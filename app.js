@@ -15662,7 +15662,9 @@ function ModuleStockPF({
   stockCond,
   stockPF,
   setStockPF,
-  stock
+  stock,
+  inventaires,
+  setInventaires
 }) {
   const [view, setView] = useState('stock');
   const [filtre, setFiltre] = useState('Tous');
@@ -15676,8 +15678,12 @@ function ModuleStockPF({
     lot: '',
     date: new Date().toISOString().split('T')[0]
   });
-  const [csvPreview, setCsvPreview] = useState(null); // [{article,qte,prixTTC}]
+  const [csvPreview, setCsvPreview] = useState(null);
   const [importLog, setImportLog] = useState('');
+  const [invMode, setInvMode] = useState('liste'); // 'liste' | 'terrain'
+  const [invCounts, setInvCounts] = useState({}); // {key: string} valeur saisie
+  const [invStep, setInvStep] = useState(0); // index mode terrain
+  const [invConfirm, setInvConfirm] = useState(false); // afficher récap avant validation
   const csvRef = useRef();
   const pCond = calcPrixCond(stockCond);
   const fmtKey = {
@@ -15919,6 +15925,90 @@ function ModuleStockPF({
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  // ── Helpers inventaire ─────────────────────────────────────────────────────
+  const invGroups = (() => {
+    const map = {};
+    allLots.forEach(lot => {
+      const key = `${lot.brassinNom}||${lot.type}`;
+      if (!map[key]) map[key] = {
+        key,
+        brassinNom: lot.brassinNom,
+        type: lot.type,
+        lots: [],
+        qteDispo: 0
+      };
+      map[key].lots.push(lot);
+      map[key].qteDispo += lot.qteDispo;
+    });
+    return Object.values(map).sort((a, b) => a.brassinNom.localeCompare(b.brassinNom));
+  })();
+  const invDelta = key => {
+    const v = invCounts[key];
+    if (v === undefined || v === '') return null;
+    const group = invGroups.find(g => g.key === key);
+    return parseInt(v) - (group?.qteDispo || 0);
+  };
+  const validerInventaire = () => {
+    const items = [];
+    const newPF = [...stockPF];
+    invGroups.forEach(group => {
+      const v = invCounts[group.key];
+      if (v === undefined || v === '') return;
+      const counted = parseInt(v);
+      const avant = group.qteDispo;
+      const delta = counted - avant;
+      if (delta === 0) return;
+      items.push({
+        brassinNom: group.brassinNom,
+        type: group.type,
+        avant,
+        apres: counted,
+        delta
+      });
+      // Applique le delta sur les lots (du plus récent au plus ancien)
+      let remain = Math.abs(delta);
+      const sorted = [...group.lots].sort((a, b) => new Date(b.dateCond) - new Date(a.dateCond));
+      sorted.forEach(lot => {
+        if (remain <= 0) return;
+        const idx = newPF.findIndex(x => x.lotId === lot.lotId);
+        if (delta < 0) {
+          // Réduction : on prend sur ce lot
+          const take = Math.min(remain, lot.qteDispo);
+          if (idx >= 0) newPF[idx] = {
+            ...newPF[idx],
+            qteDispo: newPF[idx].qteDispo - take
+          };else newPF.push({
+            ...lot,
+            qteDispo: lot.qteDispo - take
+          });
+          remain -= take;
+        } else {
+          // Surplus : on ajoute sur le lot le plus récent uniquement
+          if (idx >= 0) newPF[idx] = {
+            ...newPF[idx],
+            qteDispo: newPF[idx].qteDispo + remain
+          };else newPF.push({
+            ...lot,
+            qteDispo: lot.qteDispo + remain
+          });
+          remain = 0;
+        }
+      });
+    });
+    if (items.length > 0) {
+      setStockPF(newPF);
+      setInventaires(prev => [{
+        id: Date.now(),
+        date: new Date().toISOString().split('T')[0],
+        items,
+        total: items.reduce((s, i) => s + Math.abs(i.delta), 0)
+      }, ...prev]);
+    }
+    setInvCounts({});
+    setInvConfirm(false);
+    setView('stock');
+  };
   const PctBar = ({
     val,
     max,
@@ -16052,7 +16142,7 @@ function ModuleStockPF({
       scrollbarWidth: 'none',
       WebkitOverflowScrolling: 'touch'
     }
-  }, [['stock', '📋 Lots'], ['valorisation', '📊 Valeur'], ['import', '📥 Import/Export']].map(([v, l]) => /*#__PURE__*/React.createElement("button", {
+  }, [['stock', '📋 Lots'], ['valorisation', '📊 Valeur'], ['inventaire', '📝 Inventaire'], ['import', '📥 Import']].map(([v, l]) => /*#__PURE__*/React.createElement("button", {
     key: v,
     onClick: () => setView(v),
     style: {
@@ -16060,14 +16150,24 @@ function ModuleStockPF({
       padding: '7px 14px',
       borderRadius: 20,
       whiteSpace: 'nowrap',
-      border: `1.5px solid ${view === v ? C.amber : C.border}`,
-      background: view === v ? C.amberPale : C.bgCard,
-      color: view === v ? C.amber : C.textMid,
+      border: `1.5px solid ${view === v ? v === 'inventaire' ? C.ok : C.amber : C.border}`,
+      background: view === v ? v === 'inventaire' ? C.greenPale : C.amberPale : C.bgCard,
+      color: view === v ? v === 'inventaire' ? C.greenL : C.amber : C.textMid,
       fontWeight: 600,
       fontSize: 12,
       minHeight: 36
     }
-  }, l)), /*#__PURE__*/React.createElement("button", {
+  }, l, v === 'inventaire' && inventaires.length > 0 && /*#__PURE__*/React.createElement("span", {
+    style: {
+      marginLeft: 4,
+      background: C.ok,
+      color: '#fff',
+      borderRadius: 4,
+      padding: '0 5px',
+      fontSize: 8,
+      fontWeight: 900
+    }
+  }, inventaires.length))), /*#__PURE__*/React.createElement("button", {
     onClick: exportDGSYS,
     style: {
       flexShrink: 0,
@@ -16081,7 +16181,7 @@ function ModuleStockPF({
       fontSize: 12,
       minHeight: 36
     }
-  }, "\uD83D\uDCE4 Export DGSYS")), /*#__PURE__*/React.createElement("input", {
+  }, "\uD83D\uDCE4 DGSYS")), /*#__PURE__*/React.createElement("input", {
     type: "file",
     ref: csvRef,
     accept: ".csv,.txt",
@@ -16598,6 +16698,629 @@ function ModuleStockPF({
         color: C.ok
       })));
     }));
+  })(), view === 'inventaire' && (() => {
+    const pendingCount = invGroups.filter(g => invCounts[g.key] !== undefined && invCounts[g.key] !== '').length;
+    const hasDiff = invGroups.some(g => {
+      const d = invDelta(g.key);
+      return d !== null && d !== 0;
+    });
+
+    // ── MODE TERRAIN : une bière à la fois ─────────────────────────────────
+    if (invMode === 'terrain') {
+      const item = invGroups[invStep];
+      if (!item) return /*#__PURE__*/React.createElement("div", {
+        style: {
+          padding: '40px 20px',
+          textAlign: 'center',
+          color: C.textLight
+        }
+      }, "Inventaire termin\xE9 \u2713");
+      const col = couleurType(item.type);
+      const ico = iconeType(item.type);
+      const counted = invCounts[item.key] !== undefined ? invCounts[item.key] : '';
+      const delta = invDelta(item.key);
+      return /*#__PURE__*/React.createElement("div", {
+        style: {
+          paddingBottom: 80
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 16
+        }
+      }, /*#__PURE__*/React.createElement("button", {
+        onClick: () => setInvMode('liste'),
+        style: {
+          background: 'none',
+          border: 'none',
+          color: C.textMid,
+          fontSize: 12,
+          fontFamily: FM,
+          fontWeight: 700,
+          cursor: 'pointer',
+          letterSpacing: 0.5
+        }
+      }, "\u2190 LISTE"), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontFamily: FM,
+          fontSize: 11,
+          color: C.textLight
+        }
+      }, invStep + 1, " / ", invGroups.length)), /*#__PURE__*/React.createElement("div", {
+        style: {
+          background: C.bgCard,
+          borderRadius: 20,
+          padding: '24px 20px',
+          border: `2px solid ${col}`,
+          marginBottom: 16,
+          textAlign: 'center',
+          boxShadow: `0 0 30px ${col}20`
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 52,
+          marginBottom: 8
+        }
+      }, ico), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: FA,
+          fontSize: 28,
+          color: C.text,
+          lineHeight: 1,
+          marginBottom: 4
+        }
+      }, item.brassinNom), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: FM,
+          fontSize: 13,
+          color: col,
+          fontWeight: 700,
+          marginBottom: 16
+        }
+      }, item.type), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: FM,
+          fontSize: 12,
+          color: C.textLight,
+          marginBottom: 20
+        }
+      }, "Stock enregistr\xE9 : ", /*#__PURE__*/React.createElement("strong", {
+        style: {
+          color: C.amber,
+          fontSize: 18
+        }
+      }, item.qteDispo)), /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 12,
+          marginBottom: 12
+        }
+      }, /*#__PURE__*/React.createElement("button", {
+        onClick: () => setInvCounts(p => ({
+          ...p,
+          [item.key]: String(Math.max(0, (parseInt(p[item.key]) || 0) - 1))
+        })),
+        style: {
+          width: 60,
+          height: 60,
+          borderRadius: 16,
+          border: `2px solid ${C.border}`,
+          background: C.bg,
+          color: C.text,
+          fontSize: 28,
+          fontWeight: 700,
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }
+      }, "\u2212"), /*#__PURE__*/React.createElement("input", {
+        type: "number",
+        min: "0",
+        value: counted,
+        onChange: e => setInvCounts(p => ({
+          ...p,
+          [item.key]: e.target.value
+        })),
+        placeholder: String(item.qteDispo),
+        style: {
+          width: 110,
+          textAlign: 'center',
+          background: C.bg,
+          border: `2px solid ${counted !== '' ? col : C.border}`,
+          borderRadius: 16,
+          padding: '12px 8px',
+          fontSize: 36,
+          color: counted !== '' ? col : C.textMid,
+          fontFamily: FM,
+          fontWeight: 700,
+          outline: 'none'
+        }
+      }), /*#__PURE__*/React.createElement("button", {
+        onClick: () => setInvCounts(p => ({
+          ...p,
+          [item.key]: String((parseInt(p[item.key]) || 0) + 1)
+        })),
+        style: {
+          width: 60,
+          height: 60,
+          borderRadius: 16,
+          border: `2px solid ${C.border}`,
+          background: C.bg,
+          color: C.text,
+          fontSize: 28,
+          fontWeight: 700,
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }
+      }, "+")), delta !== null && /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: FM,
+          fontSize: 15,
+          fontWeight: 700,
+          color: delta > 0 ? C.ok : delta < 0 ? C.alert : C.textLight
+        }
+      }, delta > 0 ? `+${delta} surplus` : delta < 0 ? `${delta} manquant` : '✓ Conforme'), /*#__PURE__*/React.createElement("button", {
+        onClick: () => setInvCounts(p => ({
+          ...p,
+          [item.key]: String(item.qteDispo)
+        })),
+        style: {
+          marginTop: 12,
+          padding: '5px 14px',
+          borderRadius: 8,
+          fontSize: 11,
+          border: `1px solid ${C.border}`,
+          background: 'none',
+          color: C.textMid,
+          fontFamily: FM,
+          cursor: 'pointer'
+        }
+      }, "Inchang\xE9 (", item.qteDispo, ")")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 10
+        }
+      }, /*#__PURE__*/React.createElement("button", {
+        onClick: () => setInvStep(s => Math.max(0, s - 1)),
+        disabled: invStep === 0,
+        style: {
+          padding: '14px',
+          borderRadius: 12,
+          border: `1.5px solid ${C.border}`,
+          background: invStep === 0 ? C.bgCard : 'transparent',
+          color: invStep === 0 ? C.textLight : C.text,
+          fontSize: 14,
+          fontWeight: 700,
+          cursor: 'pointer'
+        }
+      }, "\u2039 Pr\xE9c\xE9dent"), invStep < invGroups.length - 1 ? /*#__PURE__*/React.createElement("button", {
+        onClick: () => setInvStep(s => s + 1),
+        style: {
+          padding: '14px',
+          borderRadius: 12,
+          border: 'none',
+          background: C.amber,
+          color: C.bgDark,
+          fontSize: 14,
+          fontWeight: 700,
+          cursor: 'pointer'
+        }
+      }, "Suivant \u203A") : /*#__PURE__*/React.createElement("button", {
+        onClick: () => setInvMode('liste'),
+        style: {
+          padding: '14px',
+          borderRadius: 12,
+          border: 'none',
+          background: C.ok,
+          color: '#fff',
+          fontSize: 14,
+          fontWeight: 700,
+          cursor: 'pointer'
+        }
+      }, "\u2713 Terminer")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          marginTop: 14,
+          height: 4,
+          background: C.border,
+          borderRadius: 2,
+          overflow: 'hidden'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          height: '100%',
+          background: C.ok,
+          borderRadius: 2,
+          width: `${(invStep + 1) / invGroups.length * 100}%`,
+          transition: 'width 0.3s'
+        }
+      })), /*#__PURE__*/React.createElement("div", {
+        style: {
+          textAlign: 'center',
+          fontFamily: FM,
+          fontSize: 9,
+          color: C.textLight,
+          marginTop: 4
+        }
+      }, Math.round((invStep + 1) / invGroups.length * 100), "% parcouru \xB7 ", pendingCount, " compt\xE9s"));
+    }
+
+    // ── MODE LISTE ─────────────────────────────────────────────────────────
+    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: C.bgCard,
+        borderRadius: 10,
+        padding: '12px 14px',
+        marginBottom: 14,
+        border: `1px solid ${C.border}`,
+        display: 'flex',
+        gap: 12,
+        alignItems: 'center'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: FM,
+        fontSize: 11,
+        color: C.textMid,
+        marginBottom: 2
+      }
+    }, "Comptez vos bouteilles et f\xFBts, saisissez les quantit\xE9s r\xE9elles."), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: FM,
+        fontSize: 10,
+        color: C.textLight
+      }
+    }, "Les \xE9carts seront appliqu\xE9s sur les lots les plus r\xE9cents.")), /*#__PURE__*/React.createElement("button", {
+      onClick: () => {
+        setInvStep(0);
+        setInvMode('terrain');
+      },
+      style: {
+        flexShrink: 0,
+        padding: '8px 12px',
+        borderRadius: 8,
+        border: 'none',
+        background: C.ok,
+        color: '#fff',
+        fontFamily: FM,
+        fontSize: 11,
+        fontWeight: 700,
+        cursor: 'pointer',
+        lineHeight: 1.3,
+        textAlign: 'center'
+      }
+    }, "\uD83D\uDCF1 Mode", /*#__PURE__*/React.createElement("br", null), "terrain")), ['Bouteille 33cl', 'Bouteille 75cl', 'Fût 20L', 'Fût 30L'].map(type => {
+      const groupe = invGroups.filter(g => g.type === type);
+      if (groupe.length === 0) return null;
+      const col = couleurType(type);
+      return /*#__PURE__*/React.createElement("div", {
+        key: type,
+        style: {
+          background: C.bgCard,
+          borderRadius: 12,
+          marginBottom: 12,
+          border: `1px solid ${C.border}`,
+          overflow: 'hidden',
+          borderTop: `3px solid ${col}`
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          padding: '10px 14px 6px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 18
+        }
+      }, iconeType(type)), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontFamily: FA,
+          fontSize: 16,
+          color: C.text
+        }
+      }, type), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontFamily: FM,
+          fontSize: 10,
+          color: C.textLight,
+          marginLeft: 'auto'
+        }
+      }, "Stock \xB7 Compt\xE9 \xB7 \xC9cart")), groupe.map(g => {
+        const delta = invDelta(g.key);
+        const counted = invCounts[g.key];
+        return /*#__PURE__*/React.createElement("div", {
+          key: g.key,
+          style: {
+            padding: '8px 14px',
+            borderTop: `1px solid ${C.border}`,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8
+          }
+        }, /*#__PURE__*/React.createElement("div", {
+          style: {
+            flex: 1,
+            minWidth: 0
+          }
+        }, /*#__PURE__*/React.createElement("div", {
+          style: {
+            fontSize: 13,
+            color: C.text,
+            fontWeight: 600,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
+          }
+        }, g.brassinNom), /*#__PURE__*/React.createElement("div", {
+          style: {
+            fontFamily: FM,
+            fontSize: 10,
+            color: C.textLight
+          }
+        }, "Enregistr\xE9 : ", g.qteDispo)), /*#__PURE__*/React.createElement("div", {
+          style: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4
+          }
+        }, /*#__PURE__*/React.createElement("button", {
+          onClick: () => setInvCounts(p => ({
+            ...p,
+            [g.key]: String(Math.max(0, (parseInt(p[g.key]) || g.qteDispo) - 1))
+          })),
+          style: {
+            width: 28,
+            height: 32,
+            borderRadius: 6,
+            border: `1px solid ${C.border}`,
+            background: C.bg,
+            color: C.text,
+            fontSize: 16,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }
+        }, "\u2212"), /*#__PURE__*/React.createElement("input", {
+          type: "number",
+          min: "0",
+          value: counted !== undefined ? counted : '',
+          onChange: e => setInvCounts(p => ({
+            ...p,
+            [g.key]: e.target.value
+          })),
+          placeholder: String(g.qteDispo),
+          style: {
+            width: 60,
+            textAlign: 'center',
+            background: C.bg,
+            border: `1.5px solid ${counted !== undefined && counted !== '' ? col : C.border}`,
+            borderRadius: 6,
+            padding: '4px 4px',
+            fontSize: 15,
+            color: counted !== undefined && counted !== '' ? col : C.textMid,
+            fontFamily: FM,
+            fontWeight: 700,
+            outline: 'none'
+          }
+        }), /*#__PURE__*/React.createElement("button", {
+          onClick: () => setInvCounts(p => ({
+            ...p,
+            [g.key]: String((parseInt(p[g.key]) || g.qteDispo) + 1)
+          })),
+          style: {
+            width: 28,
+            height: 32,
+            borderRadius: 6,
+            border: `1px solid ${C.border}`,
+            background: C.bg,
+            color: C.text,
+            fontSize: 16,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }
+        }, "+")), /*#__PURE__*/React.createElement("div", {
+          style: {
+            width: 54,
+            textAlign: 'right',
+            flexShrink: 0
+          }
+        }, delta !== null ? /*#__PURE__*/React.createElement("span", {
+          style: {
+            fontFamily: FM,
+            fontSize: 12,
+            fontWeight: 700,
+            color: delta > 0 ? C.ok : delta < 0 ? C.alert : C.textLight
+          }
+        }, delta > 0 ? `+${delta}` : delta === 0 ? '✓' : delta) : /*#__PURE__*/React.createElement("span", {
+          style: {
+            color: C.border
+          }
+        }, "\u2014")));
+      }));
+    }), pendingCount > 0 && !invConfirm && /*#__PURE__*/React.createElement("button", {
+      onClick: () => setInvConfirm(true),
+      style: {
+        width: '100%',
+        padding: '14px',
+        borderRadius: 12,
+        border: 'none',
+        background: hasDiff ? C.ok : C.amber,
+        color: '#fff',
+        fontFamily: FM,
+        fontSize: 14,
+        fontWeight: 700,
+        marginTop: 4,
+        cursor: 'pointer',
+        marginBottom: 10
+      }
+    }, "\u2713 Valider l'inventaire (", pendingCount, " produit", pendingCount > 1 ? 's' : '', " compt\xE9", pendingCount > 1 ? 's' : '', ")"), invConfirm && /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: C.bgCard,
+        borderRadius: 12,
+        padding: '16px',
+        marginTop: 4,
+        border: `1.5px solid ${C.ok}`,
+        marginBottom: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontWeight: 700,
+        color: C.text,
+        marginBottom: 12,
+        fontSize: 14
+      }
+    }, "\uD83D\uDCCB R\xE9capitulatif des corrections"), invGroups.filter(g => invDelta(g.key) !== null && invDelta(g.key) !== 0).map(g => {
+      const d = invDelta(g.key);
+      return /*#__PURE__*/React.createElement("div", {
+        key: g.key,
+        style: {
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '6px 0',
+          borderBottom: `1px solid ${C.border}`
+        }
+      }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 12,
+          color: C.text
+        }
+      }, g.brassinNom), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 10,
+          color: C.textLight,
+          fontFamily: FM
+        }
+      }, g.type)), /*#__PURE__*/React.createElement("div", {
+        style: {
+          textAlign: 'right'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: FM,
+          fontSize: 12,
+          color: C.textMid
+        }
+      }, g.qteDispo, " \u2192 ", invCounts[g.key]), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: FM,
+          fontSize: 13,
+          fontWeight: 700,
+          color: d > 0 ? C.ok : C.alert
+        }
+      }, d > 0 ? `+${d}` : d)));
+    }), invGroups.filter(g => invDelta(g.key) === 0 && invCounts[g.key] !== undefined).length > 0 && /*#__PURE__*/React.createElement("div", {
+      style: {
+        padding: '6px 0',
+        fontSize: 11,
+        color: C.textLight,
+        fontFamily: FM
+      }
+    }, "+ ", invGroups.filter(g => invDelta(g.key) === 0 && invCounts[g.key] !== undefined).length, " produit(s) sans \xE9cart"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 8,
+        marginTop: 14
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: validerInventaire,
+      style: {
+        flex: 1,
+        padding: '12px',
+        borderRadius: 8,
+        border: 'none',
+        background: C.ok,
+        color: '#fff',
+        fontFamily: FM,
+        fontSize: 13,
+        fontWeight: 700,
+        cursor: 'pointer'
+      }
+    }, "\u2713 Confirmer & mettre \xE0 jour"), /*#__PURE__*/React.createElement("button", {
+      onClick: () => setInvConfirm(false),
+      style: {
+        padding: '12px 16px',
+        borderRadius: 8,
+        border: `1px solid ${C.border}`,
+        background: 'transparent',
+        color: C.textMid,
+        fontSize: 13,
+        cursor: 'pointer'
+      }
+    }, "Annuler"))), inventaires.length > 0 && /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 16
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: FM,
+        fontSize: 9,
+        letterSpacing: 2,
+        color: C.textLight,
+        textTransform: 'uppercase',
+        marginBottom: 8
+      }
+    }, "Historique des inventaires"), inventaires.slice(0, 5).map(inv => /*#__PURE__*/React.createElement("div", {
+      key: inv.id,
+      style: {
+        background: C.bgCard,
+        borderRadius: 10,
+        padding: '10px 14px',
+        marginBottom: 8,
+        border: `1px solid ${C.border}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 6
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: FM,
+        fontSize: 11,
+        fontWeight: 700,
+        color: C.text
+      }
+    }, fmtDate(inv.date)), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: FM,
+        fontSize: 10,
+        color: C.textLight
+      }
+    }, inv.items.length, " produit(s) \xB7 ", inv.total, " unit\xE9s corrig\xE9es")), inv.items.map((it, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        fontSize: 11,
+        color: C.textMid,
+        marginBottom: 2
+      }
+    }, /*#__PURE__*/React.createElement("span", null, it.brassinNom, " \xB7 ", it.type), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: FM,
+        fontWeight: 700,
+        color: it.delta > 0 ? C.ok : C.alert
+      }
+    }, it.delta > 0 ? `+${it.delta}` : it.delta)))))));
   })(), view === 'import' && /*#__PURE__*/React.createElement("div", null, importLog && /*#__PURE__*/React.createElement("div", {
     style: {
       background: C.greenPale,
@@ -21528,6 +22251,7 @@ function App() {
   const [tireuses, setTireuses] = useState(TIREUSES_INIT);
   const [locations, setLocations] = useState(LOCATIONS_INIT);
   const [stockPF, setStockPF] = useState([]);
+  const [inventaires, setInventaires] = useState([]);
   const [module, setModule] = useState('dashboard');
   useEffect(() => {
     try {
@@ -21538,6 +22262,7 @@ function App() {
         if (d.brassins?.length) setBrassins(d.brassins);
         if (d.stock?.length) setStock(d.stock);
         if (d.tireuses?.length) setTireuses(d.tireuses);
+        if (d.inventaires?.length) setInventaires(d.inventaires);
       }
     } catch (e) {}
   }, []);
@@ -21547,7 +22272,8 @@ function App() {
         locations,
         brassins,
         stock,
-        tireuses
+        tireuses,
+        inventaires
       }));
     } catch (e) {}
   }, [locations, brassins, stock, tireuses]);
@@ -21836,7 +22562,9 @@ function App() {
     stockCond: stockCond,
     stockPF: stockPF,
     setStockPF: setStockPF,
-    stock: stock
+    stock: stock,
+    inventaires: inventaires,
+    setInventaires: setInventaires
   }), module === 'catalogue' && /*#__PURE__*/React.createElement(ModuleCatalogue, {
     recettes: recettes,
     setRecettes: setRecettes,

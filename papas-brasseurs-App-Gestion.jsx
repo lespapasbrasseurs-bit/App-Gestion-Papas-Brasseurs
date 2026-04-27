@@ -6064,15 +6064,19 @@ function ModulePlanification({brassins,setBrassins,condSessions,recettes,locatio
  );
 }
 
-function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock}){
+function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock,inventaires,setInventaires}){
  const [view,setView]   = useState('stock');
  const [filtre,setFiltre] = useState('Tous');
  const [q,setQ]           = useState('');
  const [editLot,setEditLot] = useState(null);
  const [adjVal,setAdjVal]   = useState('');
  const [manualForm,setManualForm] = useState({nom:'',type:'Bouteille 33cl',qte:'',lot:'',date:new Date().toISOString().split('T')[0]});
- const [csvPreview,setCsvPreview] = useState(null); // [{article,qte,prixTTC}]
+ const [csvPreview,setCsvPreview] = useState(null);
  const [importLog,setImportLog]   = useState('');
+ const [invMode,setInvMode]       = useState('liste'); // 'liste' | 'terrain'
+ const [invCounts,setInvCounts]   = useState({});     // {key: string} valeur saisie
+ const [invStep,setInvStep]       = useState(0);      // index mode terrain
+ const [invConfirm,setInvConfirm] = useState(false);  // afficher récap avant validation
  const csvRef = useRef();
 
  const pCond = calcPrixCond(stockCond);
@@ -6263,6 +6267,70 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
   a.click(); URL.revokeObjectURL(url);
  };
 
+ // ── Helpers inventaire ─────────────────────────────────────────────────────
+ const invGroups = (() => {
+  const map = {};
+  allLots.forEach(lot => {
+   const key = `${lot.brassinNom}||${lot.type}`;
+   if(!map[key]) map[key] = {key, brassinNom:lot.brassinNom, type:lot.type, lots:[], qteDispo:0};
+   map[key].lots.push(lot);
+   map[key].qteDispo += lot.qteDispo;
+  });
+  return Object.values(map).sort((a,b) => a.brassinNom.localeCompare(b.brassinNom));
+ })();
+
+ const invDelta = key => {
+  const v = invCounts[key];
+  if(v===undefined||v==='') return null;
+  const group = invGroups.find(g=>g.key===key);
+  return parseInt(v) - (group?.qteDispo||0);
+ };
+
+ const validerInventaire = () => {
+  const items = [];
+  const newPF = [...stockPF];
+  invGroups.forEach(group => {
+   const v = invCounts[group.key];
+   if(v===undefined||v==='') return;
+   const counted = parseInt(v);
+   const avant = group.qteDispo;
+   const delta = counted - avant;
+   if(delta === 0) return;
+   items.push({brassinNom:group.brassinNom, type:group.type, avant, apres:counted, delta});
+   // Applique le delta sur les lots (du plus récent au plus ancien)
+   let remain = Math.abs(delta);
+   const sorted = [...group.lots].sort((a,b)=>new Date(b.dateCond)-new Date(a.dateCond));
+   sorted.forEach(lot => {
+    if(remain <= 0) return;
+    const idx = newPF.findIndex(x=>x.lotId===lot.lotId);
+    if(delta < 0) {
+     // Réduction : on prend sur ce lot
+     const take = Math.min(remain, lot.qteDispo);
+     if(idx>=0) newPF[idx] = {...newPF[idx], qteDispo: newPF[idx].qteDispo - take};
+     else newPF.push({...lot, qteDispo: lot.qteDispo - take});
+     remain -= take;
+    } else {
+     // Surplus : on ajoute sur le lot le plus récent uniquement
+     if(idx>=0) newPF[idx] = {...newPF[idx], qteDispo: newPF[idx].qteDispo + remain};
+     else newPF.push({...lot, qteDispo: lot.qteDispo + remain});
+     remain = 0;
+    }
+   });
+  });
+  if(items.length > 0){
+   setStockPF(newPF);
+   setInventaires(prev=>[{
+    id: Date.now(),
+    date: new Date().toISOString().split('T')[0],
+    items,
+    total: items.reduce((s,i)=>s+Math.abs(i.delta),0),
+   }, ...prev]);
+  }
+  setInvCounts({});
+  setInvConfirm(false);
+  setView('stock');
+ };
+
  const PctBar = ({val,max,color}) => (
   <div style={{height:4,background:C.border,borderRadius:2,overflow:'hidden',marginTop:3}}>
    <div style={{height:'100%',borderRadius:2,background:color,
@@ -6303,20 +6371,22 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
    </div>
 
    <div style={{display:'flex',gap:6,marginBottom:14,overflowX:'auto',scrollbarWidth:'none',WebkitOverflowScrolling:'touch'}}>
-    {[['stock','📋 Lots'],['valorisation','📊 Valeur'],['import','📥 Import/Export']].map(([v,l])=>(
+    {[['stock','📋 Lots'],['valorisation','📊 Valeur'],['inventaire','📝 Inventaire'],['import','📥 Import']].map(([v,l])=>(
      <button key={v} onClick={()=>setView(v)}
       style={{flexShrink:0,padding:'7px 14px',borderRadius:20,whiteSpace:'nowrap',
-       border:`1.5px solid ${view===v?C.amber:C.border}`,
-       background:view===v?C.amberPale:C.bgCard,
-       color:view===v?C.amber:C.textMid,fontWeight:600,fontSize:12,minHeight:36}}>
+       border:`1.5px solid ${view===v?(v==='inventaire'?C.ok:C.amber):C.border}`,
+       background:view===v?(v==='inventaire'?C.greenPale:C.amberPale):C.bgCard,
+       color:view===v?(v==='inventaire'?C.greenL:C.amber):C.textMid,
+       fontWeight:600,fontSize:12,minHeight:36}}>
       {l}
+      {v==='inventaire'&&inventaires.length>0&&<span style={{marginLeft:4,background:C.ok,color:'#fff',borderRadius:4,padding:'0 5px',fontSize:8,fontWeight:900}}>{inventaires.length}</span>}
      </button>
     ))}
     <button onClick={exportDGSYS}
      style={{flexShrink:0,padding:'7px 14px',borderRadius:20,whiteSpace:'nowrap',
       border:`1.5px solid ${C.hop}`,background:'transparent',
       color:C.hop,fontWeight:600,fontSize:12,minHeight:36}}>
-     📤 Export DGSYS
+     📤 DGSYS
     </button>
    </div>
    <input type="file" ref={csvRef} accept=".csv,.txt" onChange={onCSVFile}
@@ -6596,6 +6666,310 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
         </div>
        );
       })}
+     </div>
+    );
+   })()}
+
+   {view==='inventaire'&&(()=>{
+    const pendingCount = invGroups.filter(g=>invCounts[g.key]!==undefined&&invCounts[g.key]!=='').length;
+    const hasDiff = invGroups.some(g=>{const d=invDelta(g.key);return d!==null&&d!==0;});
+
+    // ── MODE TERRAIN : une bière à la fois ─────────────────────────────────
+    if(invMode==='terrain'){
+     const item = invGroups[invStep];
+     if(!item) return <div style={{padding:'40px 20px',textAlign:'center',color:C.textLight}}>Inventaire terminé ✓</div>;
+     const col = couleurType(item.type);
+     const ico = iconeType(item.type);
+     const counted = invCounts[item.key]!==undefined ? invCounts[item.key] : '';
+     const delta = invDelta(item.key);
+     return (
+      <div style={{paddingBottom:80}}>
+       {/* Header terrain */}
+       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+        <button onClick={()=>setInvMode('liste')}
+         style={{background:'none',border:'none',color:C.textMid,fontSize:12,fontFamily:FM,fontWeight:700,cursor:'pointer',letterSpacing:0.5}}>
+         ← LISTE
+        </button>
+        <span style={{fontFamily:FM,fontSize:11,color:C.textLight}}>
+         {invStep+1} / {invGroups.length}
+        </span>
+       </div>
+
+       {/* Carte produit */}
+       <div style={{background:C.bgCard,borderRadius:20,padding:'24px 20px',
+        border:`2px solid ${col}`,marginBottom:16,textAlign:'center',
+        boxShadow:`0 0 30px ${col}20`}}>
+        <div style={{fontSize:52,marginBottom:8}}>{ico}</div>
+        <div style={{fontFamily:FA,fontSize:28,color:C.text,lineHeight:1,marginBottom:4}}>
+         {item.brassinNom}
+        </div>
+        <div style={{fontFamily:FM,fontSize:13,color:col,fontWeight:700,marginBottom:16}}>
+         {item.type}
+        </div>
+        <div style={{fontFamily:FM,fontSize:12,color:C.textLight,marginBottom:20}}>
+         Stock enregistré : <strong style={{color:C.amber,fontSize:18}}>{item.qteDispo}</strong>
+        </div>
+
+        {/* Grand input de comptage */}
+        <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:12,marginBottom:12}}>
+         <button
+          onClick={()=>setInvCounts(p=>({...p,[item.key]:String(Math.max(0,(parseInt(p[item.key])||0)-1))}))}
+          style={{width:60,height:60,borderRadius:16,border:`2px solid ${C.border}`,
+           background:C.bg,color:C.text,fontSize:28,fontWeight:700,cursor:'pointer',
+           display:'flex',alignItems:'center',justifyContent:'center'}}>−</button>
+         <input
+          type="number" min="0"
+          value={counted}
+          onChange={e=>setInvCounts(p=>({...p,[item.key]:e.target.value}))}
+          placeholder={String(item.qteDispo)}
+          style={{width:110,textAlign:'center',background:C.bg,
+           border:`2px solid ${counted!==''?col:C.border}`,
+           borderRadius:16,padding:'12px 8px',fontSize:36,color:counted!==''?col:C.textMid,
+           fontFamily:FM,fontWeight:700,outline:'none'}}/>
+         <button
+          onClick={()=>setInvCounts(p=>({...p,[item.key]:String((parseInt(p[item.key])||0)+1)}))}
+          style={{width:60,height:60,borderRadius:16,border:`2px solid ${C.border}`,
+           background:C.bg,color:C.text,fontSize:28,fontWeight:700,cursor:'pointer',
+           display:'flex',alignItems:'center',justifyContent:'center'}}>+</button>
+        </div>
+
+        {/* Delta en temps réel */}
+        {delta!==null&&(
+         <div style={{fontFamily:FM,fontSize:15,fontWeight:700,
+          color:delta>0?C.ok:delta<0?C.alert:C.textLight}}>
+          {delta>0?`+${delta} surplus`:delta<0?`${delta} manquant`:'✓ Conforme'}
+         </div>
+        )}
+
+        {/* Bouton "inchangé" */}
+        <button onClick={()=>setInvCounts(p=>({...p,[item.key]:String(item.qteDispo)}))}
+         style={{marginTop:12,padding:'5px 14px',borderRadius:8,fontSize:11,
+          border:`1px solid ${C.border}`,background:'none',color:C.textMid,
+          fontFamily:FM,cursor:'pointer'}}>
+         Inchangé ({item.qteDispo})
+        </button>
+       </div>
+
+       {/* Navigation */}
+       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+        <button onClick={()=>setInvStep(s=>Math.max(0,s-1))}
+         disabled={invStep===0}
+         style={{padding:'14px',borderRadius:12,border:`1.5px solid ${C.border}`,
+          background:invStep===0?C.bgCard:'transparent',
+          color:invStep===0?C.textLight:C.text,fontSize:14,fontWeight:700,cursor:'pointer'}}>
+         ‹ Précédent
+        </button>
+        {invStep<invGroups.length-1?(
+         <button onClick={()=>setInvStep(s=>s+1)}
+          style={{padding:'14px',borderRadius:12,border:'none',
+           background:C.amber,color:C.bgDark,fontSize:14,fontWeight:700,cursor:'pointer'}}>
+          Suivant ›
+         </button>
+        ):(
+         <button onClick={()=>setInvMode('liste')}
+          style={{padding:'14px',borderRadius:12,border:'none',
+           background:C.ok,color:'#fff',fontSize:14,fontWeight:700,cursor:'pointer'}}>
+          ✓ Terminer
+         </button>
+        )}
+       </div>
+
+       {/* Mini-barre de progression */}
+       <div style={{marginTop:14,height:4,background:C.border,borderRadius:2,overflow:'hidden'}}>
+        <div style={{height:'100%',background:C.ok,borderRadius:2,
+         width:`${(invStep+1)/invGroups.length*100}%`,transition:'width 0.3s'}}/>
+       </div>
+       <div style={{textAlign:'center',fontFamily:FM,fontSize:9,color:C.textLight,marginTop:4}}>
+        {Math.round((invStep+1)/invGroups.length*100)}% parcouru · {pendingCount} comptés
+       </div>
+      </div>
+     );
+    }
+
+    // ── MODE LISTE ─────────────────────────────────────────────────────────
+    return (
+     <div>
+      {/* Bandeau info */}
+      <div style={{background:C.bgCard,borderRadius:10,padding:'12px 14px',
+       marginBottom:14,border:`1px solid ${C.border}`,
+       display:'flex',gap:12,alignItems:'center'}}>
+       <div style={{flex:1}}>
+        <div style={{fontFamily:FM,fontSize:11,color:C.textMid,marginBottom:2}}>
+         Comptez vos bouteilles et fûts, saisissez les quantités réelles.
+        </div>
+        <div style={{fontFamily:FM,fontSize:10,color:C.textLight}}>
+         Les écarts seront appliqués sur les lots les plus récents.
+        </div>
+       </div>
+       <button onClick={()=>{setInvStep(0);setInvMode('terrain');}}
+        style={{flexShrink:0,padding:'8px 12px',borderRadius:8,border:'none',
+         background:C.ok,color:'#fff',fontFamily:FM,fontSize:11,
+         fontWeight:700,cursor:'pointer',lineHeight:1.3,textAlign:'center'}}>
+        📱 Mode<br/>terrain
+       </button>
+      </div>
+
+      {/* Tableau de comptage */}
+      {['Bouteille 33cl','Bouteille 75cl','Fût 20L','Fût 30L'].map(type=>{
+       const groupe = invGroups.filter(g=>g.type===type);
+       if(groupe.length===0) return null;
+       const col = couleurType(type);
+       return (
+        <div key={type} style={{background:C.bgCard,borderRadius:12,
+         marginBottom:12,border:`1px solid ${C.border}`,overflow:'hidden',
+         borderTop:`3px solid ${col}`}}>
+         <div style={{padding:'10px 14px 6px',
+          display:'flex',alignItems:'center',gap:8}}>
+          <span style={{fontSize:18}}>{iconeType(type)}</span>
+          <span style={{fontFamily:FA,fontSize:16,color:C.text}}>{type}</span>
+          <span style={{fontFamily:FM,fontSize:10,color:C.textLight,marginLeft:'auto'}}>
+           Stock · Compté · Écart
+          </span>
+         </div>
+         {groupe.map(g=>{
+          const delta = invDelta(g.key);
+          const counted = invCounts[g.key];
+          return (
+           <div key={g.key} style={{padding:'8px 14px',
+            borderTop:`1px solid ${C.border}`,
+            display:'flex',alignItems:'center',gap:8}}>
+            <div style={{flex:1,minWidth:0}}>
+             <div style={{fontSize:13,color:C.text,fontWeight:600,
+              overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
+              {g.brassinNom}
+             </div>
+             <div style={{fontFamily:FM,fontSize:10,color:C.textLight}}>
+              Enregistré : {g.qteDispo}
+             </div>
+            </div>
+            {/* Input compté */}
+            <div style={{display:'flex',alignItems:'center',gap:4}}>
+             <button onClick={()=>setInvCounts(p=>({...p,[g.key]:String(Math.max(0,(parseInt(p[g.key])||g.qteDispo)-1))}))}
+              style={{width:28,height:32,borderRadius:6,border:`1px solid ${C.border}`,
+               background:C.bg,color:C.text,fontSize:16,cursor:'pointer',
+               display:'flex',alignItems:'center',justifyContent:'center'}}>−</button>
+             <input type="number" min="0"
+              value={counted!==undefined?counted:''}
+              onChange={e=>setInvCounts(p=>({...p,[g.key]:e.target.value}))}
+              placeholder={String(g.qteDispo)}
+              style={{width:60,textAlign:'center',background:C.bg,
+               border:`1.5px solid ${counted!==undefined&&counted!==''?col:C.border}`,
+               borderRadius:6,padding:'4px 4px',fontSize:15,
+               color:counted!==undefined&&counted!==''?col:C.textMid,
+               fontFamily:FM,fontWeight:700,outline:'none'}}/>
+             <button onClick={()=>setInvCounts(p=>({...p,[g.key]:String((parseInt(p[g.key])||g.qteDispo)+1)}))}
+              style={{width:28,height:32,borderRadius:6,border:`1px solid ${C.border}`,
+               background:C.bg,color:C.text,fontSize:16,cursor:'pointer',
+               display:'flex',alignItems:'center',justifyContent:'center'}}>+</button>
+            </div>
+            {/* Delta */}
+            <div style={{width:54,textAlign:'right',flexShrink:0}}>
+             {delta!==null?(
+              <span style={{fontFamily:FM,fontSize:12,fontWeight:700,
+               color:delta>0?C.ok:delta<0?C.alert:C.textLight}}>
+               {delta>0?`+${delta}`:delta===0?'✓':delta}
+              </span>
+             ):<span style={{color:C.border}}>—</span>}
+            </div>
+           </div>
+          );
+         })}
+        </div>
+       );
+      })}
+
+      {/* Bouton valider */}
+      {pendingCount>0&&!invConfirm&&(
+       <button onClick={()=>setInvConfirm(true)}
+        style={{width:'100%',padding:'14px',borderRadius:12,border:'none',
+         background:hasDiff?C.ok:C.amber,
+         color:'#fff',fontFamily:FM,fontSize:14,fontWeight:700,
+         marginTop:4,cursor:'pointer',marginBottom:10}}>
+        ✓ Valider l'inventaire ({pendingCount} produit{pendingCount>1?'s':''} compté{pendingCount>1?'s':''})
+       </button>
+      )}
+
+      {/* Récap avant validation */}
+      {invConfirm&&(
+       <div style={{background:C.bgCard,borderRadius:12,padding:'16px',
+        marginTop:4,border:`1.5px solid ${C.ok}`,marginBottom:10}}>
+        <div style={{fontWeight:700,color:C.text,marginBottom:12,fontSize:14}}>
+         📋 Récapitulatif des corrections
+        </div>
+        {invGroups.filter(g=>invDelta(g.key)!==null&&invDelta(g.key)!==0).map(g=>{
+         const d=invDelta(g.key);
+         return (
+          <div key={g.key} style={{display:'flex',justifyContent:'space-between',
+           alignItems:'center',padding:'6px 0',borderBottom:`1px solid ${C.border}`}}>
+           <div>
+            <div style={{fontSize:12,color:C.text}}>{g.brassinNom}</div>
+            <div style={{fontSize:10,color:C.textLight,fontFamily:FM}}>{g.type}</div>
+           </div>
+           <div style={{textAlign:'right'}}>
+            <div style={{fontFamily:FM,fontSize:12,color:C.textMid}}>
+             {g.qteDispo} → {invCounts[g.key]}
+            </div>
+            <div style={{fontFamily:FM,fontSize:13,fontWeight:700,
+             color:d>0?C.ok:C.alert}}>
+             {d>0?`+${d}`:d}
+            </div>
+           </div>
+          </div>
+         );
+        })}
+        {invGroups.filter(g=>invDelta(g.key)===0&&invCounts[g.key]!==undefined).length>0&&(
+         <div style={{padding:'6px 0',fontSize:11,color:C.textLight,fontFamily:FM}}>
+          + {invGroups.filter(g=>invDelta(g.key)===0&&invCounts[g.key]!==undefined).length} produit(s) sans écart
+         </div>
+        )}
+        <div style={{display:'flex',gap:8,marginTop:14}}>
+         <button onClick={validerInventaire}
+          style={{flex:1,padding:'12px',borderRadius:8,border:'none',
+           background:C.ok,color:'#fff',fontFamily:FM,fontSize:13,fontWeight:700,cursor:'pointer'}}>
+          ✓ Confirmer & mettre à jour
+         </button>
+         <button onClick={()=>setInvConfirm(false)}
+          style={{padding:'12px 16px',borderRadius:8,border:`1px solid ${C.border}`,
+           background:'transparent',color:C.textMid,fontSize:13,cursor:'pointer'}}>
+          Annuler
+         </button>
+        </div>
+       </div>
+      )}
+
+      {/* Historique des inventaires */}
+      {inventaires.length>0&&(
+       <div style={{marginTop:16}}>
+        <div style={{fontFamily:FM,fontSize:9,letterSpacing:2,color:C.textLight,
+         textTransform:'uppercase',marginBottom:8}}>
+         Historique des inventaires
+        </div>
+        {inventaires.slice(0,5).map(inv=>(
+         <div key={inv.id} style={{background:C.bgCard,borderRadius:10,
+          padding:'10px 14px',marginBottom:8,border:`1px solid ${C.border}`}}>
+          <div style={{display:'flex',justifyContent:'space-between',
+           alignItems:'center',marginBottom:6}}>
+           <span style={{fontFamily:FM,fontSize:11,fontWeight:700,color:C.text}}>
+            {fmtDate(inv.date)}
+           </span>
+           <span style={{fontFamily:FM,fontSize:10,color:C.textLight}}>
+            {inv.items.length} produit(s) · {inv.total} unités corrigées
+           </span>
+          </div>
+          {inv.items.map((it,i)=>(
+           <div key={i} style={{display:'flex',justifyContent:'space-between',
+            fontSize:11,color:C.textMid,marginBottom:2}}>
+            <span>{it.brassinNom} · {it.type}</span>
+            <span style={{fontFamily:FM,fontWeight:700,
+             color:it.delta>0?C.ok:C.alert}}>
+             {it.delta>0?`+${it.delta}`:it.delta}
+            </span>
+           </div>
+          ))}
+         </div>
+        ))}
+       </div>
+      )}
      </div>
     );
    })()}
@@ -9220,6 +9594,7 @@ export default function App(){
  const [tireuses,setTireuses]=useState(TIREUSES_INIT);
  const [locations,setLocations]=useState(LOCATIONS_INIT);
  const [stockPF,setStockPF]=useState([]);
+ const [inventaires,setInventaires]=useState([]);
  const [module,setModule]=useState('dashboard');
 
  useEffect(()=>{
@@ -9227,10 +9602,11 @@ export default function App(){
    const saved = localStorage.getItem('ppb_data');
    if(saved){
     const d = JSON.parse(saved);
-    if(d.locations?.length)  setLocations(d.locations);
-    if(d.brassins?.length)   setBrassins(d.brassins);
-    if(d.stock?.length)      setStock(d.stock);
-    if(d.tireuses?.length)   setTireuses(d.tireuses);
+    if(d.locations?.length)    setLocations(d.locations);
+    if(d.brassins?.length)     setBrassins(d.brassins);
+    if(d.stock?.length)        setStock(d.stock);
+    if(d.tireuses?.length)     setTireuses(d.tireuses);
+    if(d.inventaires?.length)  setInventaires(d.inventaires);
    }
   }catch(e){}
  },[]);
@@ -9238,7 +9614,7 @@ export default function App(){
  useEffect(()=>{
   try{
    localStorage.setItem('ppb_data', JSON.stringify({
-    locations, brassins, stock, tireuses
+    locations, brassins, stock, tireuses, inventaires
    }));
   }catch(e){}
  },[locations,brassins,stock,tireuses]);
@@ -9365,7 +9741,7 @@ export default function App(){
     {module==='historique'      &&<ModuleHistorique brassins={brassins}/>}
     {module==='planification'   &&<ModulePlanification brassins={brassins} setBrassins={setBrassins} condSessions={condSessions} recettes={recettes} locations={locations}/>}
     {module==='tireuses'        &&<ModuleTireuses tireuses={tireuses} setTireuses={setTireuses} locations={locations} setLocations={setLocations} stockCond={stockCond} setStockCond={setStockCond} recettes={recettes}/>}
-    {module==='stockpf'         &&<ModuleStockPF condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} setStockPF={setStockPF} stock={stock}/>}
+    {module==='stockpf'         &&<ModuleStockPF condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} setStockPF={setStockPF} stock={stock} inventaires={inventaires} setInventaires={setInventaires}/>}
     {module==='catalogue'       &&<ModuleCatalogue recettes={recettes} setRecettes={setRecettes} brassins={brassins} stockPF={stockPF} setStockPF={setStockPF} condSessions={condSessions} stock={stock} stockCond={stockCond}/>}
     {module==='pl'              &&<ModulePL brassins={brassins} recettes={recettes} condSessions={condSessions} stockPF={stockPF} locations={locations} stock={stock} stockCond={stockCond}/>}
     {module==='encaissement'    &&<ModuleEncaissement locations={locations} setLocations={setLocations}/>}
