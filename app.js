@@ -1,8 +1,4 @@
-const {
-  useState,
-  useEffect,
-  useRef
-} = React;
+const { useState, useEffect, useRef } = React;
 const FM = "'DM Mono',monospace";
 const FB = "'Barlow Condensed',sans-serif";
 const FA = "'Abril Fatface',serif";
@@ -1018,10 +1014,10 @@ const RECETTES_INIT = [{
   volume: 300,
   permanent: true,
   prix: {
-    b33: 2.80,
-    b75: 6.50,
-    f20: 85,
-    f30: 125
+    b33: 1.80,
+    b75: 3.97,
+    f20: 78.40,
+    f30: 117.60
   },
   description: "Notre rockstar ! Blonde houblonnée, amertume légère et envoutante.",
   houblons: ["Cascade", "Mosaic"],
@@ -1059,10 +1055,10 @@ const RECETTES_INIT = [{
   volume: 300,
   permanent: true,
   prix: {
-    b33: 2.60,
-    b75: 6.00,
-    f20: 75,
-    f30: 110
+    b33: 1.80,
+    b75: 3.97,
+    f20: 78.40,
+    f30: 117.60
   },
   description: "Brassée sur Terre, notre blanche est dans la Lune.",
   houblons: ["Cascade", "Mosaic"],
@@ -1100,10 +1096,10 @@ const RECETTES_INIT = [{
   volume: 300,
   permanent: true,
   prix: {
-    b33: 2.80,
-    b75: 6.50,
-    f20: 85,
-    f30: 125
+    b33: 1.80,
+    b75: 3.97,
+    f20: 78.40,
+    f30: 117.60
   },
   description: "Pleine de rebondissements, parfum caramel et douce amertume.",
   houblons: ["Chinook"],
@@ -1137,10 +1133,10 @@ const RECETTES_INIT = [{
   volume: 300,
   permanent: true,
   prix: {
-    b33: 3.20,
-    b75: 7.50,
-    f20: 95,
-    f30: 140
+    b33: 1.80,
+    b75: 3.97,
+    f20: 78.40,
+    f30: 117.60
   },
   description: "Laisse-toi ensorceler. Blonde dorée à l'alchimie parfaite.",
   houblons: ["Cascade", "Mosaic", "Chinook"],
@@ -1178,10 +1174,10 @@ const RECETTES_INIT = [{
   volume: 200,
   permanent: true,
   prix: {
-    b33: 4.00,
-    b75: 9.00,
-    f20: 110,
-    f30: 160
+    b33: 1.80,
+    b75: 3.97,
+    f20: 78.40,
+    f30: 117.60
   },
   description: "Avec force et courage, cette blonde musclée, épices et puissante rondeur.",
   houblons: ["Cascade"],
@@ -1219,10 +1215,10 @@ const RECETTES_INIT = [{
   volume: 300,
   permanent: true,
   prix: {
-    b33: 2.60,
-    b75: 6.00,
-    f20: 75,
-    f30: 110
+    b33: 1.80,
+    b75: 3.97,
+    f20: 63.40,
+    f30: 95.10
   },
   description: "Notre blonde légère et limpide, douce, maltée, sans amertume.",
   houblons: ["Nugget", "Cascade"],
@@ -1260,10 +1256,10 @@ const RECETTES_INIT = [{
   volume: 200,
   permanent: false,
   prix: {
-    b33: 3.50,
-    b75: 8.00,
-    f20: 100,
-    f30: 150
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "Éphémère juteuse et trouble, arômes intenses de fruits tropicaux.",
   houblons: ["Mosaic", "Citra", "Amarillo"],
@@ -1305,10 +1301,10 @@ const RECETTES_INIT = [{
   volume: 200,
   permanent: false,
   prix: {
-    b33: 4.50,
-    b75: 10.00,
-    f20: 120,
-    f30: 175
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "Double IPA puissante.",
   houblons: ["Citra", "Sabro", "Azacca"],
@@ -1342,10 +1338,10 @@ const RECETTES_INIT = [{
   volume: 500,
   permanent: false,
   prix: {
-    b33: 3.00,
-    b75: 7.00,
-    f20: 90,
-    f30: 130
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "Brune robuste aux notes de café et chocolat — Chinook aromatique, corps dense et torréfié.",
   houblons: ["Chinook"],
@@ -1410,10 +1406,10 @@ const RECETTES_INIT = [{
   volume: 500,
   permanent: false,
   prix: {
-    b33: 3.20,
-    b75: 7.50,
-    f20: 95,
-    f30: 140
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "Ambrée au poivre de Madagascar — maltée, caramel, épices chaudes. Version originale 5HL.",
   houblons: ["Nugget", "Chinook", "Simcoe"],
@@ -1481,10 +1477,10 @@ const RECETTES_INIT = [{
   volume: 1200,
   permanent: false,
   prix: {
-    b33: 3.5,
-    b75: 8.0,
-    f20: 100,
-    f30: 150
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "NEIPA puissante à 8% — double empatage, dry hop massif Citra + Sabro.",
   houblons: ["Citra", "Mistral", "Sabro"],
@@ -1556,10 +1552,10 @@ const RECETTES_INIT = [{
   volume: 1200,
   permanent: false,
   prix: {
-    b33: 2.8,
-    b75: 6.5,
-    f20: 85,
-    f30: 125
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "Cold IPA fermentation froide — dry hop massif Centennial 5kg.",
   houblons: ["Nugget", "Centennial"],
@@ -1609,10 +1605,10 @@ const RECETTES_INIT = [{
   volume: 1200,
   permanent: false,
   prix: {
-    b33: 3.0,
-    b75: 7.0,
-    f20: 90,
-    f30: 135
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "Kveik IPA fermentée à 35°C — amertume franche, Centennial + Azacca en dry hop.",
   houblons: ["Simcoe", "Centennial", "Azacca"],
@@ -1686,10 +1682,10 @@ const RECETTES_INIT = [{
   volume: 500,
   permanent: false,
   prix: {
-    b33: 2.8,
-    b75: 6.5,
-    f20: 85,
-    f30: 125
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "Gose Ananas Kiwi — sour légère, sel et coriandre, 80kg de fruits en dry hop.",
   houblons: ["Nugget", "Elixir"],
@@ -1749,10 +1745,10 @@ const RECETTES_INIT = [{
   volume: 1200,
   permanent: false,
   prix: {
-    b33: 3.0,
-    b75: 7.0,
-    f20: 90,
-    f30: 135
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "West Coast IPA sèche et amère — Mosaic + Idaho7 en dry hop, haute atténuation.",
   houblons: ["Nugget", "Simcoe", "Mosaic", "Idaho7"],
@@ -1812,10 +1808,10 @@ const RECETTES_INIT = [{
   volume: 500,
   permanent: false,
   prix: {
-    b33: 3.0,
-    b75: 7.0,
-    f20: 90,
-    f30: 135
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "Ambrée au poivre de Madagascar — maltée, caramel, épices chaudes. Poivre en dry hop J+5.",
   houblons: ["Nugget", "Chinook", "Simcoe"],
@@ -1883,10 +1879,10 @@ const RECETTES_INIT = [{
   volume: 500,
   permanent: false,
   prix: {
-    b33: 2.6,
-    b75: 6.0,
-    f20: 75,
-    f30: 115
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "Session IPA légère — Verdant, dry hop Mistral + Cascade pour finir en douceur.",
   houblons: ["Mistral", "Elixir", "Cascade"],
@@ -1940,10 +1936,10 @@ const RECETTES_INIT = [{
   volume: 500,
   permanent: false,
   prix: {
-    b33: 2.8,
-    b75: 6.5,
-    f20: 85,
-    f30: 125
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "Sour framboise / fruit de la passion — acidulée, légère, 60kg de purée de fruits.",
   houblons: ["Nugget", "Mistral"],
@@ -1998,10 +1994,10 @@ const RECETTES_INIT = [{
   volume: 500,
   permanent: false,
   prix: {
-    b33: 3.2,
-    b75: 7.5,
-    f20: 95,
-    f30: 140
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "Bière au miel — maltée douce, 60kg de miel, Sabro aromatique, levure CBC1 en conditionnement.",
   houblons: ["Nugget", "Sabro"],
@@ -2055,10 +2051,10 @@ const RECETTES_INIT = [{
   volume: 500,
   permanent: false,
   prix: {
-    b33: 2.8,
-    b75: 6.5,
-    f20: 85,
-    f30: 125
+    b33: 1.96,
+    b75: 4.29,
+    f20: 91.60,
+    f30: 137.40
   },
   description: "Black IPA — robe noire, amertume tranchante, Sabro + Simcoe en dry hop.",
   houblons: ["Sabro", "Simcoe"],
@@ -2851,6 +2847,175 @@ const PRODUCTION_INIT = [{
   abv: 5,
   notes: "Brassage en cours",
   mesures: []
+}, {
+  id: 35,
+  recette: "La Blonde des Papas",
+  volume: 0,
+  statut: "planifié",
+  dateDebut: "2026-04-27",
+  dateCond: null,
+  fermenteur: "C1",
+  og: null,
+  fg: null,
+  abv: 5,
+  notes: "Brassage C1",
+  mesures: []
+}, {
+  id: 36,
+  recette: "COLLAB26",
+  volume: 0,
+  statut: "planifié",
+  dateDebut: "2026-04-30",
+  dateCond: null,
+  fermenteur: "C2",
+  og: null,
+  fg: null,
+  abv: null,
+  notes: "Embouteillage C2 — 100% 75cl (collab)",
+  mesures: []
+}, {
+  id: 37,
+  recette: "La Pèrlimpinpin",
+  volume: 0,
+  statut: "planifié",
+  dateDebut: "2026-05-04",
+  dateCond: null,
+  fermenteur: "C2",
+  og: null,
+  fg: null,
+  abv: 6.5,
+  notes: "Brassage C2",
+  mesures: []
+}, {
+  id: 38,
+  recette: "La Blonde des Papas",
+  volume: 0,
+  statut: "planifié",
+  dateDebut: "2026-05-06",
+  dateCond: null,
+  fermenteur: "??",
+  og: null,
+  fg: null,
+  abv: 5,
+  notes: "Brassage — cuve à confirmer",
+  mesures: []
+}, {
+  id: 39,
+  recette: "La Blonde des Papas",
+  volume: 0,
+  statut: "planifié",
+  dateDebut: "2026-05-07",
+  dateCond: null,
+  fermenteur: "C3",
+  og: null,
+  fg: null,
+  abv: 5,
+  notes: "Enfutage C3",
+  mesures: []
+}, {
+  id: 40,
+  recette: "La Habemouss Papa",
+  volume: 1200,
+  statut: "planifié",
+  dateDebut: "2026-05-11",
+  dateCond: null,
+  fermenteur: "C3",
+  og: null,
+  fg: null,
+  abv: 7,
+  notes: "Brassage C3 — 12HL, option empatage jour",
+  mesures: []
+}, {
+  id: 41,
+  recette: "La Queen Bee",
+  volume: 600,
+  statut: "planifié",
+  dateDebut: "2026-05-12",
+  dateCond: null,
+  fermenteur: "C5",
+  og: null,
+  fg: null,
+  abv: 5.5,
+  notes: "Embouteillage C5 — 6HL",
+  mesures: []
+}, {
+  id: 42,
+  recette: "La Pèrchée",
+  volume: 0,
+  statut: "planifié",
+  dateDebut: "2026-05-12",
+  dateCond: null,
+  fermenteur: "C5",
+  og: null,
+  fg: null,
+  abv: 4.5,
+  notes: "Brassage C5",
+  mesures: []
+}, {
+  id: 43,
+  recette: "Leclerc (Collab)",
+  volume: 0,
+  statut: "planifié",
+  dateDebut: "2026-05-18",
+  dateCond: null,
+  fermenteur: "C4",
+  og: null,
+  fg: null,
+  abv: null,
+  notes: "Brassage C4 — collab Leclerc, bouteilles",
+  mesures: []
+}, {
+  id: 44,
+  recette: "Cascadeuse (Collab)",
+  volume: 0,
+  statut: "planifié",
+  dateDebut: "2026-05-18",
+  dateCond: null,
+  fermenteur: "C4",
+  og: null,
+  fg: null,
+  abv: null,
+  notes: "Enfutage C4 — collab",
+  mesures: []
+}, {
+  id: 45,
+  recette: "La Blonde des Papas",
+  volume: 0,
+  statut: "planifié",
+  dateDebut: "2026-05-21",
+  dateCond: null,
+  fermenteur: "C1",
+  og: null,
+  fg: null,
+  abv: 5,
+  notes: "Enfutage C1",
+  mesures: []
+}, {
+  id: 46,
+  recette: "La Blonde des Papas",
+  volume: 0,
+  statut: "planifié",
+  dateDebut: "2026-05-26",
+  dateCond: null,
+  fermenteur: "C1",
+  og: null,
+  fg: null,
+  abv: 5,
+  notes: "Brassage C1",
+  mesures: []
+}, {
+  id: 47,
+  recette: "La Pèrlimpinpin",
+  volume: 0,
+  statut: "planifié",
+  dateDebut: "2026-05-28",
+  dateCond: null,
+  fermenteur: "C2",
+  og: null,
+  fg: null,
+  abv: 6.5,
+  notes: "Enfutage C2",
+  mesures: []
 }];
 const STOCK_COND_INIT = [{
   id: 1,
@@ -3171,6 +3336,1288 @@ const LOCATIONS_INIT = [{
   tarif: 45,
   statut: "confirmée",
   notes: "Repas de printemps"
+}, {
+  id: 4,
+  client: "MALLET Clement",
+  tel: "0673324497",
+  dateDebut: "2026-04-29",
+  dateFin: "2026-05-06",
+  tireuses: [4],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "20L",
+    "nbFuts": 1,
+    "volTotal": 20
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "20L",
+    "nbFuts": 1,
+    "volTotal": 20
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 5,
+  client: "[Période complète]",
+  tel: "",
+  dateDebut: "2026-04-29",
+  dateFin: "2026-04-30",
+  tireuses: [],
+  futs: [],
+  tarif: 0,
+  statut: "bloqué",
+  notes: ""
+}, {
+  id: 6,
+  client: "Le QUERE Aurélie",
+  tel: "",
+  dateDebut: "2026-04-30",
+  dateFin: "2026-05-04",
+  tireuses: [5],
+  futs: [],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 7,
+  client: "Julien Audreno",
+  tel: "0788804419",
+  dateDebut: "2026-04-30",
+  dateFin: "2026-05-04",
+  tireuses: [1],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 40
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 8,
+  client: "BOSSIS Antoine",
+  tel: "0618552435",
+  dateDebut: "2026-04-30",
+  dateFin: "2026-05-04",
+  tireuses: [7],
+  futs: [],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 9,
+  client: "APE Pré vert Baptiste",
+  tel: "0628535553",
+  dateDebut: "2026-04-30",
+  dateFin: "2026-05-04",
+  tireuses: [2],
+  futs: [],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 10,
+  client: "FRATTI Stéphane",
+  tel: "0669566976",
+  dateDebut: "2026-04-30",
+  dateFin: "2026-05-04",
+  tireuses: [3],
+  futs: [{
+    "biere": "Single Hop",
+    "typeFut": "30L",
+    "nbFuts": 1,
+    "volTotal": 30
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 11,
+  client: "Lanohé Martin",
+  tel: "0698632290",
+  dateDebut: "2026-04-30",
+  dateFin: "2026-05-04",
+  tireuses: [8],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 50
+  }, {
+    "biere": "...???",
+    "typeFut": "20L",
+    "nbFuts": 1,
+    "volTotal": 20
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 12,
+  client: "Yann Picool",
+  tel: "",
+  dateDebut: "2026-04-30",
+  dateFin: "2026-05-04",
+  tireuses: [6],
+  futs: [{
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "20L",
+    "nbFuts": 1,
+    "volTotal": 20
+  }, {
+    "biere": "La Blonde des Papas",
+    "typeFut": "20L",
+    "nbFuts": 1,
+    "volTotal": 20
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 13,
+  client: "Sans tireuse André",
+  tel: "",
+  dateDebut: "2026-04-30",
+  dateFin: "2026-05-04",
+  tireuses: [],
+  futs: [{
+    "biere": "L'Impèrtinente",
+    "typeFut": "30L",
+    "nbFuts": 1,
+    "volTotal": 30
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 1,
+    "volTotal": 30
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 14,
+  client: "1BEC CO2 BOUILLON",
+  tel: "",
+  dateDebut: "2026-05-07",
+  dateFin: "2026-05-11",
+  tireuses: [8, 7, 1],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 27,
+    "volTotal": 800
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 24,
+    "volTotal": 700
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: "2BCG+2BCF+1BEC"
+}, {
+  id: 15,
+  client: "HERVY Odile",
+  tel: "0618361597",
+  dateDebut: "2026-05-07",
+  dateFin: "2026-05-11",
+  tireuses: [5],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "20L",
+    "nbFuts": 2,
+    "volTotal": 40
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 16,
+  client: "Eric Papa Lunatruck",
+  tel: "",
+  dateDebut: "2026-05-07",
+  dateFin: "2026-05-11",
+  tireuses: [2],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "20L",
+    "nbFuts": 3,
+    "volTotal": 60
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 17,
+  client: "Romain LEURET",
+  tel: "0648231782",
+  dateDebut: "2026-05-07",
+  dateFin: "2026-05-11",
+  tireuses: [4],
+  futs: [],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 18,
+  client: "Clara (Ben)",
+  tel: "",
+  dateDebut: "2026-05-07",
+  dateFin: "2026-05-11",
+  tireuses: [3],
+  futs: [{
+    "biere": "L'Impèrtinente",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 60
+  }, {
+    "biere": "La Pèrchée",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 50
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 19,
+  client: "Sans Tireuse - FRANCHET Hadrien",
+  tel: "0623389858",
+  dateDebut: "2026-05-07",
+  dateFin: "2026-05-11",
+  tireuses: [],
+  futs: [{
+    "biere": "L'Impèrtinente",
+    "typeFut": "30L",
+    "nbFuts": 4,
+    "volTotal": 120
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 20,
+  client: "ROUCHET Adrien",
+  tel: "0616917700",
+  dateDebut: "2026-05-07",
+  dateFin: "2026-05-11",
+  tireuses: [6],
+  futs: [{
+    "biere": "La Pèrchée",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 60
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 60
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 21,
+  client: "Aurelien Mallard",
+  tel: "0622972305",
+  dateDebut: "2026-05-13",
+  dateFin: "2026-05-18",
+  tireuses: [1],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 4,
+    "volTotal": 120
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 22,
+  client: "Association Commerçants St Antoine",
+  tel: "",
+  dateDebut: "2026-05-13",
+  dateFin: "2026-05-18",
+  tireuses: [8],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 60
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 60
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 23,
+  client: "[Période complète]",
+  tel: "",
+  dateDebut: "2026-05-13",
+  dateFin: "2026-05-18",
+  tireuses: [],
+  futs: [],
+  tarif: 0,
+  statut: "bloqué",
+  notes: ""
+}, {
+  id: 24,
+  client: "Bernardeau Elisa",
+  tel: "0673998950",
+  dateDebut: "2026-05-13",
+  dateFin: "2026-05-18",
+  tireuses: [4],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "20L",
+    "nbFuts": 4,
+    "volTotal": 80
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "20L",
+    "nbFuts": 3,
+    "volTotal": 60
+  }, {
+    "biere": "L'Impèrtinente",
+    "typeFut": "20L",
+    "nbFuts": 2,
+    "volTotal": 40
+  }, {
+    "biere": "La Pèrchée",
+    "typeFut": "20L",
+    "nbFuts": 1,
+    "volTotal": 20
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 25,
+  client: "Reste 2BCG",
+  tel: "",
+  dateDebut: "2026-05-13",
+  dateFin: "2026-05-14",
+  tireuses: [8],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 26,
+  client: "Poux Adeline",
+  tel: "0670188907",
+  dateDebut: "2026-05-15",
+  dateFin: "2026-05-17",
+  tireuses: [5],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 60
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 27,
+  client: "GAUTHIER Claude-Yves",
+  tel: "0656672061",
+  dateDebut: "2026-05-15",
+  dateFin: "2026-05-18",
+  tireuses: [2],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 28,
+  client: "CHEYROUZE Frederic",
+  tel: "0675234973",
+  dateDebut: "2026-05-15",
+  dateFin: "2026-05-18",
+  tireuses: [6],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 5,
+    "volTotal": 150
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 29,
+  client: "Bike park Montaigu Emmanuel",
+  tel: "0642797199",
+  dateDebut: "2026-05-15",
+  dateFin: "2026-05-18",
+  tireuses: [7],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 5,
+    "volTotal": 150
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 5,
+    "volTotal": 150
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 30,
+  client: "Franck JUSTICE",
+  tel: "0610251651",
+  dateDebut: "2026-05-15",
+  dateFin: "2026-05-18",
+  tireuses: [3],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 1,
+    "volTotal": 30
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 31,
+  client: "Pallard",
+  tel: "",
+  dateDebut: "2026-05-21",
+  dateFin: "2026-05-23",
+  tireuses: [6],
+  futs: [],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 32,
+  client: "*2 BEC Asso ASAG VTT",
+  tel: "",
+  dateDebut: "2026-05-22",
+  dateFin: "2026-05-25",
+  tireuses: [5],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 4,
+    "volTotal": 110
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 4,
+    "volTotal": 100
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 33,
+  client: "Papier Sensible Karine",
+  tel: "0619230356",
+  dateDebut: "2026-05-22",
+  dateFin: "2026-05-25",
+  tireuses: [1],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "20L",
+    "nbFuts": 2,
+    "volTotal": 40
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 34,
+  client: "[Période complète]",
+  tel: "",
+  dateDebut: "2026-05-22",
+  dateFin: "2026-05-25",
+  tireuses: [],
+  futs: [],
+  tarif: 0,
+  statut: "bloqué",
+  notes: ""
+}, {
+  id: 35,
+  client: "+2BCF + 1BEC ACSG",
+  tel: "",
+  dateDebut: "2026-05-22",
+  dateFin: "2026-05-25",
+  tireuses: [8, 7, 2],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 15,
+    "volTotal": 450
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 15,
+    "volTotal": 450
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: "2BCG+2BCF+1BEC"
+}, {
+  id: 36,
+  client: "BERNARDEAU Jean-Marc",
+  tel: "0744797899",
+  dateDebut: "2026-05-22",
+  dateFin: "2026-05-27",
+  tireuses: [3],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 1,
+    "volTotal": 30
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 37,
+  client: "Léa Feree",
+  tel: "0611108210",
+  dateDebut: "2026-05-22",
+  dateFin: "2026-05-25",
+  tireuses: [4],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 50
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 50
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 38,
+  client: "Ben Jafar",
+  tel: "",
+  dateDebut: "2026-05-23",
+  dateFin: "2026-05-26",
+  tireuses: [6],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 39,
+  client: "Label'Asso Thomas",
+  tel: "0609491944",
+  dateDebut: "2026-05-29",
+  dateFin: "2026-06-01",
+  tireuses: [6],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 5,
+    "volTotal": 150
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 5,
+    "volTotal": 150
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 40,
+  client: "ARTHUR",
+  tel: "",
+  dateDebut: "2026-05-29",
+  dateFin: "2026-06-01",
+  tireuses: [4],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 41,
+  client: "sans tireuse MALLASSAGNE Christophe",
+  tel: "0782262518",
+  dateDebut: "2026-05-29",
+  dateFin: "2026-06-01",
+  tireuses: [],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 3,
+    "volTotal": 80
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 50
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 42,
+  client: "Laureline & Antoine",
+  tel: "",
+  dateDebut: "2026-05-29",
+  dateFin: "2026-06-01",
+  tireuses: [5],
+  futs: [{
+    "biere": "La Pèrchée",
+    "typeFut": "30L",
+    "nbFuts": 1,
+    "volTotal": 30
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 1,
+    "volTotal": 30
+  }, {
+    "biere": "L'Impèrtinente",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 50
+  }],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 43,
+  client: "BLANCHARD Linda",
+  tel: "0619704705",
+  dateDebut: "2026-05-29",
+  dateFin: "2026-06-01",
+  tireuses: [1],
+  futs: [],
+  tarif: 0,
+  statut: "confirmée",
+  notes: ""
+}, {
+  id: 44,
+  client: "Isabelle BOSSIS",
+  tel: "0679663918",
+  dateDebut: "2026-06-05",
+  dateFin: "2026-06-08",
+  tireuses: [2],
+  futs: [{
+    "biere": "L'Impèrtinente",
+    "typeFut": "20L",
+    "nbFuts": 1,
+    "volTotal": 20
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 45,
+  client: "APE école Claire Doré Graslin",
+  tel: "",
+  dateDebut: "2026-06-05",
+  dateFin: "2026-06-08",
+  tireuses: [4],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 5,
+    "volTotal": 140
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 5,
+    "volTotal": 140
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 46,
+  client: "Etienne RIBEROT",
+  tel: "0631376612",
+  dateDebut: "2026-06-05",
+  dateFin: "2026-06-08",
+  tireuses: [6],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 47,
+  client: "Association Commerçants St Antoine",
+  tel: "",
+  dateDebut: "2026-06-05",
+  dateFin: "2026-06-08",
+  tireuses: [5],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 60
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 60
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 48,
+  client: "GAUTHIER Claude-Yves",
+  tel: "0656672061",
+  dateDebut: "2026-06-12",
+  dateFin: "2026-06-15",
+  tireuses: [3],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 49,
+  client: "Mathieu FLEURANCE",
+  tel: "0767874960",
+  dateDebut: "2026-06-12",
+  dateFin: "2026-06-23",
+  tireuses: [4],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 50,
+  client: "resto MAD Clisson",
+  tel: "",
+  dateDebut: "2026-06-16",
+  dateFin: "2026-06-22",
+  tireuses: [1],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 3,
+    "volTotal": 90
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 51,
+  client: "Les Papas Hellfest",
+  tel: "",
+  dateDebut: "2026-06-16",
+  dateFin: "2026-06-22",
+  tireuses: [8, 6],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: "2BCG+2BARI"
+}, {
+  id: 52,
+  client: "Nandin Emeric",
+  tel: "0649676436",
+  dateDebut: "2026-06-17",
+  dateFin: "2026-06-22",
+  tireuses: [5],
+  futs: [{
+    "biere": "La Pèrchée",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 60
+  }, {
+    "biere": "L'Impèrtinente",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 40
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 53,
+  client: "2 BCF BRELFEST",
+  tel: "",
+  dateDebut: "2026-06-19",
+  dateFin: "2026-06-22",
+  tireuses: [],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 10,
+    "volTotal": 280
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 54,
+  client: "2*2BEC+1BEC La récuperette",
+  tel: "",
+  dateDebut: "2026-06-26",
+  dateFin: "2026-06-30",
+  tireuses: [5, 2],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 8,
+    "volTotal": 240
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 7,
+    "volTotal": 210
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: "2BEC+1BEC"
+}, {
+  id: 55,
+  client: "Fete école Simone Veil APE ST Hilaire (mail)",
+  tel: "",
+  dateDebut: "2026-06-26",
+  dateFin: "2026-06-29",
+  tireuses: [3],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 3,
+    "volTotal": 90
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 56,
+  client: "Jim",
+  tel: "0631412986",
+  dateDebut: "2026-06-26",
+  dateFin: "2026-06-29",
+  tireuses: [1],
+  futs: [{
+    "biere": "L'Impèrtinente",
+    "typeFut": "20L",
+    "nbFuts": 3,
+    "volTotal": 60
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 57,
+  client: "2 BEC COUTINHO Elodie",
+  tel: "0689585776",
+  dateDebut: "2026-06-26",
+  dateFin: "2026-06-29",
+  tireuses: [4],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 58,
+  client: "ECOLE JACQUES PREVERT",
+  tel: "",
+  dateDebut: "2026-06-26",
+  dateFin: "2026-06-29",
+  tireuses: [7],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 59,
+  client: "2 BEC Legault Cécile",
+  tel: "",
+  dateDebut: "2026-07-01",
+  dateFin: "2026-07-01",
+  tireuses: [4],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 60,
+  client: "1 BEC VINET David",
+  tel: "0681201996",
+  dateDebut: "2026-07-03",
+  dateFin: "2026-07-06",
+  tireuses: [1],
+  futs: [{
+    "biere": "L'Impèrtinente",
+    "typeFut": "20L",
+    "nbFuts": 2,
+    "volTotal": 40
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 61,
+  client: "EVANO Adrien",
+  tel: "0637288428",
+  dateDebut: "2026-07-03",
+  dateFin: "2026-07-06",
+  tireuses: [3],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 62,
+  client: "Label'asso Thomas",
+  tel: "0609491944",
+  dateDebut: "2026-07-03",
+  dateFin: "2026-07-06",
+  tireuses: [7],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 5,
+    "volTotal": 150
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 63,
+  client: "2 Becs Elise Salmon (Ben)",
+  tel: "",
+  dateDebut: "2026-07-10",
+  dateFin: "2026-07-13",
+  tireuses: [5],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 64,
+  client: "LEGAULT Cécile",
+  tel: "",
+  dateDebut: "2026-07-10",
+  dateFin: "2026-07-13",
+  tireuses: [4],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 65,
+  client: "NOGUES Océane",
+  tel: "0607095499",
+  dateDebut: "2026-07-10",
+  dateFin: "2026-07-13",
+  tireuses: [2],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 1,
+    "volTotal": 30
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 66,
+  client: "CERISIER Frederic",
+  tel: "0681681168",
+  dateDebut: "2026-07-10",
+  dateFin: "2026-07-11",
+  tireuses: [1],
+  futs: [{
+    "biere": "+ 1x20L + 60 gobelets",
+    "typeFut": "30L",
+    "nbFuts": 3,
+    "volTotal": 90
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 67,
+  client: "VIGNON Charles",
+  tel: "0668570899",
+  dateDebut: "2026-07-10",
+  dateFin: "2026-07-16",
+  tireuses: [7],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 68,
+  client: "Guillaume Lenne",
+  tel: "0677508518",
+  dateDebut: "2026-07-10",
+  dateFin: "2026-07-16",
+  tireuses: [3],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 60
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 69,
+  client: "GAUTHIER Jérémy",
+  tel: "0683428612",
+  dateDebut: "2026-07-17",
+  dateFin: "2026-07-20",
+  tireuses: [1],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 5,
+    "volTotal": 150
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "30L",
+    "nbFuts": 1,
+    "volTotal": 30
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 70,
+  client: "Aymeric",
+  tel: "0680925084",
+  dateDebut: "2026-07-17",
+  dateFin: "2026-07-20",
+  tireuses: [4],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "20L",
+    "nbFuts": 2,
+    "volTotal": 40
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 71,
+  client: "RICHARD Jean-François",
+  tel: "0608510407",
+  dateDebut: "2026-07-17",
+  dateFin: "2026-07-20",
+  tireuses: [5],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 72,
+  client: "Alban Guillet",
+  tel: "0625660896",
+  dateDebut: "2026-07-24",
+  dateFin: "2026-07-27",
+  tireuses: [4],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 73,
+  client: "DUCLOS Abélia",
+  tel: "0778317620",
+  dateDebut: "2026-08-01",
+  dateFin: "2026-08-02",
+  tireuses: [5],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 3,
+    "volTotal": 80
+  }, {
+    "biere": "de perchée",
+    "typeFut": "30L",
+    "nbFuts": 3,
+    "volTotal": 80
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 74,
+  client: "Volley Club Clisson",
+  tel: "",
+  dateDebut: "2026-08-14",
+  dateFin: "2026-08-17",
+  tireuses: [8, 7],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 34,
+    "volTotal": 1000
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: "2BCG+2BCF"
+}, {
+  id: 75,
+  client: "Guillaume Charon mail",
+  tel: "",
+  dateDebut: "2026-08-21",
+  dateFin: "2026-08-24",
+  tireuses: [2],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 76,
+  client: "Cyril",
+  tel: "0664112698",
+  dateDebut: "2026-08-21",
+  dateFin: "2026-08-24",
+  tireuses: [3],
+  futs: [{
+    "biere": "L'Impèrtinente",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 60
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 77,
+  client: "PETAVY Stéphanie",
+  tel: "0658073896",
+  dateDebut: "2026-08-28",
+  dateFin: "2026-08-31",
+  tireuses: [1],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 78,
+  client: "Asso QNANS (Tatiana mail)",
+  tel: "",
+  dateDebut: "2026-09-10",
+  dateFin: "2026-09-14",
+  tireuses: [4],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 79,
+  client: "Bachelier Fabien",
+  tel: "0633682670",
+  dateDebut: "2026-09-10",
+  dateFin: "2026-09-14",
+  tireuses: [2],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 60
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 80,
+  client: "GALLON Sylvain",
+  tel: "0620850862",
+  dateDebut: "2026-09-10",
+  dateFin: "2026-09-14",
+  tireuses: [5],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "30L",
+    "nbFuts": 2,
+    "volTotal": 60
+  }, {
+    "biere": "La Pèrlimpinpin",
+    "typeFut": "20L",
+    "nbFuts": 2,
+    "volTotal": 40
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 81,
+  client: "KONCAR Quentin",
+  tel: "0638026631",
+  dateDebut: "2026-09-17",
+  dateFin: "2026-09-21",
+  tireuses: [4],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "20L",
+    "nbFuts": 2,
+    "volTotal": 40
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 82,
+  client: "FERNEL Fréderique",
+  tel: "0629183142",
+  dateDebut: "2026-09-25",
+  dateFin: "2026-09-28",
+  tireuses: [5],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 83,
+  client: "Dominique voisin",
+  tel: "",
+  dateDebut: "2026-10-02",
+  dateFin: "2026-10-05",
+  tireuses: [3],
+  futs: [{
+    "biere": "La Blonde des Papas",
+    "typeFut": "20L",
+    "nbFuts": 2,
+    "volTotal": 40
+  }],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 84,
+  client: "Pallard",
+  tel: "",
+  dateDebut: "2026-10-15",
+  dateFin: "2026-10-19",
+  tireuses: [6],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
+}, {
+  id: 85,
+  client: "Marie-Didier Laval",
+  tel: "",
+  dateDebut: "2026-10-30",
+  dateFin: "2026-11-02",
+  tireuses: [1],
+  futs: [],
+  tarif: 0,
+  statut: "en attente",
+  notes: ""
 }];
 const TARIFS_LOC = {
   tireuse1j: 30,
@@ -11928,135 +13375,168 @@ function VuePlanning({
     retournée: T.creamDim,
     annulée: T.red
   };
-  const PlanSemaine = () => /*#__PURE__*/React.createElement("div", {
-    style: {
-      overflowX: 'auto',
-      WebkitOverflowScrolling: 'touch'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      minWidth: 360
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'grid',
-      gridTemplateColumns: '52px repeat(7,1fr)',
-      gap: 2,
-      marginBottom: 3
-    }
-  }, /*#__PURE__*/React.createElement("div", null), days.map((d, i) => {
-    const nb = locDay(d).length;
+  const PlanSemaine = () => {
+    const fmtISO = d => {
+      const y = d.getFullYear(),
+        m = String(d.getMonth() + 1).padStart(2, '0'),
+        dd = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${dd}`;
+    };
+    const w0 = fmtISO(days[0]);
+    const w6 = fmtISO(days[6]);
     return /*#__PURE__*/React.createElement("div", {
-      key: `k${i}`,
       style: {
-        background: isTod(d) ? T.amber : T.bgMid,
-        borderRadius: 7,
-        padding: '6px 2px',
-        textAlign: 'center',
-        border: `1px solid ${isTod(d) ? T.amber : T.border}`
+        overflowX: 'auto',
+        WebkitOverflowScrolling: 'touch'
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 10,
-        fontWeight: 700,
-        color: isTod(d) ? T.bgCard : T.creamDim,
-        fontFamily: FM,
-        textTransform: 'uppercase',
-        letterSpacing: 0.3
+        minWidth: 360
       }
-    }, fmtWD(d)), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 16,
-        fontWeight: 900,
-        color: isTod(d) ? T.bgCard : T.cream,
-        lineHeight: 1.1
-      }
-    }, fmtDay(d)), nb > 0 && /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 8,
-        marginTop: 1,
-        color: isTod(d) ? T.bgCard : T.amber,
-        fontFamily: FM
-      }
-    }, nb, " loc."));
-  })), tireuses.map(t => {
-    return /*#__PURE__*/React.createElement("div", {
-      key: t.id,
+    }, /*#__PURE__*/React.createElement("div", {
       style: {
         display: 'grid',
         gridTemplateColumns: '52px repeat(7,1fr)',
         gap: 2,
-        marginBottom: 2
+        marginBottom: 3
       }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        background: T.bgMid,
-        borderRadius: 7,
-        padding: '4px 5px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        borderLeft: `3px solid ${t.couleur}`,
-        minHeight: 44
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 11,
-        fontWeight: 900,
-        color: t.couleur,
-        fontFamily: FB,
-        lineHeight: 1
-      }
-    }, t.nom), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 8,
-        color: T.creamDim,
-        fontFamily: FM,
-        marginTop: 1,
-        lineHeight: 1
-      }
-    }, t.label)), days.map((d, di) => {
-      const locs = locDay(d).filter(l => l.tireuses?.includes(t.id));
-      const is = isTod(d);
+    }, /*#__PURE__*/React.createElement("div", null), days.map((d, i) => {
+      const nb = locDay(d).length;
       return /*#__PURE__*/React.createElement("div", {
-        key: di,
+        key: `k${i}`,
         style: {
-          background: locs.length ? (SCOL[locs[0].statut] || T.green) + '1A' : is ? T.amberPale + '30' : T.bgCard,
-          border: `1px solid ${is ? T.amber + '50' : locs.length ? SCOL[locs[0].statut] + '40' : T.border}`,
-          borderRadius: 6,
-          minHeight: 44,
-          padding: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 1
-        }
-      }, locs.map((l, li) => /*#__PURE__*/React.createElement("div", {
-        key: li,
-        onClick: () => onClickLoc(l),
-        style: {
-          flex: 1,
-          borderRadius: 4,
-          padding: '3px 5px',
-          cursor: 'pointer',
-          background: (SCOL[l.statut] || T.green) + '28',
-          borderLeft: `2px solid ${SCOL[l.statut] || T.green}`,
-          overflow: 'hidden',
-          minHeight: 18
+          background: isTod(d) ? T.amber : T.bgMid,
+          borderRadius: 7,
+          padding: '6px 2px',
+          textAlign: 'center',
+          border: `1px solid ${isTod(d) ? T.amber : T.border}`
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
           fontSize: 10,
           fontWeight: 700,
-          color: SCOL[l.statut] || T.green,
-          lineHeight: 1.2,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-          fontFamily: FB
+          color: isTod(d) ? T.bgCard : T.creamDim,
+          fontFamily: FM,
+          textTransform: 'uppercase',
+          letterSpacing: 0.3
         }
-      }, l.client))));
-    }));
-  })));
+      }, fmtWD(d)), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 16,
+          fontWeight: 900,
+          color: isTod(d) ? T.bgCard : T.cream,
+          lineHeight: 1.1
+        }
+      }, fmtDay(d)), nb > 0 && /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 8,
+          marginTop: 1,
+          color: isTod(d) ? T.bgCard : T.amber,
+          fontFamily: FM
+        }
+      }, nb, " loc."));
+    })), tireuses.map(t => {
+      const tLocs = locations.filter(l => l.statut !== 'annulée' && l.tireuses?.includes(t.id) && l.dateFin >= w0 && l.dateDebut <= w6);
+      return /*#__PURE__*/React.createElement("div", {
+        key: t.id,
+        style: {
+          display: 'grid',
+          gridTemplateColumns: '52px repeat(7,1fr)',
+          gap: 2,
+          marginBottom: 2
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          gridColumn: 1,
+          gridRow: 1,
+          background: T.bgMid,
+          borderRadius: 7,
+          padding: '4px 5px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          borderLeft: `3px solid ${t.couleur}`,
+          minHeight: 44
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 11,
+          fontWeight: 900,
+          color: t.couleur,
+          fontFamily: FB,
+          lineHeight: 1
+        }
+      }, t.nom), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 8,
+          color: T.creamDim,
+          fontFamily: FM,
+          marginTop: 1,
+          lineHeight: 1
+        }
+      }, t.label)), days.map((d, di) => {
+        const is = isTod(d);
+        const ds = fmtISO(d);
+        const dl = tLocs.find(l => ds >= l.dateDebut && ds <= l.dateFin);
+        const col = SCOL[dl?.statut] || T.green;
+        return /*#__PURE__*/React.createElement("div", {
+          key: `bg${di}`,
+          style: {
+            gridColumn: di + 2,
+            gridRow: 1,
+            background: dl ? col + '15' : is ? T.amberPale + '30' : T.bgCard,
+            border: `1px solid ${is ? T.amber + '50' : dl ? col + '35' : T.border}`,
+            borderRadius: 6,
+            minHeight: 44
+          }
+        });
+      }), tLocs.map((l, li) => {
+        let s = -1,
+          e = -1;
+        days.forEach((d, i) => {
+          const ds = fmtISO(d);
+          if (ds >= l.dateDebut && ds <= l.dateFin) {
+            if (s < 0) s = i;
+            e = i;
+          }
+        });
+        if (s < 0) return null;
+        const col = SCOL[l.statut] || T.green;
+        return /*#__PURE__*/React.createElement("div", {
+          key: `bar${li}`,
+          onClick: () => onClickLoc(l),
+          style: {
+            gridColumn: `${s + 2} / ${e + 3}`,
+            gridRow: 1,
+            zIndex: 1,
+            position: 'relative',
+            background: col + '30',
+            border: `1px solid ${col}60`,
+            borderLeft: `3px solid ${col}`,
+            borderRadius: 6,
+            padding: '4px 7px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            overflow: 'hidden',
+            minHeight: 44,
+            boxSizing: 'border-box'
+          }
+        }, /*#__PURE__*/React.createElement("div", {
+          style: {
+            fontSize: 10,
+            fontWeight: 700,
+            color: col,
+            lineHeight: 1.2,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            fontFamily: FB
+          }
+        }, l.client));
+      }));
+    })));
+  };
   const PlanMois = () => {
     const WDS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
     const inM = d => d.getMonth() === moisRef?.getMonth();

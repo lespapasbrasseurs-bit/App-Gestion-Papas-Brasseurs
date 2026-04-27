@@ -162,26 +162,26 @@ const STOCK_INIT=[
 ];
 
 const RECETTES_INIT=[
- {id:1,nom:"L'Impèrtinente",style:"APA",abv:6.0,ibu:35,srm:5,og:1.049,fg:1.006,volume:300,permanent:true,prix:{b33:2.80,b75:6.50,f20:85,f30:125},description:"Notre rockstar ! Blonde houblonnée, amertume légère et envoutante.",houblons:["Cascade","Mosaic"],levure:"Nottingham",ingredients:[{nom:"Pale",qte:300,u:"kg"},{nom:"Pilsen",qte:150,u:"kg"},{nom:"Cascade",qte:6,u:"kg"},{nom:"Mosaic",qte:6,u:"kg"},{nom:"Nottingham",qte:0.5,u:"sach"}]},
- {id:2,nom:"La Pèrchée",style:"Blanche",abv:4.5,ibu:15,srm:3,og:1.037,fg:1.004,volume:300,permanent:true,prix:{b33:2.60,b75:6.00,f20:75,f30:110},description:"Brassée sur Terre, notre blanche est dans la Lune.",houblons:["Cascade","Mosaic"],levure:"WB-06",ingredients:[{nom:"Blé",qte:62.5,u:"kg"},{nom:"Pilsen",qte:37.5,u:"kg"},{nom:"Cascade",qte:1,u:"kg"},{nom:"Mosaic",qte:2,u:"kg"},{nom:"WB-06",qte:0.25,u:"sach"}]},
- {id:3,nom:"La Pèrilleuse",style:"Ambrée",abv:6.0,ibu:28,srm:18,og:1.061,fg:1.020,volume:300,permanent:true,prix:{b33:2.80,b75:6.50,f20:85,f30:125},description:"Pleine de rebondissements, parfum caramel et douce amertume.",houblons:["Chinook"],levure:"S-04",ingredients:[{nom:"Pale",qte:275,u:"kg"},{nom:"Cara 240",qte:20,u:"kg"},{nom:"Chinook",qte:4,u:"kg"},{nom:"S-04",qte:0.5,u:"sach"}]},
- {id:4,nom:"La Pèrlimpinpin",style:"IPA",abv:6.5,ibu:60,srm:7,og:1.056,fg:1.008,volume:300,permanent:true,prix:{b33:3.20,b75:7.50,f20:95,f30:140},description:"Laisse-toi ensorceler. Blonde dorée à l'alchimie parfaite.",houblons:["Cascade","Mosaic","Chinook"],levure:"Nottingham",ingredients:[{nom:"Pale",qte:325,u:"kg"},{nom:"Pilsen",qte:87.5,u:"kg"},{nom:"Cascade",qte:9.6,u:"kg"},{nom:"Mosaic",qte:6,u:"kg"},{nom:"Nottingham",qte:0.5,u:"sach"}]},
- {id:5,nom:"La Supère",style:"Triple",abv:8.5,ibu:22,srm:6,og:1.069,fg:1.009,volume:200,permanent:true,prix:{b33:4.00,b75:9.00,f20:110,f30:160},description:"Avec force et courage, cette blonde musclée, épices et puissante rondeur.",houblons:["Cascade"],levure:"BE256",ingredients:[{nom:"Pale",qte:185,u:"kg"},{nom:"Pilsen",qte:50,u:"kg"},{nom:"Flocon Avoine",qte:25,u:"kg"},{nom:"Coriandre",qte:1,u:"kg"},{nom:"BE256",qte:0.25,u:"sach"}]},
- {id:6,nom:"La Blonde des Papas",style:"Blonde",abv:5.0,ibu:25,srm:7,og:1.047,fg:1.011,volume:300,permanent:true,prix:{b33:2.60,b75:6.00,f20:75,f30:110},description:"Notre blonde légère et limpide, douce, maltée, sans amertume.",houblons:["Nugget","Cascade"],levure:"S-04",ingredients:[{nom:"Pilsen",qte:350,u:"kg"},{nom:"Viene10",qte:75,u:"kg"},{nom:"Nugget",qte:0.5,u:"kg"},{nom:"Cascade",qte:2.4,u:"kg"},{nom:"S-04",qte:0.5,u:"sach"}]},
- {id:7,nom:"La Mèrveilleuse",style:"NEIPA",abv:6.0,ibu:45,srm:5,og:1.059,fg:1.018,volume:200,permanent:false,prix:{b33:3.50,b75:8.00,f20:100,f30:150},description:"Éphémère juteuse et trouble, arômes intenses de fruits tropicaux.",houblons:["Mosaic","Citra","Amarillo"],levure:"NEIPA",ingredients:[{nom:"Pale",qte:155,u:"kg"},{nom:"Blé",qte:75,u:"kg"},{nom:"Flocon Avoine",qte:75,u:"kg"},{nom:"Mosaic",qte:7.2,u:"kg"},{nom:"Citra",qte:9.2,u:"kg"},{nom:"NEIPA",qte:0.5,u:"sach"}]},
- {id:8,nom:"La Mèrlimpinpin",style:"DIPA",abv:8.0,ibu:70,srm:6,og:1.073,fg:1.015,volume:200,permanent:false,prix:{b33:4.50,b75:10.00,f20:120,f30:175},description:"Double IPA puissante.",houblons:["Citra","Sabro","Azacca"],levure:"Nottingham",ingredients:[{nom:"Pale",qte:200,u:"kg"},{nom:"Citra",qte:9.75,u:"kg"},{nom:"Sabro",qte:1.4,u:"kg"},{nom:"Nottingham",qte:0.75,u:"sach"}]},
- {id:9,nom:"La Mary'Stout",style:"Brune",abv:6.0,ibu:45,srm:45,og:1.062,fg:1.020,volume:500,permanent:false,prix:{b33:3.00,b75:7.00,f20:90,f30:130},description:"Brune robuste aux notes de café et chocolat — Chinook aromatique, corps dense et torréfié.",houblons:["Chinook"],levure:"Windsor",ingredients:[{nom:"Viene10",qte:75,u:"kg"},{nom:"Pale",qte:12.5,u:"kg"},{nom:"Cara Vienne 55",qte:12.5,u:"kg"},{nom:"Tourambre",qte:12.5,u:"kg"},{nom:"Flocon Avoine",qte:12.5,u:"kg",note:"non concassé"},{nom:"Cara 240",qte:12,u:"kg"},{nom:"Chocolat",qte:6,u:"kg"},{nom:"Black",qte:5,u:"kg"},{nom:"Amèrisant",qte:0.8,u:"kg",note:"60min"},{nom:"Chinook",qte:1.0,u:"kg",note:"aroma 80°C"},{nom:"Windsor",qte:0.25,u:"kg"}]},
- {id:10,nom:"La Mamagascar",style:"Ambrée épicée",abv:7.0,ibu:21,srm:13,og:1.069,fg:1.020,volume:500,permanent:false,prix:{b33:3.20,b75:7.50,f20:95,f30:140},description:"Ambrée au poivre de Madagascar — maltée, caramel, épices chaudes. Version originale 5HL.",houblons:["Nugget","Chinook","Simcoe"],levure:"Windsor",ingredients:[{nom:"Pale",qte:112.5,u:"kg"},{nom:"Cara Vienne 55",qte:12.5,u:"kg"},{nom:"Tourambre",qte:12.5,u:"kg"},{nom:"Cara 240",qte:4.7,u:"kg"},{nom:"Nugget",qte:0.27,u:"kg",note:"60min"},{nom:"Sucre",qte:20,u:"kg",note:"10min"},{nom:"Chinook",qte:0.5,u:"kg",note:"aroma 80°C"},{nom:"Simcoe",qte:0.5,u:"kg",note:"aroma 80°C"},{nom:"Poivre",qte:0.5,u:"kg",note:"aroma 100°C"},{nom:"Windsor",qte:0.25,u:"kg"},{nom:"Poivre",qte:0.3,u:"kg",note:"DH J+5"}]},
- {id:11,nom:"La Chromamatik",style:"NEIPA",abv:8.0,ibu:20,srm:6,og:1.083,fg:1.028,volume:1200,permanent:false,prix:{b33:3.5,b75:8.0,f20:100,f30:150},description:"NEIPA puissante à 8% — double empatage, dry hop massif Citra + Sabro.",houblons:["Citra","Mistral","Sabro"],levure:"Best coast hazy",ingredients:[{nom:"Pale",qte:112.5,"u":"kg",note:"soir"},{nom:"Flocon Avoine",qte:25,"u":"kg",note:"soir"},{nom:"Pale",qte:12.5,"u":"kg",note:"matin"},{nom:"Pilsen",qte:62.5,"u":"kg",note:"matin"},{nom:"Blé",qte:25,"u":"kg",note:"matin"},{nom:"Sucre",qte:15,"u":"kg",note:"15min"},{nom:"Citra",qte:1.0,"u":"kg",note:"aroma 80°C"},{nom:"Mistral",qte:1.0,"u":"kg",note:"aroma 80°C"},{nom:"Best coast hazy",qte:0.5,"u":"kg"},{nom:"Citra",qte:6.0,"u":"kg",note:"DH J+2"},{nom:"Sabro",qte:6.0,"u":"kg",note:"DH J+5"}]},
- {id:12,nom:"La Cold IPA",style:"Cold IPA",abv:5.0,ibu:38,srm:4,og:1.043,fg:1.005,volume:1200,permanent:false,prix:{b33:2.8,b75:6.5,f20:85,f30:125},description:"Cold IPA fermentation froide — dry hop massif Centennial 5kg.",houblons:["Nugget","Centennial"],levure:"Nova Lager",ingredients:[{nom:"Pilsen",qte:87.5,"u":"kg"},{nom:"Flocon Maïs",qte:30,"u":"kg"},{nom:"Nugget",qte:0.5,"u":"kg",note:"60min"},{nom:"Centennial",qte:0.2,"u":"kg",note:"10min"},{nom:"Centennial",qte:1.5,"u":"kg",note:"aroma 80°C"},{nom:"Nova Lager",qte:0.5,"u":"kg"},{nom:"Centennial",qte:5.0,"u":"kg",note:"DH J+4"}]},
- {id:13,nom:"La Daarønn",style:"Kveik IPA",abv:7.0,ibu:74,srm:6,og:1.062,fg:1.011,volume:1200,permanent:false,prix:{b33:3.0,b75:7.0,f20:90,f30:135},description:"Kveik IPA fermentée à 35°C — amertume franche, Centennial + Azacca en dry hop.",houblons:["Simcoe","Centennial","Azacca"],levure:"Kveik",ingredients:[{nom:"Pale",qte:75,"u":"kg"},{nom:"Viene10",qte:25,"u":"kg"},{nom:"Blé",qte:12.5,"u":"kg"},{nom:"Flocon Avoine",qte:25,"u":"kg",note:"non concassé"},{nom:"Simcoe",qte:1.0,"u":"kg",note:"60min"},{nom:"Centennial",qte:0.4,"u":"kg",note:"20min"},{nom:"Simcoe",qte:0.7,"u":"kg",note:"aroma 80°C"},{nom:"Centennial",qte:0.6,"u":"kg",note:"aroma 80°C"},{nom:"Sucre",qte:15,"u":"kg",note:"10min"},{nom:"Kveik",qte:0.5,"u":"kg"},{nom:"Centennial",qte:1.5,"u":"kg",note:"DH"},{nom:"Azacca",qte:2.5,"u":"kg",note:"DH"}]},
- {id:14,nom:"La Daddy Cool Gose",style:"Gose fruitée",abv:4.0,ibu:10,srm:4,og:1.045,fg:1.012,volume:500,permanent:false,prix:{b33:2.8,b75:6.5,f20:85,f30:125},description:"Gose Ananas Kiwi — sour légère, sel et coriandre, 80kg de fruits en dry hop.",houblons:["Nugget","Elixir"],levure:"Phily sour",ingredients:[{nom:"Pilsen",qte:50,"u":"kg"},{nom:"Blé",qte:50,"u":"kg"},{nom:"Nugget",qte:0.1,"u":"kg",note:"60min"},{nom:"Coriandre",qte:0.7,"u":"kg",note:"15min"},{nom:"Elixir",qte:0.1,"u":"kg",note:"10min"},{nom:"Elixir",qte:0.4,"u":"kg",note:"aroma 80°C"},{nom:"Phily sour",qte:0.5,"u":"kg"},{nom:"Ananas purée",qte:40,"u":"kg",note:"DH J+0"},{nom:"Kiwi purée",qte:40,"u":"kg",note:"DH J+0"}]},
- {id:15,nom:"La Habemouss Papa",style:"West Coast IPA",abv:7.0,ibu:50,srm:7,og:1.051,fg:1.0,volume:1200,permanent:false,prix:{b33:3.0,b75:7.0,f20:90,f30:135},description:"West Coast IPA sèche et amère — Mosaic + Idaho7 en dry hop, haute atténuation.",houblons:["Nugget","Simcoe","Mosaic","Idaho7"],levure:"BRY 97",ingredients:[{nom:"Pale",qte:100,"u":"kg"},{nom:"Cara Pils",qte:25,"u":"kg"},{nom:"Flocon Seigle",qte:12.5,"u":"kg",note:"non concassé"},{nom:"Nugget",qte:0.6,"u":"kg",note:"60min"},{nom:"Simcoe",qte:1.5,"u":"kg",note:"aroma 80°C"},{nom:"Mosaic",qte:1.5,"u":"kg",note:"aroma 80°C"},{nom:"BRY 97",qte:0.5,"u":"kg"},{nom:"Mosaic",qte:1.0,"u":"kg",note:"DH"},{nom:"Idaho7",qte:2.0,"u":"kg",note:"DH"}]},
- {id:16,nom:"La Mamagascard",style:"Ambrée épicée",abv:7.0,ibu:21,srm:13,og:1.069,fg:1.02,volume:500,permanent:false,prix:{b33:3.0,b75:7.0,f20:90,f30:135},description:"Ambrée au poivre de Madagascar — maltée, caramel, épices chaudes. Poivre en dry hop J+5.",houblons:["Nugget","Chinook","Simcoe"],levure:"Windsor",ingredients:[{nom:"Pale",qte:112.5,"u":"kg"},{nom:"Cara Vienne 55",qte:12.5,"u":"kg"},{nom:"Tourambre",qte:12.5,"u":"kg"},{nom:"Cara 240",qte:4.7,"u":"kg"},{nom:"Nugget",qte:0.27,"u":"kg",note:"60min"},{nom:"Sucre",qte:20,"u":"kg",note:"10min"},{nom:"Chinook",qte:0.5,"u":"kg",note:"aroma 80°C"},{nom:"Simcoe",qte:0.5,"u":"kg",note:"aroma 80°C"},{nom:"Poivre",qte:0.5,"u":"kg",note:"aroma 100°C"},{nom:"Windsor",qte:0.25,"u":"kg"},{nom:"Poivre",qte:0.3,"u":"kg",note:"DH J+5"}]},
- {id:17,nom:"La Mèrcure",style:"Session IPA",abv:4.0,ibu:25,srm:4,og:1.034,fg:1.006,volume:500,permanent:false,prix:{b33:2.6,b75:6.0,f20:75,f30:115},description:"Session IPA légère — Verdant, dry hop Mistral + Cascade pour finir en douceur.",houblons:["Mistral","Elixir","Cascade"],levure:"Verdant",ingredients:[{nom:"Pale",qte:50,"u":"kg"},{nom:"Blé",qte:25,"u":"kg"},{nom:"Flocon Avoine",qte:12.5,"u":"kg"},{nom:"Mistral",qte:0.65,"u":"kg",note:"60min"},{nom:"Elixir",qte:1.0,"u":"kg",note:"aroma 80°C"},{nom:"Verdant",qte:0.5,"u":"kg"},{nom:"Mistral",qte:2.0,"u":"kg",note:"DH"},{nom:"Cascade",qte:1.0,"u":"kg",note:"DH"}]},
- {id:18,nom:"La Papa Poule",style:"Sour fruitée",abv:3.5,ibu:12,srm:4,og:1.041,fg:1.009,volume:500,permanent:false,prix:{b33:2.8,b75:6.5,f20:85,f30:125},description:"Sour framboise / fruit de la passion — acidulée, légère, 60kg de purée de fruits.",houblons:["Nugget","Mistral"],levure:"Phily sour",ingredients:[{nom:"Pilsen",qte:87.5,"u":"kg"},{nom:"Flocon Avoine",qte:12.5,"u":"kg"},{nom:"Nugget",qte:0.13,"u":"kg",note:"60min"},{nom:"Framboise purée",qte:20,"u":"kg",note:"0min"},{nom:"Mistral",qte:0.5,"u":"kg",note:"aroma 80°C"},{nom:"Phily sour",qte:0.5,"u":"kg"},{nom:"Framboise purée",qte:10,"u":"kg",note:"DH J+0"},{nom:"Passion purée",qte:30,"u":"kg",note:"DH J+0"}]},
- {id:19,nom:"La Queen Bee",style:"Mead-beer",abv:5.5,ibu:30,srm:8,og:1.054,fg:1.013,volume:500,permanent:false,prix:{b33:3.2,b75:7.5,f20:95,f30:140},description:"Bière au miel — maltée douce, 60kg de miel, Sabro aromatique, levure CBC1 en conditionnement.",houblons:["Nugget","Sabro"],levure:"Windsor",ingredients:[{nom:"Pale",qte:37.5,"u":"kg"},{nom:"Cara Pils",qte:25,"u":"kg"},{nom:"Flocon Seigle",qte:12.5,"u":"kg"},{nom:"Nugget",qte:0.25,"u":"kg",note:"60min"},{nom:"Miel",qte:20,"u":"kg",note:"5min"},{nom:"Miel",qte:40,"u":"kg",note:"0min"},{nom:"Sabro",qte:0.6,"u":"kg",note:"aroma 80°C"},{nom:"Windsor",qte:0.25,"u":"kg"}]},
- {id:20,nom:"La Témèraire",style:"Black IPA",abv:5.0,ibu:53,srm:40,og:1.048,fg:1.01,volume:500,permanent:false,prix:{b33:2.8,b75:6.5,f20:85,f30:125},description:"Black IPA — robe noire, amertume tranchante, Sabro + Simcoe en dry hop.",houblons:["Sabro","Simcoe"],levure:"Nottingham",ingredients:[{nom:"Pale",qte:62.5,"u":"kg"},{nom:"Cara Vienne 55",qte:25,"u":"kg"},{nom:"Cara 240",qte:7,"u":"kg"},{nom:"Chocolat",qte:6,"u":"kg"},{nom:"Black",qte:6,"u":"kg"},{nom:"Flocon Avoine",qte:12.5,"u":"kg",note:"non concassé"},{nom:"Amèrisant",qte:0.8,"u":"kg",note:"60min"},{nom:"Sabro",qte:1.0,"u":"kg",note:"aroma 80°C"},{nom:"Nottingham",qte:0.25,"u":"kg"},{nom:"Sabro",qte:1.5,"u":"kg",note:"DH"},{nom:"Simcoe",qte:0.5,"u":"kg",note:"DH"}]},
+ {id:1,nom:"L'Impèrtinente",style:"APA",abv:6.0,ibu:35,srm:5,og:1.049,fg:1.006,volume:300,permanent:true,prix:{b33:1.80,b75:3.97,f20:78.40,f30:117.60},description:"Notre rockstar ! Blonde houblonnée, amertume légère et envoutante.",houblons:["Cascade","Mosaic"],levure:"Nottingham",ingredients:[{nom:"Pale",qte:300,u:"kg"},{nom:"Pilsen",qte:150,u:"kg"},{nom:"Cascade",qte:6,u:"kg"},{nom:"Mosaic",qte:6,u:"kg"},{nom:"Nottingham",qte:0.5,u:"sach"}]},
+ {id:2,nom:"La Pèrchée",style:"Blanche",abv:4.5,ibu:15,srm:3,og:1.037,fg:1.004,volume:300,permanent:true,prix:{b33:1.80,b75:3.97,f20:78.40,f30:117.60},description:"Brassée sur Terre, notre blanche est dans la Lune.",houblons:["Cascade","Mosaic"],levure:"WB-06",ingredients:[{nom:"Blé",qte:62.5,u:"kg"},{nom:"Pilsen",qte:37.5,u:"kg"},{nom:"Cascade",qte:1,u:"kg"},{nom:"Mosaic",qte:2,u:"kg"},{nom:"WB-06",qte:0.25,u:"sach"}]},
+ {id:3,nom:"La Pèrilleuse",style:"Ambrée",abv:6.0,ibu:28,srm:18,og:1.061,fg:1.020,volume:300,permanent:true,prix:{b33:1.80,b75:3.97,f20:78.40,f30:117.60},description:"Pleine de rebondissements, parfum caramel et douce amertume.",houblons:["Chinook"],levure:"S-04",ingredients:[{nom:"Pale",qte:275,u:"kg"},{nom:"Cara 240",qte:20,u:"kg"},{nom:"Chinook",qte:4,u:"kg"},{nom:"S-04",qte:0.5,u:"sach"}]},
+ {id:4,nom:"La Pèrlimpinpin",style:"IPA",abv:6.5,ibu:60,srm:7,og:1.056,fg:1.008,volume:300,permanent:true,prix:{b33:1.80,b75:3.97,f20:78.40,f30:117.60},description:"Laisse-toi ensorceler. Blonde dorée à l'alchimie parfaite.",houblons:["Cascade","Mosaic","Chinook"],levure:"Nottingham",ingredients:[{nom:"Pale",qte:325,u:"kg"},{nom:"Pilsen",qte:87.5,u:"kg"},{nom:"Cascade",qte:9.6,u:"kg"},{nom:"Mosaic",qte:6,u:"kg"},{nom:"Nottingham",qte:0.5,u:"sach"}]},
+ {id:5,nom:"La Supère",style:"Triple",abv:8.5,ibu:22,srm:6,og:1.069,fg:1.009,volume:200,permanent:true,prix:{b33:1.80,b75:3.97,f20:78.40,f30:117.60},description:"Avec force et courage, cette blonde musclée, épices et puissante rondeur.",houblons:["Cascade"],levure:"BE256",ingredients:[{nom:"Pale",qte:185,u:"kg"},{nom:"Pilsen",qte:50,u:"kg"},{nom:"Flocon Avoine",qte:25,u:"kg"},{nom:"Coriandre",qte:1,u:"kg"},{nom:"BE256",qte:0.25,u:"sach"}]},
+ {id:6,nom:"La Blonde des Papas",style:"Blonde",abv:5.0,ibu:25,srm:7,og:1.047,fg:1.011,volume:300,permanent:true,prix:{b33:1.80,b75:3.97,f20:63.40,f30:95.10},description:"Notre blonde légère et limpide, douce, maltée, sans amertume.",houblons:["Nugget","Cascade"],levure:"S-04",ingredients:[{nom:"Pilsen",qte:350,u:"kg"},{nom:"Viene10",qte:75,u:"kg"},{nom:"Nugget",qte:0.5,u:"kg"},{nom:"Cascade",qte:2.4,u:"kg"},{nom:"S-04",qte:0.5,u:"sach"}]},
+ {id:7,nom:"La Mèrveilleuse",style:"NEIPA",abv:6.0,ibu:45,srm:5,og:1.059,fg:1.018,volume:200,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"Éphémère juteuse et trouble, arômes intenses de fruits tropicaux.",houblons:["Mosaic","Citra","Amarillo"],levure:"NEIPA",ingredients:[{nom:"Pale",qte:155,u:"kg"},{nom:"Blé",qte:75,u:"kg"},{nom:"Flocon Avoine",qte:75,u:"kg"},{nom:"Mosaic",qte:7.2,u:"kg"},{nom:"Citra",qte:9.2,u:"kg"},{nom:"NEIPA",qte:0.5,u:"sach"}]},
+ {id:8,nom:"La Mèrlimpinpin",style:"DIPA",abv:8.0,ibu:70,srm:6,og:1.073,fg:1.015,volume:200,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"Double IPA puissante.",houblons:["Citra","Sabro","Azacca"],levure:"Nottingham",ingredients:[{nom:"Pale",qte:200,u:"kg"},{nom:"Citra",qte:9.75,u:"kg"},{nom:"Sabro",qte:1.4,u:"kg"},{nom:"Nottingham",qte:0.75,u:"sach"}]},
+ {id:9,nom:"La Mary'Stout",style:"Brune",abv:6.0,ibu:45,srm:45,og:1.062,fg:1.020,volume:500,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"Brune robuste aux notes de café et chocolat — Chinook aromatique, corps dense et torréfié.",houblons:["Chinook"],levure:"Windsor",ingredients:[{nom:"Viene10",qte:75,u:"kg"},{nom:"Pale",qte:12.5,u:"kg"},{nom:"Cara Vienne 55",qte:12.5,u:"kg"},{nom:"Tourambre",qte:12.5,u:"kg"},{nom:"Flocon Avoine",qte:12.5,u:"kg",note:"non concassé"},{nom:"Cara 240",qte:12,u:"kg"},{nom:"Chocolat",qte:6,u:"kg"},{nom:"Black",qte:5,u:"kg"},{nom:"Amèrisant",qte:0.8,u:"kg",note:"60min"},{nom:"Chinook",qte:1.0,u:"kg",note:"aroma 80°C"},{nom:"Windsor",qte:0.25,u:"kg"}]},
+ {id:10,nom:"La Mamagascar",style:"Ambrée épicée",abv:7.0,ibu:21,srm:13,og:1.069,fg:1.020,volume:500,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"Ambrée au poivre de Madagascar — maltée, caramel, épices chaudes. Version originale 5HL.",houblons:["Nugget","Chinook","Simcoe"],levure:"Windsor",ingredients:[{nom:"Pale",qte:112.5,u:"kg"},{nom:"Cara Vienne 55",qte:12.5,u:"kg"},{nom:"Tourambre",qte:12.5,u:"kg"},{nom:"Cara 240",qte:4.7,u:"kg"},{nom:"Nugget",qte:0.27,u:"kg",note:"60min"},{nom:"Sucre",qte:20,u:"kg",note:"10min"},{nom:"Chinook",qte:0.5,u:"kg",note:"aroma 80°C"},{nom:"Simcoe",qte:0.5,u:"kg",note:"aroma 80°C"},{nom:"Poivre",qte:0.5,u:"kg",note:"aroma 100°C"},{nom:"Windsor",qte:0.25,u:"kg"},{nom:"Poivre",qte:0.3,u:"kg",note:"DH J+5"}]},
+ {id:11,nom:"La Chromamatik",style:"NEIPA",abv:8.0,ibu:20,srm:6,og:1.083,fg:1.028,volume:1200,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"NEIPA puissante à 8% — double empatage, dry hop massif Citra + Sabro.",houblons:["Citra","Mistral","Sabro"],levure:"Best coast hazy",ingredients:[{nom:"Pale",qte:112.5,"u":"kg",note:"soir"},{nom:"Flocon Avoine",qte:25,"u":"kg",note:"soir"},{nom:"Pale",qte:12.5,"u":"kg",note:"matin"},{nom:"Pilsen",qte:62.5,"u":"kg",note:"matin"},{nom:"Blé",qte:25,"u":"kg",note:"matin"},{nom:"Sucre",qte:15,"u":"kg",note:"15min"},{nom:"Citra",qte:1.0,"u":"kg",note:"aroma 80°C"},{nom:"Mistral",qte:1.0,"u":"kg",note:"aroma 80°C"},{nom:"Best coast hazy",qte:0.5,"u":"kg"},{nom:"Citra",qte:6.0,"u":"kg",note:"DH J+2"},{nom:"Sabro",qte:6.0,"u":"kg",note:"DH J+5"}]},
+ {id:12,nom:"La Cold IPA",style:"Cold IPA",abv:5.0,ibu:38,srm:4,og:1.043,fg:1.005,volume:1200,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"Cold IPA fermentation froide — dry hop massif Centennial 5kg.",houblons:["Nugget","Centennial"],levure:"Nova Lager",ingredients:[{nom:"Pilsen",qte:87.5,"u":"kg"},{nom:"Flocon Maïs",qte:30,"u":"kg"},{nom:"Nugget",qte:0.5,"u":"kg",note:"60min"},{nom:"Centennial",qte:0.2,"u":"kg",note:"10min"},{nom:"Centennial",qte:1.5,"u":"kg",note:"aroma 80°C"},{nom:"Nova Lager",qte:0.5,"u":"kg"},{nom:"Centennial",qte:5.0,"u":"kg",note:"DH J+4"}]},
+ {id:13,nom:"La Daarønn",style:"Kveik IPA",abv:7.0,ibu:74,srm:6,og:1.062,fg:1.011,volume:1200,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"Kveik IPA fermentée à 35°C — amertume franche, Centennial + Azacca en dry hop.",houblons:["Simcoe","Centennial","Azacca"],levure:"Kveik",ingredients:[{nom:"Pale",qte:75,"u":"kg"},{nom:"Viene10",qte:25,"u":"kg"},{nom:"Blé",qte:12.5,"u":"kg"},{nom:"Flocon Avoine",qte:25,"u":"kg",note:"non concassé"},{nom:"Simcoe",qte:1.0,"u":"kg",note:"60min"},{nom:"Centennial",qte:0.4,"u":"kg",note:"20min"},{nom:"Simcoe",qte:0.7,"u":"kg",note:"aroma 80°C"},{nom:"Centennial",qte:0.6,"u":"kg",note:"aroma 80°C"},{nom:"Sucre",qte:15,"u":"kg",note:"10min"},{nom:"Kveik",qte:0.5,"u":"kg"},{nom:"Centennial",qte:1.5,"u":"kg",note:"DH"},{nom:"Azacca",qte:2.5,"u":"kg",note:"DH"}]},
+ {id:14,nom:"La Daddy Cool Gose",style:"Gose fruitée",abv:4.0,ibu:10,srm:4,og:1.045,fg:1.012,volume:500,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"Gose Ananas Kiwi — sour légère, sel et coriandre, 80kg de fruits en dry hop.",houblons:["Nugget","Elixir"],levure:"Phily sour",ingredients:[{nom:"Pilsen",qte:50,"u":"kg"},{nom:"Blé",qte:50,"u":"kg"},{nom:"Nugget",qte:0.1,"u":"kg",note:"60min"},{nom:"Coriandre",qte:0.7,"u":"kg",note:"15min"},{nom:"Elixir",qte:0.1,"u":"kg",note:"10min"},{nom:"Elixir",qte:0.4,"u":"kg",note:"aroma 80°C"},{nom:"Phily sour",qte:0.5,"u":"kg"},{nom:"Ananas purée",qte:40,"u":"kg",note:"DH J+0"},{nom:"Kiwi purée",qte:40,"u":"kg",note:"DH J+0"}]},
+ {id:15,nom:"La Habemouss Papa",style:"West Coast IPA",abv:7.0,ibu:50,srm:7,og:1.051,fg:1.0,volume:1200,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"West Coast IPA sèche et amère — Mosaic + Idaho7 en dry hop, haute atténuation.",houblons:["Nugget","Simcoe","Mosaic","Idaho7"],levure:"BRY 97",ingredients:[{nom:"Pale",qte:100,"u":"kg"},{nom:"Cara Pils",qte:25,"u":"kg"},{nom:"Flocon Seigle",qte:12.5,"u":"kg",note:"non concassé"},{nom:"Nugget",qte:0.6,"u":"kg",note:"60min"},{nom:"Simcoe",qte:1.5,"u":"kg",note:"aroma 80°C"},{nom:"Mosaic",qte:1.5,"u":"kg",note:"aroma 80°C"},{nom:"BRY 97",qte:0.5,"u":"kg"},{nom:"Mosaic",qte:1.0,"u":"kg",note:"DH"},{nom:"Idaho7",qte:2.0,"u":"kg",note:"DH"}]},
+ {id:16,nom:"La Mamagascard",style:"Ambrée épicée",abv:7.0,ibu:21,srm:13,og:1.069,fg:1.02,volume:500,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"Ambrée au poivre de Madagascar — maltée, caramel, épices chaudes. Poivre en dry hop J+5.",houblons:["Nugget","Chinook","Simcoe"],levure:"Windsor",ingredients:[{nom:"Pale",qte:112.5,"u":"kg"},{nom:"Cara Vienne 55",qte:12.5,"u":"kg"},{nom:"Tourambre",qte:12.5,"u":"kg"},{nom:"Cara 240",qte:4.7,"u":"kg"},{nom:"Nugget",qte:0.27,"u":"kg",note:"60min"},{nom:"Sucre",qte:20,"u":"kg",note:"10min"},{nom:"Chinook",qte:0.5,"u":"kg",note:"aroma 80°C"},{nom:"Simcoe",qte:0.5,"u":"kg",note:"aroma 80°C"},{nom:"Poivre",qte:0.5,"u":"kg",note:"aroma 100°C"},{nom:"Windsor",qte:0.25,"u":"kg"},{nom:"Poivre",qte:0.3,"u":"kg",note:"DH J+5"}]},
+ {id:17,nom:"La Mèrcure",style:"Session IPA",abv:4.0,ibu:25,srm:4,og:1.034,fg:1.006,volume:500,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"Session IPA légère — Verdant, dry hop Mistral + Cascade pour finir en douceur.",houblons:["Mistral","Elixir","Cascade"],levure:"Verdant",ingredients:[{nom:"Pale",qte:50,"u":"kg"},{nom:"Blé",qte:25,"u":"kg"},{nom:"Flocon Avoine",qte:12.5,"u":"kg"},{nom:"Mistral",qte:0.65,"u":"kg",note:"60min"},{nom:"Elixir",qte:1.0,"u":"kg",note:"aroma 80°C"},{nom:"Verdant",qte:0.5,"u":"kg"},{nom:"Mistral",qte:2.0,"u":"kg",note:"DH"},{nom:"Cascade",qte:1.0,"u":"kg",note:"DH"}]},
+ {id:18,nom:"La Papa Poule",style:"Sour fruitée",abv:3.5,ibu:12,srm:4,og:1.041,fg:1.009,volume:500,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"Sour framboise / fruit de la passion — acidulée, légère, 60kg de purée de fruits.",houblons:["Nugget","Mistral"],levure:"Phily sour",ingredients:[{nom:"Pilsen",qte:87.5,"u":"kg"},{nom:"Flocon Avoine",qte:12.5,"u":"kg"},{nom:"Nugget",qte:0.13,"u":"kg",note:"60min"},{nom:"Framboise purée",qte:20,"u":"kg",note:"0min"},{nom:"Mistral",qte:0.5,"u":"kg",note:"aroma 80°C"},{nom:"Phily sour",qte:0.5,"u":"kg"},{nom:"Framboise purée",qte:10,"u":"kg",note:"DH J+0"},{nom:"Passion purée",qte:30,"u":"kg",note:"DH J+0"}]},
+ {id:19,nom:"La Queen Bee",style:"Mead-beer",abv:5.5,ibu:30,srm:8,og:1.054,fg:1.013,volume:500,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"Bière au miel — maltée douce, 60kg de miel, Sabro aromatique, levure CBC1 en conditionnement.",houblons:["Nugget","Sabro"],levure:"Windsor",ingredients:[{nom:"Pale",qte:37.5,"u":"kg"},{nom:"Cara Pils",qte:25,"u":"kg"},{nom:"Flocon Seigle",qte:12.5,"u":"kg"},{nom:"Nugget",qte:0.25,"u":"kg",note:"60min"},{nom:"Miel",qte:20,"u":"kg",note:"5min"},{nom:"Miel",qte:40,"u":"kg",note:"0min"},{nom:"Sabro",qte:0.6,"u":"kg",note:"aroma 80°C"},{nom:"Windsor",qte:0.25,"u":"kg"}]},
+ {id:20,nom:"La Témèraire",style:"Black IPA",abv:5.0,ibu:53,srm:40,og:1.048,fg:1.01,volume:500,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"Black IPA — robe noire, amertume tranchante, Sabro + Simcoe en dry hop.",houblons:["Sabro","Simcoe"],levure:"Nottingham",ingredients:[{nom:"Pale",qte:62.5,"u":"kg"},{nom:"Cara Vienne 55",qte:25,"u":"kg"},{nom:"Cara 240",qte:7,"u":"kg"},{nom:"Chocolat",qte:6,"u":"kg"},{nom:"Black",qte:6,"u":"kg"},{nom:"Flocon Avoine",qte:12.5,"u":"kg",note:"non concassé"},{nom:"Amèrisant",qte:0.8,"u":"kg",note:"60min"},{nom:"Sabro",qte:1.0,"u":"kg",note:"aroma 80°C"},{nom:"Nottingham",qte:0.25,"u":"kg"},{nom:"Sabro",qte:1.5,"u":"kg",note:"DH"},{nom:"Simcoe",qte:0.5,"u":"kg",note:"DH"}]},
 ];
 const PRODUCTION_INIT=[
  {id:1,recette:"La Pèrilleuse",volume:460,statut:"terminé",dateDebut:"2025-09-19",dateCond:"2025-10-07",fermenteur:"FV-05",og:1.061,fg:1.020,abv:6,notes:"pH=4,37",mesures:[{date:"2025-09-19",valeur:1.061,temp:20,note:"DI"},{date:"2025-10-07",valeur:1.020,temp:5,note:"DF"}]},
@@ -218,6 +218,19 @@ const PRODUCTION_INIT=[
  {id:32,recette:"La Supère",volume:0,statut:"fermentation",dateDebut:"2026-02-26",dateCond:null,fermenteur:"FV-04",og:1.069,fg:null,abv:8.5,notes:"Coriandre 0.8kg",mesures:[{date:"2026-02-26",valeur:1.069,temp:20,note:"DI"}]},
  {id:33,recette:"La Pèrilleuse",volume:0,statut:"fermentation",dateDebut:"2026-02-27",dateCond:null,fermenteur:"FV-05",og:1.060,fg:null,abv:6,notes:"",mesures:[{date:"2026-02-27",valeur:1.060,temp:20,note:"DI"}]},
  {id:34,recette:"La Blonde des Papas",volume:0,statut:"brassage",dateDebut:"2026-03-06",dateCond:null,fermenteur:"FV-01",og:null,fg:null,abv:5,notes:"Brassage en cours",mesures:[]},
+ {id:35,recette:"La Blonde des Papas",volume:0,statut:"planifié",dateDebut:"2026-04-27",dateCond:null,fermenteur:"C1",og:null,fg:null,abv:5,notes:"Brassage C1",mesures:[]},
+ {id:36,recette:"COLLAB26",volume:0,statut:"planifié",dateDebut:"2026-04-30",dateCond:null,fermenteur:"C2",og:null,fg:null,abv:null,notes:"Embouteillage C2 — 100% 75cl (collab)",mesures:[]},
+ {id:37,recette:"La Pèrlimpinpin",volume:0,statut:"planifié",dateDebut:"2026-05-04",dateCond:null,fermenteur:"C2",og:null,fg:null,abv:6.5,notes:"Brassage C2",mesures:[]},
+ {id:38,recette:"La Blonde des Papas",volume:0,statut:"planifié",dateDebut:"2026-05-06",dateCond:null,fermenteur:"??",og:null,fg:null,abv:5,notes:"Brassage — cuve à confirmer",mesures:[]},
+ {id:39,recette:"La Blonde des Papas",volume:0,statut:"planifié",dateDebut:"2026-05-07",dateCond:null,fermenteur:"C3",og:null,fg:null,abv:5,notes:"Enfutage C3",mesures:[]},
+ {id:40,recette:"La Habemouss Papa",volume:1200,statut:"planifié",dateDebut:"2026-05-11",dateCond:null,fermenteur:"C3",og:null,fg:null,abv:7,notes:"Brassage C3 — 12HL, option empatage jour",mesures:[]},
+ {id:41,recette:"La Queen Bee",volume:600,statut:"planifié",dateDebut:"2026-05-12",dateCond:null,fermenteur:"C5",og:null,fg:null,abv:5.5,notes:"Embouteillage C5 — 6HL",mesures:[]},
+ {id:42,recette:"La Pèrchée",volume:0,statut:"planifié",dateDebut:"2026-05-12",dateCond:null,fermenteur:"C5",og:null,fg:null,abv:4.5,notes:"Brassage C5",mesures:[]},
+ {id:43,recette:"Leclerc (Collab)",volume:0,statut:"planifié",dateDebut:"2026-05-18",dateCond:null,fermenteur:"C4",og:null,fg:null,abv:null,notes:"Brassage C4 — collab Leclerc, bouteilles",mesures:[]},
+ {id:44,recette:"Cascadeuse (Collab)",volume:0,statut:"planifié",dateDebut:"2026-05-18",dateCond:null,fermenteur:"C4",og:null,fg:null,abv:null,notes:"Enfutage C4 — collab",mesures:[]},
+ {id:45,recette:"La Blonde des Papas",volume:0,statut:"planifié",dateDebut:"2026-05-21",dateCond:null,fermenteur:"C1",og:null,fg:null,abv:5,notes:"Enfutage C1",mesures:[]},
+ {id:46,recette:"La Blonde des Papas",volume:0,statut:"planifié",dateDebut:"2026-05-26",dateCond:null,fermenteur:"C1",og:null,fg:null,abv:5,notes:"Brassage C1",mesures:[]},
+ {id:47,recette:"La Pèrlimpinpin",volume:0,statut:"planifié",dateDebut:"2026-05-28",dateCond:null,fermenteur:"C2",og:null,fg:null,abv:6.5,notes:"Enfutage C2",mesures:[]},
 ];
 const STOCK_COND_INIT=[
  {id:1,nom:"Bouteille 33cl",cat:"Bouteille",qte:4800,u:"unités",seuil:500,prix:0.28,four:"Verallia",dateAjout:"2026-01-15"},
@@ -263,6 +276,89 @@ const LOCATIONS_INIT=[
  dateDebut:"2026-04-05",dateFin:"2026-04-06",tireuses:[4],
  futs:[{tieuseId:4,biere:"La Pèrchée",typeFut:"20L",nbFuts:1,volTotal:20}],
  tarif:45,statut:"confirmée",notes:"Repas de printemps"},
+{id:4,client:"MALLET Clement",tel:"0673324497",dateDebut:"2026-04-29",dateFin:"2026-05-06",tireuses:[4],futs:[{"biere":"La Blonde des Papas","typeFut":"20L","nbFuts":1,"volTotal":20},{"biere":"La Pèrlimpinpin","typeFut":"20L","nbFuts":1,"volTotal":20}],tarif:0,statut:"confirmée",notes:""},
+ {id:5,client:"[Période complète]",tel:"",dateDebut:"2026-04-29",dateFin:"2026-04-30",tireuses:[],futs:[],tarif:0,statut:"bloqué",notes:""},
+ {id:6,client:"Le QUERE Aurélie",tel:"",dateDebut:"2026-04-30",dateFin:"2026-05-04",tireuses:[5],futs:[],tarif:0,statut:"confirmée",notes:""},
+ {id:7,client:"Julien Audreno",tel:"0788804419",dateDebut:"2026-04-30",dateFin:"2026-05-04",tireuses:[1],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":2,"volTotal":40}],tarif:0,statut:"confirmée",notes:""},
+ {id:8,client:"BOSSIS Antoine",tel:"0618552435",dateDebut:"2026-04-30",dateFin:"2026-05-04",tireuses:[7],futs:[],tarif:0,statut:"confirmée",notes:""},
+ {id:9,client:"APE Pré vert Baptiste",tel:"0628535553",dateDebut:"2026-04-30",dateFin:"2026-05-04",tireuses:[2],futs:[],tarif:0,statut:"confirmée",notes:""},
+ {id:10,client:"FRATTI Stéphane",tel:"0669566976",dateDebut:"2026-04-30",dateFin:"2026-05-04",tireuses:[3],futs:[{"biere":"Single Hop","typeFut":"30L","nbFuts":1,"volTotal":30}],tarif:0,statut:"confirmée",notes:""},
+ {id:11,client:"Lanohé Martin",tel:"0698632290",dateDebut:"2026-04-30",dateFin:"2026-05-04",tireuses:[8],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":2,"volTotal":50},{"biere":"...???","typeFut":"20L","nbFuts":1,"volTotal":20}],tarif:0,statut:"en attente",notes:""},
+ {id:12,client:"Yann Picool",tel:"",dateDebut:"2026-04-30",dateFin:"2026-05-04",tireuses:[6],futs:[{"biere":"La Pèrlimpinpin","typeFut":"20L","nbFuts":1,"volTotal":20},{"biere":"La Blonde des Papas","typeFut":"20L","nbFuts":1,"volTotal":20}],tarif:0,statut:"confirmée",notes:""},
+ {id:13,client:"Sans tireuse André",tel:"",dateDebut:"2026-04-30",dateFin:"2026-05-04",tireuses:[],futs:[{"biere":"L'Impèrtinente","typeFut":"30L","nbFuts":1,"volTotal":30},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":1,"volTotal":30}],tarif:0,statut:"confirmée",notes:""},
+ {id:14,client:"1BEC CO2 BOUILLON",tel:"",dateDebut:"2026-05-07",dateFin:"2026-05-11",tireuses:[8,7,1],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":27,"volTotal":800},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":24,"volTotal":700}],tarif:0,statut:"confirmée",notes:"2BCG+2BCF+1BEC"},
+ {id:15,client:"HERVY Odile",tel:"0618361597",dateDebut:"2026-05-07",dateFin:"2026-05-11",tireuses:[5],futs:[{"biere":"La Blonde des Papas","typeFut":"20L","nbFuts":2,"volTotal":40}],tarif:0,statut:"confirmée",notes:""},
+ {id:16,client:"Eric Papa Lunatruck",tel:"",dateDebut:"2026-05-07",dateFin:"2026-05-11",tireuses:[2],futs:[{"biere":"La Blonde des Papas","typeFut":"20L","nbFuts":3,"volTotal":60}],tarif:0,statut:"confirmée",notes:""},
+ {id:17,client:"Romain LEURET",tel:"0648231782",dateDebut:"2026-05-07",dateFin:"2026-05-11",tireuses:[4],futs:[],tarif:0,statut:"confirmée",notes:""},
+ {id:18,client:"Clara (Ben)",tel:"",dateDebut:"2026-05-07",dateFin:"2026-05-11",tireuses:[3],futs:[{"biere":"L'Impèrtinente","typeFut":"30L","nbFuts":2,"volTotal":60},{"biere":"La Pèrchée","typeFut":"30L","nbFuts":2,"volTotal":50}],tarif:0,statut:"confirmée",notes:""},
+ {id:19,client:"Sans Tireuse - FRANCHET Hadrien",tel:"0623389858",dateDebut:"2026-05-07",dateFin:"2026-05-11",tireuses:[],futs:[{"biere":"L'Impèrtinente","typeFut":"30L","nbFuts":4,"volTotal":120}],tarif:0,statut:"en attente",notes:""},
+ {id:20,client:"ROUCHET Adrien",tel:"0616917700",dateDebut:"2026-05-07",dateFin:"2026-05-11",tireuses:[6],futs:[{"biere":"La Pèrchée","typeFut":"30L","nbFuts":2,"volTotal":60},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":2,"volTotal":60}],tarif:0,statut:"confirmée",notes:""},
+ {id:21,client:"Aurelien Mallard",tel:"0622972305",dateDebut:"2026-05-13",dateFin:"2026-05-18",tireuses:[1],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":4,"volTotal":120}],tarif:0,statut:"confirmée",notes:""},
+ {id:22,client:"Association Commerçants St Antoine",tel:"",dateDebut:"2026-05-13",dateFin:"2026-05-18",tireuses:[8],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":2,"volTotal":60},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":2,"volTotal":60}],tarif:0,statut:"en attente",notes:""},
+ {id:23,client:"[Période complète]",tel:"",dateDebut:"2026-05-13",dateFin:"2026-05-18",tireuses:[],futs:[],tarif:0,statut:"bloqué",notes:""},
+ {id:24,client:"Bernardeau Elisa",tel:"0673998950",dateDebut:"2026-05-13",dateFin:"2026-05-18",tireuses:[4],futs:[{"biere":"La Blonde des Papas","typeFut":"20L","nbFuts":4,"volTotal":80},{"biere":"La Pèrlimpinpin","typeFut":"20L","nbFuts":3,"volTotal":60},{"biere":"L'Impèrtinente","typeFut":"20L","nbFuts":2,"volTotal":40},{"biere":"La Pèrchée","typeFut":"20L","nbFuts":1,"volTotal":20}],tarif:0,statut:"confirmée",notes:""},
+ {id:25,client:"Reste 2BCG",tel:"",dateDebut:"2026-05-13",dateFin:"2026-05-14",tireuses:[8],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:26,client:"Poux Adeline",tel:"0670188907",dateDebut:"2026-05-15",dateFin:"2026-05-17",tireuses:[5],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":2,"volTotal":60}],tarif:0,statut:"confirmée",notes:""},
+ {id:27,client:"GAUTHIER Claude-Yves",tel:"0656672061",dateDebut:"2026-05-15",dateFin:"2026-05-18",tireuses:[2],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:28,client:"CHEYROUZE Frederic",tel:"0675234973",dateDebut:"2026-05-15",dateFin:"2026-05-18",tireuses:[6],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":5,"volTotal":150}],tarif:0,statut:"confirmée",notes:""},
+ {id:29,client:"Bike park Montaigu Emmanuel",tel:"0642797199",dateDebut:"2026-05-15",dateFin:"2026-05-18",tireuses:[7],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":5,"volTotal":150},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":5,"volTotal":150}],tarif:0,statut:"confirmée",notes:""},
+ {id:30,client:"Franck JUSTICE",tel:"0610251651",dateDebut:"2026-05-15",dateFin:"2026-05-18",tireuses:[3],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":1,"volTotal":30}],tarif:0,statut:"confirmée",notes:""},
+ {id:31,client:"Pallard",tel:"",dateDebut:"2026-05-21",dateFin:"2026-05-23",tireuses:[6],futs:[],tarif:0,statut:"confirmée",notes:""},
+ {id:32,client:"*2 BEC Asso ASAG VTT",tel:"",dateDebut:"2026-05-22",dateFin:"2026-05-25",tireuses:[5],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":4,"volTotal":110},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":4,"volTotal":100}],tarif:0,statut:"en attente",notes:""},
+ {id:33,client:"Papier Sensible Karine",tel:"0619230356",dateDebut:"2026-05-22",dateFin:"2026-05-25",tireuses:[1],futs:[{"biere":"La Blonde des Papas","typeFut":"20L","nbFuts":2,"volTotal":40}],tarif:0,statut:"confirmée",notes:""},
+ {id:34,client:"[Période complète]",tel:"",dateDebut:"2026-05-22",dateFin:"2026-05-25",tireuses:[],futs:[],tarif:0,statut:"bloqué",notes:""},
+ {id:35,client:"+2BCF + 1BEC ACSG",tel:"",dateDebut:"2026-05-22",dateFin:"2026-05-25",tireuses:[8,7,2],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":15,"volTotal":450},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":15,"volTotal":450}],tarif:0,statut:"en attente",notes:"2BCG+2BCF+1BEC"},
+ {id:36,client:"BERNARDEAU Jean-Marc",tel:"0744797899",dateDebut:"2026-05-22",dateFin:"2026-05-27",tireuses:[3],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":1,"volTotal":30}],tarif:0,statut:"confirmée",notes:""},
+ {id:37,client:"Léa Feree",tel:"0611108210",dateDebut:"2026-05-22",dateFin:"2026-05-25",tireuses:[4],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":2,"volTotal":50},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":2,"volTotal":50}],tarif:0,statut:"confirmée",notes:""},
+ {id:38,client:"Ben Jafar",tel:"",dateDebut:"2026-05-23",dateFin:"2026-05-26",tireuses:[6],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:39,client:"Label'Asso Thomas",tel:"0609491944",dateDebut:"2026-05-29",dateFin:"2026-06-01",tireuses:[6],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":5,"volTotal":150},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":5,"volTotal":150}],tarif:0,statut:"confirmée",notes:""},
+ {id:40,client:"ARTHUR",tel:"",dateDebut:"2026-05-29",dateFin:"2026-06-01",tireuses:[4],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:41,client:"sans tireuse MALLASSAGNE Christophe",tel:"0782262518",dateDebut:"2026-05-29",dateFin:"2026-06-01",tireuses:[],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":3,"volTotal":80},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":2,"volTotal":50}],tarif:0,statut:"en attente",notes:""},
+ {id:42,client:"Laureline & Antoine",tel:"",dateDebut:"2026-05-29",dateFin:"2026-06-01",tireuses:[5],futs:[{"biere":"La Pèrchée","typeFut":"30L","nbFuts":1,"volTotal":30},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":1,"volTotal":30},{"biere":"L'Impèrtinente","typeFut":"30L","nbFuts":2,"volTotal":50}],tarif:0,statut:"confirmée",notes:""},
+ {id:43,client:"BLANCHARD Linda",tel:"0619704705",dateDebut:"2026-05-29",dateFin:"2026-06-01",tireuses:[1],futs:[],tarif:0,statut:"confirmée",notes:""},
+ {id:44,client:"Isabelle BOSSIS",tel:"0679663918",dateDebut:"2026-06-05",dateFin:"2026-06-08",tireuses:[2],futs:[{"biere":"L'Impèrtinente","typeFut":"20L","nbFuts":1,"volTotal":20}],tarif:0,statut:"en attente",notes:""},
+ {id:45,client:"APE école Claire Doré Graslin",tel:"",dateDebut:"2026-06-05",dateFin:"2026-06-08",tireuses:[4],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":5,"volTotal":140},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":5,"volTotal":140}],tarif:0,statut:"en attente",notes:""},
+ {id:46,client:"Etienne RIBEROT",tel:"0631376612",dateDebut:"2026-06-05",dateFin:"2026-06-08",tireuses:[6],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:47,client:"Association Commerçants St Antoine",tel:"",dateDebut:"2026-06-05",dateFin:"2026-06-08",tireuses:[5],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":2,"volTotal":60},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":2,"volTotal":60}],tarif:0,statut:"en attente",notes:""},
+ {id:48,client:"GAUTHIER Claude-Yves",tel:"0656672061",dateDebut:"2026-06-12",dateFin:"2026-06-15",tireuses:[3],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:49,client:"Mathieu FLEURANCE",tel:"0767874960",dateDebut:"2026-06-12",dateFin:"2026-06-23",tireuses:[4],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:50,client:"resto MAD Clisson",tel:"",dateDebut:"2026-06-16",dateFin:"2026-06-22",tireuses:[1],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":3,"volTotal":90}],tarif:0,statut:"en attente",notes:""},
+ {id:51,client:"Les Papas Hellfest",tel:"",dateDebut:"2026-06-16",dateFin:"2026-06-22",tireuses:[8,6],futs:[],tarif:0,statut:"en attente",notes:"2BCG+2BARI"},
+ {id:52,client:"Nandin Emeric",tel:"0649676436",dateDebut:"2026-06-17",dateFin:"2026-06-22",tireuses:[5],futs:[{"biere":"La Pèrchée","typeFut":"30L","nbFuts":2,"volTotal":60},{"biere":"L'Impèrtinente","typeFut":"30L","nbFuts":2,"volTotal":40}],tarif:0,statut:"en attente",notes:""},
+ {id:53,client:"2 BCF BRELFEST",tel:"",dateDebut:"2026-06-19",dateFin:"2026-06-22",tireuses:[],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":10,"volTotal":280}],tarif:0,statut:"en attente",notes:""},
+ {id:54,client:"2*2BEC+1BEC La récuperette",tel:"",dateDebut:"2026-06-26",dateFin:"2026-06-30",tireuses:[5,2],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":8,"volTotal":240},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":7,"volTotal":210}],tarif:0,statut:"en attente",notes:"2BEC+1BEC"},
+ {id:55,client:"Fete école Simone Veil APE ST Hilaire (mail)",tel:"",dateDebut:"2026-06-26",dateFin:"2026-06-29",tireuses:[3],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":3,"volTotal":90}],tarif:0,statut:"en attente",notes:""},
+ {id:56,client:"Jim",tel:"0631412986",dateDebut:"2026-06-26",dateFin:"2026-06-29",tireuses:[1],futs:[{"biere":"L'Impèrtinente","typeFut":"20L","nbFuts":3,"volTotal":60}],tarif:0,statut:"en attente",notes:""},
+ {id:57,client:"2 BEC COUTINHO Elodie",tel:"0689585776",dateDebut:"2026-06-26",dateFin:"2026-06-29",tireuses:[4],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:58,client:"ECOLE JACQUES PREVERT",tel:"",dateDebut:"2026-06-26",dateFin:"2026-06-29",tireuses:[7],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:59,client:"2 BEC Legault Cécile",tel:"",dateDebut:"2026-07-01",dateFin:"2026-07-01",tireuses:[4],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:60,client:"1 BEC VINET David",tel:"0681201996",dateDebut:"2026-07-03",dateFin:"2026-07-06",tireuses:[1],futs:[{"biere":"L'Impèrtinente","typeFut":"20L","nbFuts":2,"volTotal":40}],tarif:0,statut:"en attente",notes:""},
+ {id:61,client:"EVANO Adrien",tel:"0637288428",dateDebut:"2026-07-03",dateFin:"2026-07-06",tireuses:[3],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:62,client:"Label'asso Thomas",tel:"0609491944",dateDebut:"2026-07-03",dateFin:"2026-07-06",tireuses:[7],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":5,"volTotal":150}],tarif:0,statut:"en attente",notes:""},
+ {id:63,client:"2 Becs Elise Salmon (Ben)",tel:"",dateDebut:"2026-07-10",dateFin:"2026-07-13",tireuses:[5],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:64,client:"LEGAULT Cécile",tel:"",dateDebut:"2026-07-10",dateFin:"2026-07-13",tireuses:[4],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:65,client:"NOGUES Océane",tel:"0607095499",dateDebut:"2026-07-10",dateFin:"2026-07-13",tireuses:[2],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":1,"volTotal":30}],tarif:0,statut:"en attente",notes:""},
+ {id:66,client:"CERISIER Frederic",tel:"0681681168",dateDebut:"2026-07-10",dateFin:"2026-07-11",tireuses:[1],futs:[{"biere":"+ 1x20L + 60 gobelets","typeFut":"30L","nbFuts":3,"volTotal":90}],tarif:0,statut:"en attente",notes:""},
+ {id:67,client:"VIGNON Charles",tel:"0668570899",dateDebut:"2026-07-10",dateFin:"2026-07-16",tireuses:[7],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:68,client:"Guillaume Lenne",tel:"0677508518",dateDebut:"2026-07-10",dateFin:"2026-07-16",tireuses:[3],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":2,"volTotal":60}],tarif:0,statut:"en attente",notes:""},
+ {id:69,client:"GAUTHIER Jérémy",tel:"0683428612",dateDebut:"2026-07-17",dateFin:"2026-07-20",tireuses:[1],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":5,"volTotal":150},{"biere":"La Pèrlimpinpin","typeFut":"30L","nbFuts":1,"volTotal":30}],tarif:0,statut:"en attente",notes:""},
+ {id:70,client:"Aymeric",tel:"0680925084",dateDebut:"2026-07-17",dateFin:"2026-07-20",tireuses:[4],futs:[{"biere":"La Blonde des Papas","typeFut":"20L","nbFuts":2,"volTotal":40}],tarif:0,statut:"en attente",notes:""},
+ {id:71,client:"RICHARD Jean-François",tel:"0608510407",dateDebut:"2026-07-17",dateFin:"2026-07-20",tireuses:[5],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:72,client:"Alban Guillet",tel:"0625660896",dateDebut:"2026-07-24",dateFin:"2026-07-27",tireuses:[4],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:73,client:"DUCLOS Abélia",tel:"0778317620",dateDebut:"2026-08-01",dateFin:"2026-08-02",tireuses:[5],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":3,"volTotal":80},{"biere":"de perchée","typeFut":"30L","nbFuts":3,"volTotal":80}],tarif:0,statut:"en attente",notes:""},
+ {id:74,client:"Volley Club Clisson",tel:"",dateDebut:"2026-08-14",dateFin:"2026-08-17",tireuses:[8,7],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":34,"volTotal":1000}],tarif:0,statut:"en attente",notes:"2BCG+2BCF"},
+ {id:75,client:"Guillaume Charon mail",tel:"",dateDebut:"2026-08-21",dateFin:"2026-08-24",tireuses:[2],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:76,client:"Cyril",tel:"0664112698",dateDebut:"2026-08-21",dateFin:"2026-08-24",tireuses:[3],futs:[{"biere":"L'Impèrtinente","typeFut":"30L","nbFuts":2,"volTotal":60}],tarif:0,statut:"en attente",notes:""},
+ {id:77,client:"PETAVY Stéphanie",tel:"0658073896",dateDebut:"2026-08-28",dateFin:"2026-08-31",tireuses:[1],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:78,client:"Asso QNANS (Tatiana mail)",tel:"",dateDebut:"2026-09-10",dateFin:"2026-09-14",tireuses:[4],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:79,client:"Bachelier Fabien",tel:"0633682670",dateDebut:"2026-09-10",dateFin:"2026-09-14",tireuses:[2],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":2,"volTotal":60}],tarif:0,statut:"en attente",notes:""},
+ {id:80,client:"GALLON Sylvain",tel:"0620850862",dateDebut:"2026-09-10",dateFin:"2026-09-14",tireuses:[5],futs:[{"biere":"La Blonde des Papas","typeFut":"30L","nbFuts":2,"volTotal":60},{"biere":"La Pèrlimpinpin","typeFut":"20L","nbFuts":2,"volTotal":40}],tarif:0,statut:"en attente",notes:""},
+ {id:81,client:"KONCAR Quentin",tel:"0638026631",dateDebut:"2026-09-17",dateFin:"2026-09-21",tireuses:[4],futs:[{"biere":"La Blonde des Papas","typeFut":"20L","nbFuts":2,"volTotal":40}],tarif:0,statut:"en attente",notes:""},
+ {id:82,client:"FERNEL Fréderique",tel:"0629183142",dateDebut:"2026-09-25",dateFin:"2026-09-28",tireuses:[5],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:83,client:"Dominique voisin",tel:"",dateDebut:"2026-10-02",dateFin:"2026-10-05",tireuses:[3],futs:[{"biere":"La Blonde des Papas","typeFut":"20L","nbFuts":2,"volTotal":40}],tarif:0,statut:"en attente",notes:""},
+ {id:84,client:"Pallard",tel:"",dateDebut:"2026-10-15",dateFin:"2026-10-19",tireuses:[6],futs:[],tarif:0,statut:"en attente",notes:""},
+ {id:85,client:"Marie-Didier Laval",tel:"",dateDebut:"2026-10-30",dateFin:"2026-11-02",tireuses:[1],futs:[],tarif:0,statut:"en attente",notes:""},
+
 ];
 const TARIFS_LOC={tireuse1j:30,tireuse2j:50,tireuseWE:65,tireuseS:110,};
 
@@ -4124,7 +4220,14 @@ function VuePlanning({tireuses,locations,onClickLoc}){
 
  const SCOL = {confirmée:T.green,demande:T.amber,retournée:T.creamDim,annulée:T.red};
 
- const PlanSemaine = () => (
+ const PlanSemaine = () => {
+  const fmtISO = d => {
+   const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');
+   return `${y}-${m}-${dd}`;
+  };
+  const w0 = fmtISO(days[0]);
+  const w6 = fmtISO(days[6]);
+  return (
   <div style={{overflowX:'auto',WebkitOverflowScrolling:'touch'}}>
    <div style={{minWidth:360}}>
     <div style={{display:'grid',gridTemplateColumns:'52px repeat(7,1fr)',gap:2,marginBottom:3}}>
@@ -4138,8 +4241,7 @@ function VuePlanning({tireuses,locations,onClickLoc}){
         border:`1px solid ${isTod(d)?T.amber:T.border}`}}>
         <div style={{fontSize:10,fontWeight:700,
          color:isTod(d)?T.bgCard:T.creamDim,
-         fontFamily:FM,
-         textTransform:'uppercase',letterSpacing:0.3}}>
+         fontFamily:FM,textTransform:'uppercase',letterSpacing:0.3}}>
          {fmtWD(d)}
         </div>
         <div style={{fontSize:16,fontWeight:900,
@@ -4156,10 +4258,18 @@ function VuePlanning({tireuses,locations,onClickLoc}){
     </div>
 
     {tireuses.map(t=>{
+     const tLocs = locations.filter(l=>
+      l.statut!=='annulée' &&
+      l.tireuses?.includes(t.id) &&
+      l.dateFin >= w0 &&
+      l.dateDebut <= w6
+     );
      return(
       <div key={t.id} style={{display:'grid',
        gridTemplateColumns:'52px repeat(7,1fr)',gap:2,marginBottom:2}}>
-       <div style={{background:T.bgMid,borderRadius:7,padding:'4px 5px',
+       {/* Label */}
+       <div style={{gridColumn:1,gridRow:1,
+        background:T.bgMid,borderRadius:7,padding:'4px 5px',
         display:'flex',flexDirection:'column',justifyContent:'center',
         borderLeft:`3px solid ${t.couleur}`,minHeight:44}}>
         <div style={{fontSize:11,fontWeight:900,color:t.couleur,
@@ -4171,32 +4281,42 @@ function VuePlanning({tireuses,locations,onClickLoc}){
          {t.label}
         </div>
        </div>
-
+       {/* Background day cells */}
        {days.map((d,di)=>{
-        const locs = locDay(d).filter(l=>l.tireuses?.includes(t.id));
-        const is = isTod(d);
+        const is=isTod(d);
+        const ds=fmtISO(d);
+        const dl=tLocs.find(l=>ds>=l.dateDebut&&ds<=l.dateFin);
+        const col=SCOL[dl?.statut]||T.green;
         return(
-         <div key={di} style={{
-          background: locs.length
-           ? (SCOL[locs[0].statut]||T.green)+'1A'
-           : is ? T.amberPale+'30' : T.bgCard,
-          border:`1px solid ${is?T.amber+'50':locs.length?(SCOL[locs[0].statut]+'40'):T.border}`,
-          borderRadius:6,minHeight:44,padding:2,
-          display:'flex',flexDirection:'column',gap:1}}>
-          {locs.map((l,li)=>(
-           <div key={li} onClick={()=>onClickLoc(l)}
-            style={{flex:1,borderRadius:4,padding:'3px 5px',cursor:'pointer',
-             background:(SCOL[l.statut]||T.green)+'28',
-             borderLeft:`2px solid ${SCOL[l.statut]||T.green}`,
-             overflow:'hidden',minHeight:18}}>
-            <div style={{fontSize:10,fontWeight:700,
-             color:SCOL[l.statut]||T.green,lineHeight:1.2,
-             overflow:'hidden',textOverflow:'ellipsis',
-             whiteSpace:'nowrap',fontFamily:FB}}>
-             {l.client}
-            </div>
-           </div>
-          ))}
+         <div key={`bg${di}`} style={{
+          gridColumn:di+2,gridRow:1,
+          background:dl?col+'15':is?T.amberPale+'30':T.bgCard,
+          border:`1px solid ${is?T.amber+'50':dl?col+'35':T.border}`,
+          borderRadius:6,minHeight:44}}/>
+        );
+       })}
+       {/* Gantt bars — one bar per location spanning its days */}
+       {tLocs.map((l,li)=>{
+        let s=-1,e=-1;
+        days.forEach((d,i)=>{const ds=fmtISO(d);if(ds>=l.dateDebut&&ds<=l.dateFin){if(s<0)s=i;e=i;}});
+        if(s<0) return null;
+        const col=SCOL[l.statut]||T.green;
+        return(
+         <div key={`bar${li}`} onClick={()=>onClickLoc(l)}
+          style={{
+           gridColumn:`${s+2} / ${e+3}`,gridRow:1,
+           zIndex:1,position:'relative',
+           background:col+'30',
+           border:`1px solid ${col}60`,
+           borderLeft:`3px solid ${col}`,
+           borderRadius:6,padding:'4px 7px',
+           cursor:'pointer',display:'flex',alignItems:'center',
+           overflow:'hidden',minHeight:44,boxSizing:'border-box'}}>
+          <div style={{fontSize:10,fontWeight:700,color:col,
+           lineHeight:1.2,overflow:'hidden',
+           textOverflow:'ellipsis',whiteSpace:'nowrap',fontFamily:FB}}>
+           {l.client}
+          </div>
          </div>
         );
        })}
@@ -4205,7 +4325,8 @@ function VuePlanning({tireuses,locations,onClickLoc}){
     })}
    </div>
   </div>
- );
+  );
+ };
 
  const PlanMois = () => {
   const WDS = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
