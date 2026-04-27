@@ -15664,12 +15664,21 @@ function ModuleStockPF({
   setStockPF,
   stock
 }) {
-  const [view, setView] = useState('stock'); // 'stock' | 'valorisation'
-  const [filtre, setFiltre] = useState('Tous'); // bière ou 'Tous'
+  const [view, setView] = useState('stock');
+  const [filtre, setFiltre] = useState('Tous');
   const [q, setQ] = useState('');
-  const [editLot, setEditLot] = useState(null); // lot en cours d'édition
-  const [adjVal, setAdjVal] = useState(''); // valeur d'ajustement
-
+  const [editLot, setEditLot] = useState(null);
+  const [adjVal, setAdjVal] = useState('');
+  const [manualForm, setManualForm] = useState({
+    nom: '',
+    type: 'Bouteille 33cl',
+    qte: '',
+    lot: '',
+    date: new Date().toISOString().split('T')[0]
+  });
+  const [csvPreview, setCsvPreview] = useState(null); // [{article,qte,prixTTC}]
+  const [importLog, setImportLog] = useState('');
+  const csvRef = useRef();
   const pCond = calcPrixCond(stockCond);
   const fmtKey = {
     'Bouteille 33cl': 'b33',
@@ -15807,6 +15816,109 @@ function ModuleStockPF({
     'Fût 20L': '🛢',
     'Fût 30L': '🛢'
   })[t] || '📦';
+  const addManual = () => {
+    const qte = parseInt(manualForm.qte) || 0;
+    if (!manualForm.nom || qte <= 0) return;
+    const lotId = `manual-${Date.now()}`;
+    const entry = {
+      id: lotId,
+      lotId,
+      brassinNom: manualForm.nom,
+      type: manualForm.type,
+      lot: manualForm.lot || 'M1',
+      dateCond: manualForm.date,
+      qteInit: qte,
+      qteDispo: qte,
+      sorties: [],
+      source: 'manuel'
+    };
+    setStockPF(prev => [...prev, entry]);
+    setManualForm(prev => ({
+      ...prev,
+      nom: '',
+      qte: '',
+      lot: ''
+    }));
+    setImportLog(`✅ Lot manuel ajouté : ${manualForm.nom} ×${qte}`);
+  };
+  const parseDGSYS = text => {
+    const sep = text.includes('\t') ? '\t' : text.includes(';') ? ';' : ',';
+    return text.split('\n').map(l => l.trim()).filter(l => l).map(l => {
+      const c = l.split(sep).map(x => x.replace(/^"|"$/g, '').trim());
+      const article = c[0] || '';
+      const qte = parseFloat((c[4] || '').replace(',', '.')) || 0;
+      const prixTTC = parseFloat((c[6] || '').replace(',', '.')) || 0;
+      return {
+        article,
+        qte,
+        prixTTC
+      };
+    }).filter(r => r.article && r.qte > 0);
+  };
+  const onCSVFile = e => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const rows = parseDGSYS(ev.target.result);
+      setCsvPreview(rows);
+      setView('import');
+    };
+    reader.readAsText(file, 'utf-8');
+    e.target.value = '';
+  };
+  const applyCSVImport = () => {
+    if (!csvPreview) return;
+    let added = 0,
+      updated = 0;
+    const now = new Date().toISOString().split('T')[0];
+    csvPreview.forEach(row => {
+      const recMatch = recettes.find(r => row.article.toLowerCase().includes(r.nom.toLowerCase().split(' ')[1] || r.nom.toLowerCase()) || r.nom.toLowerCase().includes(row.article.toLowerCase().split(' ')[0]));
+      const lotId = `dgsys-${row.article.replace(/\s+/g, '-')}-${now}`;
+      const exist = stockPF.find(x => x.lotId === lotId);
+      if (exist) {
+        setStockPF(prev => prev.map(x => x.lotId === lotId ? {
+          ...x,
+          qteDispo: row.qte
+        } : x));
+        updated++;
+      } else {
+        const entry = {
+          id: lotId,
+          lotId,
+          brassinNom: recMatch?.nom || row.article,
+          type: 'Bouteille 33cl',
+          lot: 'DGSYS',
+          dateCond: now,
+          qteInit: row.qte,
+          qteDispo: row.qte,
+          sorties: [],
+          source: 'dgsys',
+          prixImport: row.prixTTC
+        };
+        setStockPF(prev => [...prev, entry]);
+        added++;
+      }
+    });
+    setImportLog(`✅ Import DGSYS : ${added} ajoutés, ${updated} mis à jour`);
+    setCsvPreview(null);
+  };
+  const exportDGSYS = () => {
+    const rows = allLots.filter(l => l.qteDispo > 0).map(l => {
+      const pv = prixVente(l.brassinNom, l.type);
+      const nom = `${l.brassinNom} ${l.type}`;
+      return `"${nom}";;;"";${l.qteDispo};;"${pv || ''}"`;
+    });
+    const blob = new Blob([rows.join('\n')], {
+      type: 'text/csv;charset=utf-8'
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `stock_pf_dgsys_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
   const PctBar = ({
     val,
     max,
@@ -15934,24 +16046,50 @@ function ModuleStockPF({
   }, sub)))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
-      gap: 8,
-      marginBottom: 14
+      gap: 6,
+      marginBottom: 14,
+      overflowX: 'auto',
+      scrollbarWidth: 'none',
+      WebkitOverflowScrolling: 'touch'
     }
-  }, [['stock', '📋 Lots & stock'], ['valorisation', '📊 Valorisation']].map(([v, l]) => /*#__PURE__*/React.createElement("button", {
+  }, [['stock', '📋 Lots'], ['valorisation', '📊 Valeur'], ['import', '📥 Import/Export']].map(([v, l]) => /*#__PURE__*/React.createElement("button", {
     key: v,
     onClick: () => setView(v),
     style: {
       flexShrink: 0,
-      padding: '8px 14px',
+      padding: '7px 14px',
       borderRadius: 20,
+      whiteSpace: 'nowrap',
       border: `1.5px solid ${view === v ? C.amber : C.border}`,
       background: view === v ? C.amberPale : C.bgCard,
       color: view === v ? C.amber : C.textMid,
       fontWeight: 600,
-      fontSize: 13,
-      minHeight: 40
+      fontSize: 12,
+      minHeight: 36
     }
-  }, l))), /*#__PURE__*/React.createElement(SearchBar, {
+  }, l)), /*#__PURE__*/React.createElement("button", {
+    onClick: exportDGSYS,
+    style: {
+      flexShrink: 0,
+      padding: '7px 14px',
+      borderRadius: 20,
+      whiteSpace: 'nowrap',
+      border: `1.5px solid ${C.hop}`,
+      background: 'transparent',
+      color: C.hop,
+      fontWeight: 600,
+      fontSize: 12,
+      minHeight: 36
+    }
+  }, "\uD83D\uDCE4 Export DGSYS")), /*#__PURE__*/React.createElement("input", {
+    type: "file",
+    ref: csvRef,
+    accept: ".csv,.txt",
+    onChange: onCSVFile,
+    style: {
+      display: 'none'
+    }
+  }), /*#__PURE__*/React.createElement(SearchBar, {
     value: q,
     onChange: setQ,
     placeholder: "Bi\xE8re, lot, format\u2026"
@@ -16460,7 +16598,286 @@ function ModuleStockPF({
         color: C.ok
       })));
     }));
-  })());
+  })(), view === 'import' && /*#__PURE__*/React.createElement("div", null, importLog && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.greenPale,
+      borderRadius: 8,
+      padding: '8px 12px',
+      marginBottom: 12,
+      fontSize: 12,
+      color: C.greenL,
+      fontFamily: FM,
+      border: `1px solid ${C.green}30`
+    }
+  }, importLog), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.bgCard,
+      borderRadius: 12,
+      padding: '14px',
+      marginBottom: 12,
+      border: `1px solid ${C.border}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      color: C.text,
+      marginBottom: 12,
+      fontSize: 14
+    }
+  }, "\u270F\uFE0F Entr\xE9e manuelle"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 8,
+      marginBottom: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Label, {
+    t: "Bi\xE8re"
+  }), /*#__PURE__*/React.createElement("input", {
+    value: manualForm.nom,
+    onChange: e => setManualForm(p => ({
+      ...p,
+      nom: e.target.value
+    })),
+    placeholder: "Nom de la bi\xE8re",
+    style: {
+      ...iSt,
+      padding: '8px 10px',
+      fontSize: 14
+    }
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Label, {
+    t: "Format"
+  }), /*#__PURE__*/React.createElement("select", {
+    value: manualForm.type,
+    onChange: e => setManualForm(p => ({
+      ...p,
+      type: e.target.value
+    })),
+    style: {
+      ...iSt,
+      padding: '8px 10px',
+      fontSize: 14
+    }
+  }, /*#__PURE__*/React.createElement("option", null, "Bouteille 33cl"), /*#__PURE__*/React.createElement("option", null, "Bouteille 75cl"), /*#__PURE__*/React.createElement("option", null, "F\xFBt 20L"), /*#__PURE__*/React.createElement("option", null, "F\xFBt 30L"))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Label, {
+    t: "Quantit\xE9"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    min: "1",
+    value: manualForm.qte,
+    onChange: e => setManualForm(p => ({
+      ...p,
+      qte: e.target.value
+    })),
+    placeholder: "0",
+    style: {
+      ...iSt,
+      padding: '8px 10px',
+      fontSize: 14
+    }
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Label, {
+    t: "N\xB0 lot"
+  }), /*#__PURE__*/React.createElement("input", {
+    value: manualForm.lot,
+    onChange: e => setManualForm(p => ({
+      ...p,
+      lot: e.target.value
+    })),
+    placeholder: "M1",
+    style: {
+      ...iSt,
+      padding: '8px 10px',
+      fontSize: 14
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement(Label, {
+    t: "Date"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "date",
+    value: manualForm.date,
+    onChange: e => setManualForm(p => ({
+      ...p,
+      date: e.target.value
+    })),
+    style: {
+      ...iSt,
+      padding: '8px 10px',
+      fontSize: 14
+    }
+  })), /*#__PURE__*/React.createElement("button", {
+    onClick: addManual,
+    style: {
+      width: '100%',
+      padding: '10px',
+      borderRadius: 8,
+      border: 'none',
+      background: C.amber,
+      color: C.bgDark,
+      fontFamily: FM,
+      fontSize: 13,
+      fontWeight: 700,
+      cursor: 'pointer'
+    }
+  }, "\uFF0B Ajouter au stock")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.bgCard,
+      borderRadius: 12,
+      padding: '14px',
+      marginBottom: 12,
+      border: `1px solid ${C.border}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      color: C.text,
+      marginBottom: 6,
+      fontSize: 14
+    }
+  }, "\uD83D\uDCE5 Import CSV DGSYS"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 11,
+      color: C.textLight,
+      fontFamily: FM,
+      marginBottom: 12,
+      lineHeight: 1.6
+    }
+  }, "Format attendu : colonne A = article \xB7 E = qt\xE9 \xB7 G = prix TTC unitaire"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => csvRef.current?.click(),
+    style: {
+      width: '100%',
+      padding: '10px',
+      borderRadius: 8,
+      border: `1.5px dashed ${C.amber}60`,
+      background: 'transparent',
+      color: C.amber,
+      fontFamily: FM,
+      fontSize: 13,
+      fontWeight: 700,
+      cursor: 'pointer',
+      marginBottom: 10
+    }
+  }, "\uD83D\uDCC2 Choisir un fichier CSV"), csvPreview && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: FM,
+      fontSize: 10,
+      color: C.textLight,
+      textTransform: 'uppercase',
+      letterSpacing: 0.8,
+      marginBottom: 8
+    }
+  }, "Aper\xE7u (", csvPreview.length, " lignes)"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxHeight: 200,
+      overflowY: 'auto',
+      marginBottom: 10,
+      border: `1px solid ${C.border}`,
+      borderRadius: 8
+    }
+  }, csvPreview.slice(0, 20).map((r, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 60px 70px',
+      gap: 8,
+      padding: '6px 10px',
+      borderBottom: `1px solid ${C.border}`,
+      fontSize: 11,
+      background: i % 2 ? C.bgCard : C.bg
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: C.text,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap'
+    }
+  }, r.article), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: C.amber,
+      fontFamily: FM,
+      textAlign: 'right'
+    }
+  }, "\xD7", r.qte), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: C.hop,
+      fontFamily: FM,
+      textAlign: 'right'
+    }
+  }, r.prixTTC > 0 ? r.prixTTC + '€' : ''))), csvPreview.length > 20 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '6px 10px',
+      fontSize: 10,
+      color: C.textLight
+    }
+  }, "\u2026et ", csvPreview.length - 20, " autres lignes")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: applyCSVImport,
+    style: {
+      flex: 1,
+      padding: '10px',
+      borderRadius: 8,
+      border: 'none',
+      background: C.ok,
+      color: '#fff',
+      fontFamily: FM,
+      fontSize: 13,
+      fontWeight: 700,
+      cursor: 'pointer'
+    }
+  }, "\u2713 Importer"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setCsvPreview(null),
+    style: {
+      padding: '10px 16px',
+      borderRadius: 8,
+      border: `1px solid ${C.border}`,
+      background: 'transparent',
+      color: C.textMid,
+      fontSize: 13,
+      cursor: 'pointer'
+    }
+  }, "Annuler")))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.bgCard,
+      borderRadius: 12,
+      padding: '14px',
+      border: `1px solid ${C.border}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      color: C.text,
+      marginBottom: 6,
+      fontSize: 14
+    }
+  }, "\uD83D\uDCE4 Export CSV vers DGSYS"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 11,
+      color: C.textLight,
+      fontFamily: FM,
+      marginBottom: 12,
+      lineHeight: 1.6
+    }
+  }, "Exporte les lots disponibles au format caisse DGSYS (A=article, E=qt\xE9, G=prix TTC)."), /*#__PURE__*/React.createElement("button", {
+    onClick: exportDGSYS,
+    style: {
+      width: '100%',
+      padding: '10px',
+      borderRadius: 8,
+      border: 'none',
+      background: C.hop,
+      color: '#fff',
+      fontFamily: FM,
+      fontSize: 13,
+      fontWeight: 700,
+      cursor: 'pointer'
+    }
+  }, "\u2B07\uFE0F T\xE9l\xE9charger stock_pf_dgsys.csv"))));
 }
 const BEER_IMAGES = {}; // Images retirées pour performance
 const FERM_JOURS = {
@@ -17383,7 +17800,7 @@ function ModuleCatalogue({
         marginBottom: 14,
         border: `1px solid ${C.border}`
       }
-    }, [['public', '👥 Public'], ['pro', '🤝 Pro']].map(([m, lbl]) => /*#__PURE__*/React.createElement("button", {
+    }, [['public', '👥 Public', 'TTC'], ['pro', '🤝 Pro', 'HT']].map(([m, lbl, tva]) => /*#__PURE__*/React.createElement("button", {
       key: m,
       onClick: () => setTarifMode(m),
       style: {
@@ -17399,7 +17816,12 @@ function ModuleCatalogue({
         color: tarifMode === m ? C.bgDark : C.textMid,
         transition: 'all 0.15s'
       }
-    }, lbl))), /*#__PURE__*/React.createElement("div", {
+    }, lbl, " ", /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 9,
+        opacity: 0.8
+      }
+    }, tva)))), /*#__PURE__*/React.createElement("div", {
       style: {
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
@@ -17442,7 +17864,7 @@ function ModuleCatalogue({
           display: 'flex',
           alignItems: 'center',
           gap: 4,
-          marginBottom: 6
+          marginBottom: 4
         }
       }, /*#__PURE__*/React.createElement("input", {
         type: "number",
@@ -17470,11 +17892,28 @@ function ModuleCatalogue({
       }), /*#__PURE__*/React.createElement("span", {
         style: {
           fontFamily: FM,
-          fontSize: 13,
+          fontSize: 11,
           color: C.amber,
           fontWeight: 700
         }
-      }, "\u20AC")), /*#__PURE__*/React.createElement("div", {
+      }, "\u20AC\xA0", /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 8,
+          opacity: 0.7
+        }
+      }, tarifMode === 'pro' ? 'HT' : 'TTC'))), tarifMode === 'pro' && prix > 0 && /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 9,
+          fontFamily: FM,
+          color: C.textLight,
+          textAlign: 'right',
+          marginBottom: 4
+        }
+      }, "\u2192 TTC : ", /*#__PURE__*/React.createElement("strong", {
+        style: {
+          color: C.textMid
+        }
+      }, (prix * 1.2).toFixed(2), "\u20AC")), /*#__PURE__*/React.createElement("div", {
         style: {
           display: 'flex',
           justifyContent: 'space-between',
@@ -18356,8 +18795,33 @@ function ModuleSimulation({
     f20: 0,
     f30: 0
   });
-  const [matDelta, setMatDelta] = useState(0); // % variation coût matières
-
+  const [matDelta, setMatDelta] = useState(0);
+  const [emballConf, setEmballConf] = useState({
+    carton33: 3.0,
+    carton75: 2.5,
+    paliers33: [{
+      minQte: 1,
+      prix: ''
+    }, {
+      minQte: 100,
+      prix: ''
+    }, {
+      minQte: 500,
+      prix: ''
+    }],
+    paliers75: [{
+      minQte: 1,
+      prix: ''
+    }, {
+      minQte: 50,
+      prix: ''
+    }, {
+      minQte: 200,
+      prix: ''
+    }],
+    qteEstim33: 100,
+    qteEstim75: 50
+  });
   const pCond = calcPrixCond(stockCond);
   const fmtKey = {
     'Bouteille 33cl': 'b33',
@@ -18490,22 +18954,25 @@ function ModuleSimulation({
   }, r.nom, " \u2014 ", r.style)))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
-      gap: 8,
-      marginBottom: 16
+      gap: 6,
+      marginBottom: 16,
+      overflowX: 'auto',
+      scrollbarWidth: 'none'
     }
-  }, [['prix', '📈 Prix de vente'], ['cout', '💸 Coût matières']].map(([v, l]) => /*#__PURE__*/React.createElement("button", {
+  }, [['prix', '📈 Prix'], ['cout', '💸 Matières'], ['emballage', '📦 Emballage']].map(([v, l]) => /*#__PURE__*/React.createElement("button", {
     key: v,
     onClick: () => setMode(v),
     style: {
-      flex: 1,
-      padding: '8px',
+      flexShrink: 0,
+      padding: '7px 14px',
       borderRadius: 20,
       border: `1.5px solid ${mode === v ? C.amber : C.border}`,
       background: mode === v ? C.amberPale : 'transparent',
       color: mode === v ? C.amber : C.textMid,
       fontSize: 12,
       fontWeight: 600,
-      minHeight: 36
+      minHeight: 36,
+      whiteSpace: 'nowrap'
     }
   }, l))), mode === 'prix' && /*#__PURE__*/React.createElement(React.Fragment, null, fmts.filter(f => px[f] > 0).map(f => {
     const imp = impacts[f];
@@ -18739,7 +19206,427 @@ function ModuleSimulation({
       color: C.textMid,
       lineHeight: 1.6
     }
-  }, "\uD83D\uDCA1 Utilisez ce simulateur pour anticiper l'impact d'une hausse de mati\xE8res (houblon, malt) sur vos marges et d\xE9cider si un ajustement de prix est n\xE9cessaire.")));
+  }, "\uD83D\uDCA1 Utilisez ce simulateur pour anticiper l'impact d'une hausse de mati\xE8res (houblon, malt) sur vos marges et d\xE9cider si un ajustement de prix est n\xE9cessaire.")), mode === 'emballage' && (() => {
+    const sc = stockCond || [];
+    const get = nom => sc.find(x => x.nom === nom)?.prix || 0;
+    const bout33 = get('Bouteille 33cl');
+    const caps33 = get('Capsule couronne 26mm');
+    const eti33 = get('Étiquette avant 33cl');
+    const cetiq = get('Contre-étiquette');
+    const bout75 = get('Bouteille 75cl');
+    const bouch75 = get('Bouchon liège 75cl');
+    const eti75 = get('Étiquette avant 75cl');
+    const unitBase33 = bout33 + caps33 + eti33 + cetiq;
+    const unitBase75 = bout75 + bouch75 + eti75 + cetiq;
+    const cartonU33 = (emballConf.carton33 || 0) / 12;
+    const cartonU75 = (emballConf.carton75 || 0) / 6;
+    const getPalierPrix = (paliers, qte, unitBase) => {
+      const sorted = [...paliers].filter(p => parseFloat(p.prix) > 0).sort((a, b) => b.minQte - a.minQte);
+      const found = sorted.find(p => qte >= p.minQte);
+      return found ? parseFloat(found.prix) : unitBase;
+    };
+    const pu33 = getPalierPrix(emballConf.paliers33, emballConf.qteEstim33, unitBase33);
+    const pu75 = getPalierPrix(emballConf.paliers75, emballConf.qteEstim75, unitBase75);
+    const total33 = pu33 + cartonU33;
+    const total75 = pu75 + cartonU75;
+    const updPalier = (fmt, idx, field, val) => {
+      const key = fmt === '33' ? 'paliers33' : 'paliers75';
+      setEmballConf(prev => {
+        const arr = [...prev[key]];
+        arr[idx] = {
+          ...arr[idx],
+          [field]: val
+        };
+        return {
+          ...prev,
+          [key]: arr
+        };
+      });
+    };
+    const PalierTable = ({
+      fmt,
+      paliers,
+      unitBase
+    }) => /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 8
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 6
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 10,
+        fontWeight: 700,
+        color: C.textLight,
+        textTransform: 'uppercase',
+        letterSpacing: 0.8
+      }
+    }, "Paliers prix/unit\xE9 (offre quantit\xE9)"), /*#__PURE__*/React.createElement("button", {
+      onClick: () => {
+        const key = fmt === '33' ? 'paliers33' : 'paliers75';
+        setEmballConf(prev => ({
+          ...prev,
+          [key]: [...prev[key], {
+            minQte: '',
+            prix: ''
+          }]
+        }));
+      },
+      style: {
+        fontSize: 11,
+        color: C.amber,
+        background: 'none',
+        border: `1px solid ${C.amber}40`,
+        borderRadius: 4,
+        padding: '2px 8px',
+        cursor: 'pointer'
+      }
+    }, "+ Palier")), paliers.map((p, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr 24px',
+        gap: 6,
+        marginBottom: 6,
+        alignItems: 'center'
+      }
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 9,
+        color: C.textLight,
+        marginBottom: 2
+      }
+    }, "D\xE8s qt\xE9"), /*#__PURE__*/React.createElement("input", {
+      type: "number",
+      value: p.minQte,
+      onChange: e => updPalier(fmt, i, 'minQte', e.target.value),
+      style: {
+        ...iSt,
+        padding: '5px 8px',
+        fontSize: 13
+      }
+    })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 9,
+        color: C.textLight,
+        marginBottom: 2
+      }
+    }, "Prix/unit\xE9 \u20AC", parseFloat(p.prix) > 0 && unitBase > 0 ? ` (−${Math.round((1 - parseFloat(p.prix) / unitBase) * 100)}%)` : ''), /*#__PURE__*/React.createElement("input", {
+      type: "number",
+      step: "0.01",
+      value: p.prix,
+      placeholder: unitBase.toFixed(3),
+      onChange: e => updPalier(fmt, i, 'prix', e.target.value),
+      style: {
+        ...iSt,
+        padding: '5px 8px',
+        fontSize: 13,
+        color: C.amber
+      }
+    })), /*#__PURE__*/React.createElement("button", {
+      onClick: () => {
+        const key = fmt === '33' ? 'paliers33' : 'paliers75';
+        setEmballConf(prev => ({
+          ...prev,
+          [key]: prev[key].filter((_, j) => j !== i)
+        }));
+      },
+      style: {
+        marginTop: 14,
+        width: 24,
+        height: 24,
+        borderRadius: 4,
+        border: `1px solid ${C.border}`,
+        background: 'none',
+        color: C.alert,
+        fontSize: 14,
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }
+    }, "\xD7"))));
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: C.bgCard,
+        borderRadius: 12,
+        padding: '14px',
+        marginBottom: 12,
+        border: `1px solid ${C.border}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontWeight: 700,
+        color: C.text,
+        marginBottom: 12,
+        fontSize: 14
+      }
+    }, "\uD83D\uDCE6 Co\xFBt carton (par carton entier)"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: 10
+      }
+    }, [['Carton 12×33cl', 'carton33', 12], ['Carton 6×75cl', 'carton75', 6]].map(([lbl, key, div]) => /*#__PURE__*/React.createElement("div", {
+      key: key,
+      style: {
+        background: C.bg,
+        borderRadius: 8,
+        padding: '10px 12px',
+        border: `1px solid ${C.border}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11,
+        color: C.textMid,
+        marginBottom: 6,
+        fontWeight: 600
+      }
+    }, lbl), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 4,
+        alignItems: 'center',
+        marginBottom: 4
+      }
+    }, /*#__PURE__*/React.createElement("input", {
+      type: "number",
+      step: "0.05",
+      min: "0",
+      value: emballConf[key],
+      onChange: e => setEmballConf(prev => ({
+        ...prev,
+        [key]: parseFloat(e.target.value) || 0
+      })),
+      style: {
+        ...iSt,
+        flex: 1,
+        padding: '5px 8px',
+        fontSize: 14,
+        color: C.amber
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        color: C.textMid
+      }
+    }, "\u20AC")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        fontFamily: FM,
+        color: C.textLight
+      }
+    }, "soit ", /*#__PURE__*/React.createElement("strong", {
+      style: {
+        color: C.amber
+      }
+    }, ((emballConf[key] || 0) / div).toFixed(3), "\u20AC"), "/unit\xE9"))))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: C.bgCard,
+        borderRadius: 12,
+        padding: '14px',
+        marginBottom: 12,
+        border: `1px solid ${C.border}`,
+        borderLeft: `3px solid #2A6080`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontWeight: 700,
+        color: C.text,
+        fontSize: 14
+      }
+    }, "\uD83C\uDF7A Bouteille 33cl"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: FA,
+        fontSize: 20,
+        color: C.amber
+      }
+    }, total33.toFixed(3), "\u20AC")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4,1fr)',
+        gap: 4,
+        marginBottom: 8
+      }
+    }, [['Bouteille', bout33], ['Capsule', caps33], ['Étiq.', eti33 + cetiq], ['Carton/12', cartonU33]].map(([l, v]) => /*#__PURE__*/React.createElement("div", {
+      key: l,
+      style: {
+        background: C.bg,
+        borderRadius: 6,
+        padding: '5px 6px',
+        textAlign: 'center',
+        border: `1px solid ${C.border}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: FM,
+        fontSize: 11,
+        fontWeight: 700,
+        color: C.textMid
+      }
+    }, v.toFixed(3), "\u20AC"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 8,
+        color: C.textLight,
+        marginTop: 1
+      }
+    }, l)))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        marginBottom: 6
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        color: C.textMid,
+        whiteSpace: 'nowrap'
+      }
+    }, "Qt\xE9 estim\xE9e :"), /*#__PURE__*/React.createElement("input", {
+      type: "number",
+      min: "1",
+      value: emballConf.qteEstim33,
+      onChange: e => setEmballConf(prev => ({
+        ...prev,
+        qteEstim33: parseInt(e.target.value) || 1
+      })),
+      style: {
+        ...iSt,
+        width: 80,
+        padding: '4px 8px',
+        fontSize: 13
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        color: C.hop,
+        fontFamily: FM,
+        whiteSpace: 'nowrap'
+      }
+    }, "\u2192 ", pu33.toFixed(3), "\u20AC/u (+", cartonU33.toFixed(3), "\u20AC carton)")), /*#__PURE__*/React.createElement(PalierTable, {
+      fmt: "33",
+      paliers: emballConf.paliers33,
+      unitBase: unitBase33
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: C.bgCard,
+        borderRadius: 12,
+        padding: '14px',
+        marginBottom: 12,
+        border: `1px solid ${C.border}`,
+        borderLeft: `3px solid #4A6741`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontWeight: 700,
+        color: C.text,
+        fontSize: 14
+      }
+    }, "\uD83C\uDF7E Bouteille 75cl"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: FA,
+        fontSize: 20,
+        color: C.amber
+      }
+    }, total75.toFixed(3), "\u20AC")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4,1fr)',
+        gap: 4,
+        marginBottom: 8
+      }
+    }, [['Bouteille', bout75], ['Bouchon', bouch75], ['Étiq.', eti75 + cetiq], ['Carton/6', cartonU75]].map(([l, v]) => /*#__PURE__*/React.createElement("div", {
+      key: l,
+      style: {
+        background: C.bg,
+        borderRadius: 6,
+        padding: '5px 6px',
+        textAlign: 'center',
+        border: `1px solid ${C.border}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: FM,
+        fontSize: 11,
+        fontWeight: 700,
+        color: C.textMid
+      }
+    }, v.toFixed(3), "\u20AC"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 8,
+        color: C.textLight,
+        marginTop: 1
+      }
+    }, l)))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        marginBottom: 6
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        color: C.textMid,
+        whiteSpace: 'nowrap'
+      }
+    }, "Qt\xE9 estim\xE9e :"), /*#__PURE__*/React.createElement("input", {
+      type: "number",
+      min: "1",
+      value: emballConf.qteEstim75,
+      onChange: e => setEmballConf(prev => ({
+        ...prev,
+        qteEstim75: parseInt(e.target.value) || 1
+      })),
+      style: {
+        ...iSt,
+        width: 80,
+        padding: '4px 8px',
+        fontSize: 13
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        color: C.hop,
+        fontFamily: FM,
+        whiteSpace: 'nowrap'
+      }
+    }, "\u2192 ", pu75.toFixed(3), "\u20AC/u (+", cartonU75.toFixed(3), "\u20AC carton)")), /*#__PURE__*/React.createElement(PalierTable, {
+      fmt: "75",
+      paliers: emballConf.paliers75,
+      unitBase: unitBase75
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: C.amberPale,
+        borderRadius: 10,
+        padding: '12px 14px',
+        border: `1px solid ${C.amber}30`,
+        fontSize: 12,
+        color: C.textMid,
+        lineHeight: 1.6
+      }
+    }, "\uD83D\uDCA1 Les paliers s'activent selon la quantit\xE9 estim\xE9e. Les prix stockCond (bouteille, capsule, \xE9tiquette) sont lus depuis vos achats."));
+  })());
 }
 function ModulePrediction({
   brassins,
@@ -20854,6 +21741,7 @@ function App() {
       display: 'flex',
       overflowX: 'auto',
       scrollbarWidth: 'none',
+      WebkitOverflowScrolling: 'touch',
       padding: '8px 12px 0',
       marginTop: 8,
       borderTop: `1px solid ${C.border}`
@@ -20866,7 +21754,7 @@ function App() {
       style: {
         flexShrink: 0,
         padding: '6px 14px 8px',
-        fontSize: 11,
+        fontSize: 'clamp(10px,2.5vw,12px)',
         fontWeight: 700,
         fontFamily: FM,
         letterSpacing: 0.5,
@@ -20875,9 +21763,11 @@ function App() {
         background: 'none',
         border: 'none',
         cursor: 'pointer',
+        minHeight: 40,
         color: act ? C.amber : C.textLight,
         borderBottom: act ? `2px solid ${C.amber}` : '2px solid transparent',
-        transition: 'color 0.15s'
+        transition: 'color 0.15s',
+        WebkitTapHighlightColor: 'transparent'
       }
     }, m.icon, " ", m.label, m.badge && /*#__PURE__*/React.createElement("span", {
       style: {
