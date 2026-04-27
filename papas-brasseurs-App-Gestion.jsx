@@ -6520,13 +6520,48 @@ const FERM_JOURS = {
  "La Mèrcure":24,"Single Hop Idaho7":20,
 };
 
-function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,condSessions}){
+function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,setStockPF,condSessions,stock,stockCond}){
  const [sel,setSel]             = useState(null);
  const [selIdx,setSelIdx]       = useState(0);
  const [filtre,setFiltre]       = useState('Toutes');
  const [uploadRec,setUploadRec] = useState(null);
  const [hoverId,setHoverId]     = useState(null);
+ const [tarifMode,setTarifMode] = useState('public'); // 'public' | 'pro'
+ const [ficheTab,setFicheTab]   = useState('infos');  // 'infos' | 'tarifs' | 'stock'
+ const [pxEdit,setPxEdit]       = useState(null);     // {b33,b75,f20,f30} en édition
+ const [pxProEdit,setPxProEdit] = useState(null);
  const fileRef                  = useRef();
+
+ const pCond = calcPrixCond(stockCond||[]);
+ const FMT_VOL = {'b33':0.33,'b75':0.75,'f20':20,'f30':30};
+ const FMT_LBL = {'b33':'33cl','b75':'75cl','f20':'Fût 20L','f30':'Fût 30L'};
+ const FMT_ICO = {'b33':'🍺','b75':'🍾','f20':'🛢','f30':'🛢'};
+
+ const coutMatL = rec => {
+  if(!rec||rec.volume<=0) return 0;
+  let t=0;
+  (rec.ingredients||[]).forEach(ing=>{const s=findStock(stock||[],ing.nom);if(s)t+=(ing.qte||0)*(s.prix||0);});
+  return t/rec.volume;
+ };
+ const coutRevient = (rec,fmt) => {
+  const vol = FMT_VOL[fmt]||0;
+  return coutMatL(rec)*vol + ({'b33':pCond['Bouteille 33cl'],'b75':pCond['Bouteille 75cl'],'f20':0,'f30':0}[fmt]||0);
+ };
+ const marge = (prix,cout) => prix>0 ? Math.round((prix-cout)/prix*100) : null;
+
+ const openFiche = (r,i) => {
+  setSel(r); setSelIdx(i); setFicheTab('infos');
+  setPxEdit({b33:'',b75:'',f20:'',f30:'',...(r.prix||{})});
+  setPxProEdit({b33:'',b75:'',f20:'',f30:'',...(r.prixPro||{})});
+ };
+
+ const saveTarifs = (r) => {
+  const toNum = v => parseFloat(v)||0;
+  const px    = {b33:toNum(pxEdit.b33),b75:toNum(pxEdit.b75),f20:toNum(pxEdit.f20),f30:toNum(pxEdit.f30)};
+  const pxPro = {b33:toNum(pxProEdit.b33),b75:toNum(pxProEdit.b75),f20:toNum(pxProEdit.f20),f30:toNum(pxProEdit.f30)};
+  setRecettes(prev=>prev.map(x=>x.id===r.id?{...x,prix:px,prixPro:pxPro}:x));
+  setSel(prev=>prev?{...prev,prix:px,prixPro:pxPro}:prev);
+ };
 
  const SRM = s =>
   s<=3?'#F0D060':s<=6?'#D4A820':s<=10?'#B87810':s<=16?'#A05808'
@@ -6569,9 +6604,9 @@ function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,condSessions}){
 
  const navModal = dir => {
   const i = (selIdx+dir+filtered.length)%filtered.length;
-  setSelIdx(i); setSel(filtered[i]);
+  openFiche(filtered[i],i);
  };
- const openRec = (r,i) => { setSel(r); setSelIdx(i); };
+ const openRec = (r,i) => openFiche(r,i);
 
  return (
   <div style={{paddingBottom:80,background:C.bg,minHeight:'100vh'}}>
@@ -6603,22 +6638,37 @@ function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,condSessions}){
       onError={e=>e.target.style.display='none'}/>
     </div>
 
-    <div style={{display:'flex',gap:6,paddingBottom:14}}>
-     {[['Toutes',filtered.length],
-      ['Permanentes',recettes.filter(r=>r.permanent).length],
-      ['Éphémères',recettes.filter(r=>!r.permanent).length]
-     ].map(([f,n])=>(
-      <button key={f} onClick={()=>setFiltre(f)}
-       style={{padding:'5px 14px',borderRadius:4,fontSize:11,fontWeight:700,
-        letterSpacing:0.5,textTransform:'uppercase',
-        border:`1px solid ${filtre===f?C.amber:C.border}`,
-        background:filtre===f?C.amber:'transparent',
-        color:filtre===f?C.bgDark:C.textMid,minHeight:32,
-        fontFamily:FM,
-        transition:'all 0.15s'}}>
-       {f} <span style={{opacity:0.7,fontSize:9}}>({n})</span>
-      </button>
-     ))}
+    <div style={{display:'flex',justifyContent:'space-between',
+     alignItems:'center',paddingBottom:14,gap:8}}>
+     <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+      {[['Toutes',filtered.length],
+       ['Permanentes',recettes.filter(r=>r.permanent).length],
+       ['Éphémères',recettes.filter(r=>!r.permanent).length]
+      ].map(([f,n])=>(
+       <button key={f} onClick={()=>setFiltre(f)}
+        style={{padding:'5px 14px',borderRadius:4,fontSize:11,fontWeight:700,
+         letterSpacing:0.5,textTransform:'uppercase',
+         border:`1px solid ${filtre===f?C.amber:C.border}`,
+         background:filtre===f?C.amber:'transparent',
+         color:filtre===f?C.bgDark:C.textMid,minHeight:32,
+         fontFamily:FM,cursor:'pointer',transition:'all 0.15s'}}>
+        {f} <span style={{opacity:0.7,fontSize:9}}>({n})</span>
+       </button>
+      ))}
+     </div>
+     {/* Toggle tarif Public/Pro global */}
+     <div style={{display:'flex',background:'rgba(0,0,0,0.3)',borderRadius:6,
+      padding:2,border:`1px solid ${C.border}`,flexShrink:0}}>
+      {[['public','👥'],['pro','🤝']].map(([m,ico])=>(
+       <button key={m} onClick={()=>setTarifMode(m)}
+        style={{padding:'4px 10px',borderRadius:4,fontSize:10,fontWeight:700,
+         fontFamily:FM,border:'none',cursor:'pointer',
+         background:tarifMode===m?C.amber:'transparent',
+         color:tarifMode===m?C.bgDark:C.textMid,transition:'all 0.15s'}}>
+        {ico} {m==='public'?'PUB':'PRO'}
+       </button>
+      ))}
+     </div>
     </div>
    </div>
 
@@ -6630,7 +6680,7 @@ function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,condSessions}){
      const srm    = SRM(r.srm);
      const stock  = stockBiere(r.nom);
      const dispo  = stock.reduce((s,x)=>s+x.dispo,0);
-     const px     = r.prix||{};
+     const px     = (tarifMode==='pro'?r.prixPro:r.prix)||{};
      return (
       <div key={r.id} onClick={()=>openRec(r,0)}
        onMouseEnter={()=>setHoverId(r.id)}
@@ -6681,7 +6731,7 @@ function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,condSessions}){
          {[
           [`${r.abv}%`,C.amber],
           [`IBU ${r.ibu}`,amerCol(r.ibu)],
-          ...(px.b33?[`${px.b33}€ / 33cl`,C.cream]:[]),
+          ...(px.b33?[[`${px.b33}€ / 33cl${tarifMode==='pro'?' PRO':''}`,C.cream]]:[]),
          ].map(([v,col],i)=>(
           <span key={`k${i}`} style={{fontFamily:FM,
            fontSize:10,fontWeight:700,color:col,
@@ -6712,7 +6762,7 @@ function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,condSessions}){
       const stock = stockBiere(r.nom);
       const dispo = stock.reduce((s,x)=>s+x.dispo,0);
       const dernier = dernierBrassin(r.nom);
-      const px = r.prix||{};
+      const px = (tarifMode==='pro'?r.prixPro:r.prix)||{};
       const enBrassage = dernier&&dernier.statut!=='terminé';
       const isHov = hoverId===r.id;
 
@@ -6767,8 +6817,10 @@ function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,condSessions}){
           </span>
           {px.b33&&<>
            <span style={{color:C.border,fontSize:8}}>·</span>
-           <span style={{fontFamily:FM,
-            fontSize:9,color:C.textMid}}>{px.b33}€</span>
+           <span style={{fontFamily:FM,fontSize:9,
+            color:tarifMode==='pro'?C.hop:C.textMid}}>
+            {px.b33}€{tarifMode==='pro'&&<span style={{fontSize:7,marginLeft:2,color:C.hop}}>PRO</span>}
+           </span>
           </>}
          </div>
          <div style={{marginTop:5,fontFamily:FM,
@@ -6792,54 +6844,66 @@ function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,condSessions}){
    </div>
 
    {sel&&(()=>{
-    const r       = recettes.find(x=>x.id===sel.id)||sel;
-    const img     = getImg(r);
-    const srm     = SRM(r.srm);
-    const stock   = stockBiere(r.nom);
-    const px      = r.prix||{};
-    const hasNext = filtered.length>1;
+    const r        = recettes.find(x=>x.id===sel.id)||sel;
+    const img      = getImg(r);
+    const srm      = SRM(r.srm);
+    const bStock   = stockBiere(r.nom);
+    const hasNext  = filtered.length>1;
+    const curPx    = tarifMode==='public' ? (pxEdit||{}) : (pxProEdit||{});
+    const setCurPx = tarifMode==='public' ? setPxEdit : setPxProEdit;
+    const btnTab   = (id,lbl) => (
+     <button key={id} onClick={()=>setFicheTab(id)}
+      style={{flex:1,padding:'8px 4px',fontSize:11,fontWeight:700,fontFamily:FM,
+       letterSpacing:0.5,textTransform:'uppercase',border:'none',
+       borderBottom:`2px solid ${ficheTab===id?C.amber:'transparent'}`,
+       background:'transparent',color:ficheTab===id?C.amber:C.textLight,
+       cursor:'pointer'}}>
+      {lbl}
+     </button>
+    );
+
+    // lots stockPF pour cette recette
+    const lotsRec = (stockPF||[]).filter(pf=>{
+     const cs = condSessions.find(x=>x.id===pf.lotId.split('-')[0]);
+     return cs&&(cs.brassinNom===r.nom||cs.brassinNom.includes((r.nom.split(' ')[1]||r.nom)));
+    });
 
     return (
      <Modal onClose={()=>setSel(null)}>
 
-      <div style={{display:'flex',alignItems:'center',
-       justifyContent:'space-between',marginBottom:0,
-       margin:'-20px -20px 0',padding:'12px 16px',
+      {/* Barre navigation */}
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',
+       margin:'-20px -20px 0',padding:'10px 16px',
        borderBottom:`1px solid ${C.border}`,background:C.bgDark}}>
        <button onClick={()=>setSel(null)}
         style={{display:'flex',alignItems:'center',gap:5,background:'none',
          border:'none',color:C.textMid,fontSize:12,fontWeight:700,
-         fontFamily:FM,letterSpacing:0.5,padding:0}}>
+         fontFamily:FM,letterSpacing:0.5,padding:0,cursor:'pointer'}}>
         ← RETOUR
        </button>
        {hasNext&&(
         <div style={{display:'flex',gap:8,alignItems:'center'}}>
          <button onClick={()=>navModal(-1)}
-          style={{width:28,height:28,borderRadius:4,
-           border:`1px solid ${C.border}`,background:C.bgCard,
-           color:C.textMid,fontSize:14,display:'flex',
-           alignItems:'center',justifyContent:'center',fontWeight:700}}>‹</button>
-         <span style={{fontFamily:FM,fontSize:9,
-          color:C.textLight,letterSpacing:1}}>
-          {selIdx+1} / {filtered.length}
+          style={{width:28,height:28,borderRadius:4,border:`1px solid ${C.border}`,
+           background:C.bgCard,color:C.textMid,fontSize:14,display:'flex',
+           alignItems:'center',justifyContent:'center',fontWeight:700,cursor:'pointer'}}>‹</button>
+         <span style={{fontFamily:FM,fontSize:9,color:C.textLight,letterSpacing:1}}>
+          {selIdx+1}/{filtered.length}
          </span>
          <button onClick={()=>navModal(1)}
-          style={{width:28,height:28,borderRadius:4,
-           border:`1px solid ${C.border}`,background:C.bgCard,
-           color:C.textMid,fontSize:14,display:'flex',
-           alignItems:'center',justifyContent:'center',fontWeight:700}}>›</button>
+          style={{width:28,height:28,borderRadius:4,border:`1px solid ${C.border}`,
+           background:C.bgCard,color:C.textMid,fontSize:14,display:'flex',
+           alignItems:'center',justifyContent:'center',fontWeight:700,cursor:'pointer'}}>›</button>
         </div>
        )}
       </div>
 
-      <div style={{position:'relative',height:200,overflow:'hidden',
+      {/* Bandeau image */}
+      <div style={{position:'relative',height:180,overflow:'hidden',
        margin:'0 -20px',background:C.bgDark}}>
        {img?(
-        <img src={img}
-         style={{width:'100%',height:'100%',objectFit:'cover',
-          objectPosition:'left center',
-          filter:'brightness(0.5)',
-          animation:'fadeUp 0.3s ease'}}
+        <img src={img} style={{width:'100%',height:'100%',objectFit:'cover',
+         objectPosition:'left center',filter:'brightness(0.5)'}}
          onError={e=>e.target.style.display='none'}/>
        ):(
         <div style={{height:'100%',display:'flex',alignItems:'center',
@@ -6848,145 +6912,243 @@ function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,condSessions}){
        <div style={{position:'absolute',inset:0,
         background:'linear-gradient(90deg,rgba(13,11,9,0) 0%,rgba(13,11,9,0.9) 55%)'}}/>
        <div style={{position:'absolute',left:0,top:0,bottom:0,width:4,background:srm}}/>
-
-       <div style={{position:'absolute',right:20,top:'50%',
-        transform:'translateY(-50%)',textAlign:'right',maxWidth:'55%'}}>
-        <div style={{fontFamily:FM,fontSize:8,
-         letterSpacing:3,color:srm,textTransform:'uppercase',marginBottom:4}}>
-         {r.style}
-        </div>
-        <div style={{fontFamily:"'Bebas Neue',sans-serif",
-         fontSize:36,color:C.cream,lineHeight:0.9,letterSpacing:1}}>
-         {r.nom}
-        </div>
-        <div style={{fontFamily:FM,fontSize:9,
-         color:C.textMid,marginTop:6,letterSpacing:0.5}}>
+       <div style={{position:'absolute',right:16,top:'50%',transform:'translateY(-50%)',
+        textAlign:'right',maxWidth:'58%'}}>
+        <div style={{fontFamily:FM,fontSize:8,letterSpacing:3,color:srm,
+         textTransform:'uppercase',marginBottom:4}}>{r.style}</div>
+        <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:34,
+         color:C.cream,lineHeight:0.9,letterSpacing:1}}>{r.nom}</div>
+        <div style={{fontFamily:FM,fontSize:9,color:C.textMid,marginTop:5}}>
          {r.abv}% vol · IBU {r.ibu}
         </div>
        </div>
-
        <button onClick={()=>{setUploadRec(r.id);fileRef.current?.click();}}
-        style={{position:'absolute',bottom:10,right:16,
-         fontFamily:FM,fontSize:9,fontWeight:700,
-         color:C.amber,background:'rgba(0,0,0,0.5)',
-         border:`1px solid ${C.amber}40`,
-         borderRadius:4,padding:'4px 10px',letterSpacing:0.5}}>
+        style={{position:'absolute',bottom:8,right:14,fontFamily:FM,fontSize:9,
+         fontWeight:700,color:C.amber,background:'rgba(0,0,0,0.5)',
+         border:`1px solid ${C.amber}40`,borderRadius:4,padding:'4px 8px',
+         letterSpacing:0.5,cursor:'pointer'}}>
         📷 {img?'CHANGER':'AJOUTER'}
        </button>
       </div>
 
-      <div style={{padding:'16px 0 0'}}>
+      {/* Onglets */}
+      <div style={{display:'flex',margin:'0 -20px',
+       borderBottom:`1px solid ${C.border}`,background:C.bgDark}}>
+       {btnTab('infos','📋 Infos')}
+       {btnTab('tarifs','💶 Tarifs')}
+       {btnTab('stock','📦 Stock PF')}
+      </div>
 
-       <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:14}}>
-        <Tag text={r.style} color={r.permanent?C.amber:C.hop}
-         bg={r.permanent?C.amberPale:C.hopPale}/>
-        <Tag text={`${r.abv}% vol`} color={C.textMid} bg={C.bgCard}/>
-        <Tag text={r.permanent?'Permanente':'Éphémère'}
-         color={r.permanent?C.amber:C.hop} bg={C.bgCard}/>
-       </div>
-
-       <div style={{height:2,background:srm,
-        borderRadius:1,marginBottom:14,width:'100%'}}/>
-
-       <p style={{color:C.textMid,fontSize:13,lineHeight:1.7,
-        marginBottom:16,fontStyle:'italic'}}>
-        « {r.description} »
-       </p>
-
-       <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',
-        gap:6,marginBottom:16}}>
-        {[['ABV',`${r.abv}%`,C.amber],
-         ['IBU',r.ibu,amerCol(r.ibu)],
-         ['SRM',r.srm,srm],
-         ['DI',r.og,C.textMid],
-         ['DF',r.fg||'—',C.textLight]
-        ].map(([l,v,col])=>(
-         <div key={l} style={{textAlign:'center',background:C.bgDark,
-          borderRadius:6,padding:'10px 2px',
-          borderBottom:`2px solid ${col}60`}}>
-          <div style={{fontFamily:FM,fontWeight:700,
-           fontSize:13,color:col,lineHeight:1}}>{v}</div>
-          <div style={{fontSize:8,color:C.textLight,
-           textTransform:'uppercase',letterSpacing:1,marginTop:4}}>{l}</div>
-         </div>
-        ))}
-       </div>
-
-       <div style={{marginBottom:14}}>
-        <div style={{fontFamily:FM,fontSize:8,
-         letterSpacing:2,color:C.textLight,textTransform:'uppercase',
-         marginBottom:8}}>Houblons & Levure</div>
-        <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
-         {r.houblons?.map(h=>(
-          <span key={h} style={{background:C.hopPale,color:C.hop,
-           padding:'4px 12px',borderRadius:4,fontSize:11,fontWeight:700,
-           border:`1px solid ${C.hop}30`,letterSpacing:0.3,
-           fontFamily:FM}}>
-           {h}
-          </span>
-         ))}
-         {r.levure&&(
-          <span style={{background:C.brickPale,color:C.brick,
-           padding:'4px 12px',borderRadius:4,fontSize:11,fontWeight:700,
-           border:`1px solid ${C.brick}30`,letterSpacing:0.3,
-           fontFamily:FM}}>
-           {r.levure}
-          </span>
-         )}
+      {/* ── ONGLET INFOS ── */}
+      {ficheTab==='infos'&&(
+       <div style={{paddingTop:16}}>
+        <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:12}}>
+         <Tag text={r.style} color={r.permanent?C.amber:C.hop} bg={r.permanent?C.amberPale:C.hopPale}/>
+         <Tag text={`${r.abv}% vol`} color={C.textMid} bg={C.bgCard}/>
+         <Tag text={r.permanent?'Permanente':'Éphémère'} color={r.permanent?C.amber:C.hop} bg={C.bgCard}/>
         </div>
-       </div>
-
-       {(px.b33||px.f20)&&(
-        <div style={{marginBottom:16}}>
-         <div style={{fontFamily:FM,fontSize:8,
-          letterSpacing:2,color:C.textLight,textTransform:'uppercase',
-          marginBottom:8}}>Tarifs</div>
-         <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:6}}>
-          {[['🍺','33cl',px.b33],['🍾','75cl',px.b75],
-           ['🛢','Fût 20L',px.f20],['🛢','Fût 30L',px.f30]
-          ].map(([ico,l,p])=>p?(
-           <div key={l} style={{background:C.bgDark,borderRadius:6,
-            padding:'10px 6px',textAlign:'center',
-            borderBottom:`2px solid ${C.amber}50`}}>
-            <div style={{fontSize:16,marginBottom:4}}>{ico}</div>
-            <div style={{fontFamily:"'Bebas Neue',sans-serif",
-             fontSize:20,color:C.amber,lineHeight:1}}>{p}€</div>
-            <div style={{fontFamily:FM,
-             fontSize:8,color:C.textLight,marginTop:3,
-             letterSpacing:0.5}}>{l}</div>
-           </div>
-          ):null)}
-         </div>
-        </div>
-       )}
-
-       {stock.length>0&&stock.some(s=>s.dispo>0)&&(
-        <div style={{background:C.bgDark,borderRadius:8,
-         padding:'12px 14px',marginBottom:16,
-         borderLeft:`3px solid ${C.greenL}`}}>
-         <div style={{fontFamily:FM,fontSize:8,
-          letterSpacing:2,color:C.greenL,textTransform:'uppercase',
-          marginBottom:8}}>Stock disponible</div>
-         {stock.filter(s=>s.dispo>0).map((s,i)=>(
-          <div key={`k${i}`} style={{display:'flex',
-           justifyContent:'space-between',
-           fontSize:12,color:C.textMid,marginBottom:4}}>
-           <span>{s.type}</span>
-           <span style={{fontFamily:FM,
-            fontWeight:700,color:C.greenL}}>
-            {s.dispo.toLocaleString('fr')}
-           </span>
+        <div style={{height:2,background:srm,borderRadius:1,marginBottom:12}}/>
+        <p style={{color:C.textMid,fontSize:13,lineHeight:1.7,marginBottom:14,fontStyle:'italic'}}>
+         « {r.description} »
+        </p>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:5,marginBottom:14}}>
+         {[['ABV',`${r.abv}%`,C.amber],['IBU',r.ibu,amerCol(r.ibu)],
+          ['SRM',r.srm,srm],['DI',r.og,C.textMid],['DF',r.fg||'—',C.textLight]
+         ].map(([l,v,col])=>(
+          <div key={l} style={{textAlign:'center',background:C.bgDark,borderRadius:6,
+           padding:'8px 2px',borderBottom:`2px solid ${col}60`}}>
+           <div style={{fontFamily:FM,fontWeight:700,fontSize:12,color:col}}>{v}</div>
+           <div style={{fontSize:8,color:C.textLight,textTransform:'uppercase',
+            letterSpacing:1,marginTop:3}}>{l}</div>
           </div>
          ))}
         </div>
-       )}
+        <div style={{marginBottom:12}}>
+         <div style={{fontFamily:FM,fontSize:8,letterSpacing:2,color:C.textLight,
+          textTransform:'uppercase',marginBottom:6}}>Houblons & Levure</div>
+         <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
+          {r.houblons?.map(h=>(
+           <span key={h} style={{background:C.hopPale,color:C.hop,padding:'3px 10px',
+            borderRadius:4,fontSize:11,fontWeight:700,border:`1px solid ${C.hop}30`,fontFamily:FM}}>{h}</span>
+          ))}
+          {r.levure&&(
+           <span style={{background:C.brickPale,color:C.brick,padding:'3px 10px',
+            borderRadius:4,fontSize:11,fontWeight:700,border:`1px solid ${C.brick}30`,fontFamily:FM}}>
+            {r.levure}
+           </span>
+          )}
+         </div>
+        </div>
+       </div>
+      )}
 
+      {/* ── ONGLET TARIFS ── */}
+      {ficheTab==='tarifs'&&(
+       <div style={{paddingTop:14}}>
+        {/* Toggle Public / Pro */}
+        <div style={{display:'flex',background:C.bgDark,borderRadius:8,padding:3,
+         marginBottom:14,border:`1px solid ${C.border}`}}>
+         {[['public','👥 Public'],['pro','🤝 Pro']].map(([m,lbl])=>(
+          <button key={m} onClick={()=>setTarifMode(m)}
+           style={{flex:1,padding:'7px 0',borderRadius:6,fontSize:12,fontWeight:700,
+            fontFamily:FM,border:'none',cursor:'pointer',
+            background:tarifMode===m?C.amber:'transparent',
+            color:tarifMode===m?C.bgDark:C.textMid,
+            transition:'all 0.15s'}}>
+           {lbl}
+          </button>
+         ))}
+        </div>
+
+        {/* Grille 4 formats */}
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:14}}>
+         {['b33','b75','f20','f30'].map(fmt=>{
+          const cout  = coutRevient(r,fmt);
+          const prix  = parseFloat(curPx[fmt])||0;
+          const mg    = marge(prix,cout);
+          const mgCol = mg==null?C.textLight:mg>=40?C.greenL:mg>=20?C.amber:C.alert;
+          return (
+           <div key={fmt} style={{background:C.bgDark,borderRadius:8,padding:'10px 12px',
+            border:`1px solid ${C.border}`}}>
+            <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
+             <span style={{fontSize:18}}>{FMT_ICO[fmt]}</span>
+             <span style={{fontFamily:FM,fontSize:11,color:C.textMid,fontWeight:700}}>
+              {FMT_LBL[fmt]}
+             </span>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:4,marginBottom:6}}>
+             <input type="number" min="0" step="0.1"
+              value={curPx[fmt]||''}
+              onChange={e=>setCurPx(prev=>({...prev,[fmt]:e.target.value}))}
+              placeholder="0.00"
+              style={{width:'100%',background:C.bg,border:`1px solid ${C.amber}60`,
+               borderRadius:6,padding:'6px 8px',fontSize:16,color:C.amber,
+               fontFamily:FM,fontWeight:700,textAlign:'right',outline:'none'}}/>
+             <span style={{fontFamily:FM,fontSize:13,color:C.amber,fontWeight:700}}>€</span>
+            </div>
+            <div style={{display:'flex',justifyContent:'space-between',
+             fontSize:10,fontFamily:FM}}>
+             <span style={{color:C.textLight}}>
+              CR: {cout>0?cout.toFixed(2)+'€':'—'}
+             </span>
+             {mg!=null&&(
+              <span style={{color:mgCol,fontWeight:700}}>
+               Marge {mg}%
+              </span>
+             )}
+            </div>
+           </div>
+          );
+         })}
+        </div>
+
+        {/* Note coût matière */}
+        {coutMatL(r)>0&&(
+         <div style={{background:C.bgCard,borderRadius:6,padding:'8px 12px',
+          marginBottom:12,fontSize:11,fontFamily:FM,color:C.textMid}}>
+          Coût matière: <strong style={{color:C.text}}>{coutMatL(r).toFixed(2)}€/L</strong>
+          {' · '}Cond.: <strong style={{color:C.text}}>{(pCond['Bouteille 33cl']||0).toFixed(2)}€/33cl</strong>
+         </div>
+        )}
+
+        <button onClick={()=>saveTarifs(r)}
+         style={{width:'100%',padding:'12px',borderRadius:8,border:'none',
+          background:C.amber,color:C.bgDark,fontFamily:FM,fontSize:13,
+          fontWeight:700,letterSpacing:0.5,cursor:'pointer'}}>
+         ✓ Enregistrer les tarifs
+        </button>
+       </div>
+      )}
+
+      {/* ── ONGLET STOCK PF ── */}
+      {ficheTab==='stock'&&(
+       <div style={{paddingTop:14}}>
+        <div style={{fontFamily:FM,fontSize:8,letterSpacing:2,color:C.textLight,
+         textTransform:'uppercase',marginBottom:10}}>
+         Lots en stock — {r.nom}
+        </div>
+        {lotsRec.length===0?(
+         <div style={{textAlign:'center',padding:'32px 16px',color:C.textLight,
+          fontFamily:FM,fontSize:12}}>
+          Aucun lot en stock produits finis
+         </div>
+        ):(
+         lotsRec.map(pf=>{
+          const cs = condSessions.find(x=>`${x.id}`===pf.lotId.split('-')[0]);
+          const lot = cs?.lots?.find(l=>`${cs.id}-${l.lot}`===pf.lotId);
+          return (
+           <div key={pf.id||pf.lotId} style={{background:C.bgDark,borderRadius:8,
+            padding:'10px 12px',marginBottom:8,border:`1px solid ${C.border}`}}>
+            <div style={{display:'flex',justifyContent:'space-between',
+             alignItems:'flex-start',marginBottom:8}}>
+             <div>
+              <div style={{fontFamily:FM,fontSize:11,color:C.text,fontWeight:700}}>
+               {pf.type} · Lot {pf.lot}
+              </div>
+              <div style={{fontFamily:FM,fontSize:9,color:C.textLight,marginTop:2}}>
+               Conditionné le {fmtDate(pf.dateCond)} · Init: {pf.qteInit}
+              </div>
+             </div>
+             <div style={{textAlign:'right'}}>
+              <div style={{fontFamily:FM,fontSize:9,color:C.textLight}}>Disponible</div>
+              <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,
+               color:pf.qteDispo>0?C.greenL:C.alert,lineHeight:1}}>
+               {pf.qteDispo}
+              </div>
+             </div>
+            </div>
+            {/* Édition rapide de la quantité disponible */}
+            <div style={{display:'flex',gap:8,alignItems:'center'}}>
+             <span style={{fontFamily:FM,fontSize:10,color:C.textMid,flex:1}}>
+              Modifier dispo :
+             </span>
+             <button onClick={()=>{
+              if(pf.qteDispo>0) setStockPF(prev=>prev.map(x=>x.id===pf.id||x.lotId===pf.lotId
+               ?{...x,qteDispo:Math.max(0,x.qteDispo-1)}:x));
+             }} style={{width:30,height:30,borderRadius:6,border:`1px solid ${C.border}`,
+              background:C.bgCard,color:C.text,fontSize:16,fontWeight:700,cursor:'pointer'}}>−</button>
+             <input type="number" min="0" max={pf.qteInit}
+              value={pf.qteDispo}
+              onChange={e=>{
+               const v=Math.max(0,Math.min(pf.qteInit,parseInt(e.target.value)||0));
+               setStockPF(prev=>prev.map(x=>x.id===pf.id||x.lotId===pf.lotId
+                ?{...x,qteDispo:v}:x));
+              }}
+              style={{width:52,textAlign:'center',background:C.bg,
+               border:`1px solid ${C.amber}60`,borderRadius:6,
+               padding:'4px 6px',fontSize:14,color:C.amber,
+               fontFamily:FM,fontWeight:700,outline:'none'}}/>
+             <button onClick={()=>{
+              if(pf.qteDispo<pf.qteInit) setStockPF(prev=>prev.map(x=>x.id===pf.id||x.lotId===pf.lotId
+               ?{...x,qteDispo:Math.min(x.qteInit,x.qteDispo+1)}:x));
+             }} style={{width:30,height:30,borderRadius:6,border:`1px solid ${C.border}`,
+              background:C.bgCard,color:C.text,fontSize:16,fontWeight:700,cursor:'pointer'}}>+</button>
+             <span style={{fontFamily:FM,fontSize:9,color:C.textLight}}>/ {pf.qteInit}</span>
+            </div>
+           </div>
+          );
+         })
+        )}
+        {/* Résumé total */}
+        {lotsRec.length>0&&(
+         <div style={{background:C.amberPale,borderRadius:8,padding:'10px 14px',
+          marginTop:4,display:'flex',justifyContent:'space-between',alignItems:'center',
+          border:`1px solid ${C.amber}40`}}>
+          <span style={{fontFamily:FM,fontSize:11,color:C.textMid}}>Total disponible</span>
+          <span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,color:C.amber}}>
+           {lotsRec.reduce((s,x)=>s+x.qteDispo,0).toLocaleString('fr')} unités
+          </span>
+         </div>
+        )}
+       </div>
+      )}
+
+      <div style={{marginTop:16}}>
        <button onClick={()=>setSel(null)}
-        style={{width:'100%',padding:'12px',borderRadius:6,
+        style={{width:'100%',padding:'11px',borderRadius:6,
          border:`1px solid ${C.border}`,background:'transparent',
-         color:C.textMid,fontFamily:FM,
-         fontSize:11,fontWeight:700,letterSpacing:1,
-         textTransform:'uppercase'}}>
+         color:C.textMid,fontFamily:FM,fontSize:11,fontWeight:700,
+         letterSpacing:1,textTransform:'uppercase',cursor:'pointer'}}>
         ← RETOUR AU CATALOGUE
        </button>
       </div>
@@ -8810,7 +8972,7 @@ export default function App(){
     {module==='planification'   &&<ModulePlanification brassins={brassins} setBrassins={setBrassins} condSessions={condSessions} recettes={recettes} locations={locations}/>}
     {module==='tireuses'        &&<ModuleTireuses tireuses={tireuses} setTireuses={setTireuses} locations={locations} setLocations={setLocations} stockCond={stockCond} setStockCond={setStockCond} recettes={recettes}/>}
     {module==='stockpf'         &&<ModuleStockPF condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} setStockPF={setStockPF} stock={stock}/>}
-    {module==='catalogue'       &&<ModuleCatalogue recettes={recettes} setRecettes={setRecettes} brassins={brassins} stockPF={stockPF} condSessions={condSessions}/>}
+    {module==='catalogue'       &&<ModuleCatalogue recettes={recettes} setRecettes={setRecettes} brassins={brassins} stockPF={stockPF} setStockPF={setStockPF} condSessions={condSessions} stock={stock} stockCond={stockCond}/>}
     {module==='pl'              &&<ModulePL brassins={brassins} recettes={recettes} condSessions={condSessions} stockPF={stockPF} locations={locations} stock={stock} stockCond={stockCond}/>}
     {module==='encaissement'    &&<ModuleEncaissement locations={locations} setLocations={setLocations}/>}
     {module==='simulation'      &&<ModuleSimulation recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond} condSessions={condSessions} stockPF={stockPF}/>}
