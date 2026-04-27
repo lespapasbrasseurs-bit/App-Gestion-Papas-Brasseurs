@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 const FM="'DM Mono',monospace";
-const FB="'Barlow Condensed',sans-serif";
-const FA="'Abril Fatface',serif";
+const FB="'DM Sans',sans-serif";
+const FA="'Fraunces',serif";
+const FP="'PoetsenOne',sans-serif";
+const FD="'DKLemonYellowSun',cursive";
 
 const FONTS = `
-@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Abril+Fatface&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+@font-face{font-family:'PoetsenOne';src:url('/fonts/PoetsenOne.ttf') format('truetype');font-weight:normal;font-style:normal}
+@font-face{font-family:'DKLemonYellowSun';src:url('/fonts/DKLemonYellowSun.otf') format('opentype');font-weight:normal;font-style:normal}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -14,7 +18,9 @@ input,textarea,select{font-family:'DM Sans',sans-serif;font-size:16px!important;
 button{-webkit-tap-highlight-color:transparent;cursor:pointer}
 `;
 
-const C={bg:"#1A1612",bgCard:"#252018",bgDark:"#120F0C",cream:"#F2E8D5",border:"#3D3228",amber:"#E8A020",amberL:"#FFBB44",amberPale:"#2E2410",green:"#4A8040",greenL:"#66A858",greenPale:"#182414",brick:"#A03828",brickPale:"#281208",hop:"#6A7E30",hopPale:"#1A2008",text:"#F2E8D5",textMid:"#C0A880",textLight:"#8A7458",alert:"#E04040",ok:"#4A8040",warn:"#E8A020"};
+const C_LIGHT={bg:"#F4ECDC",bgCard:"#FBF6E9",bgDark:"#EBE0C8",cream:"#F0E6D0",border:"#D9CCAC",amber:"#D8901E",amberL:"#E8A030",amberPale:"#FEEFD5",green:"#4A8040",greenL:"#66A858",greenPale:"#E4F0DE",brick:"#A03828",brickPale:"#FAE8E4",hop:"#6A7E30",hopPale:"#EFF2DC",text:"#1F1A12",textMid:"#5C4F3A",textLight:"#9A8A6E",alert:"#C83030",ok:"#4A8040",warn:"#D8901E"};
+const C_DARK ={bg:"#1F1A12",bgCard:"#28221A",bgDark:"#141008",cream:"#2A2218",border:"#3D3428",amber:"#E8A030",amberL:"#F0B040",amberPale:"#3D2A08",green:"#66A858",greenL:"#80C060",greenPale:"#1A2E16",brick:"#C04838",brickPale:"#2E1410",hop:"#8A9E40",hopPale:"#1E2410",text:"#F4ECDC",textMid:"#C0AE8E",textLight:"#806E50",alert:"#E04040",ok:"#66A858",warn:"#E8A030"};
+let C={...C_LIGHT};
 const CAT_COLORS={Malt:"#C8820A",Houblon:"#4A6741",Levure:"#8B3A2A",Épice:"#7A8B3C",Sucre:"#9B8B6E"};
 const CAT_COND_COLORS={Bouteille:"#2A6080",Capsule:"#6B5A3E",Étiquette:"#7A8B3C",Fût:"#8B3A2A",Emballage:"#4A6741",Gaz:"#5A4A7A",Nettoyage:"#9B8B6E"};
 const STATUTS={planifié:{label:"Planifié",color:C.textMid,bg:C.cream,dot:"⬜"},brassage:{label:"Brassage",color:C.amber,bg:C.amberPale,dot:"🟡"},fermentation:{label:"Fermentation",color:C.green,bg:C.greenPale,dot:"🟢"},garde:{label:"Garde froide",color:"#2A6080",bg:"#E8F4F8",dot:"🔵"},conditionnement:{label:"Conditionnement",color:C.hop,bg:C.hopPale,dot:"🟣"},terminé:{label:"Terminé",color:C.textLight,bg:C.border,dot:"⚪"}};
@@ -40,17 +46,18 @@ const calcPrixCond=(sc)=>{
   f20:0, f30:0,
  };
 };
-const iSt={width:'100%',background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:8,color:C.cream,padding:'10px 13px',fontSize:16,outline:'none',transition:'border-color 0.15s'};
-const Btn=({p,children,onClick,style={}})=><button onClick={onClick} style={{padding:'10px 18px',borderRadius:8,border:'none',fontWeight:700,fontSize:14,background:p?C.amber:C.cream,color:p?'#fff':C.text,minHeight:44,...style}}>{children}</button>;
+const iSt={width:'100%',background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,padding:'10px 13px',fontSize:16,outline:'none',transition:'border-color 0.15s'};
+const Btn=({p,children,onClick,style={}})=><button onClick={onClick} style={{padding:'10px 20px',borderRadius:12,border:'none',fontWeight:700,fontSize:14,fontFamily:p?FA:FB,fontStyle:p?'italic':'normal',background:p?C.amber:C.bgCard,color:p?'#fff':C.text,minHeight:44,border:p?'none':`1px solid ${C.border}`,boxShadow:p?'0 4px 14px -4px rgba(216,144,30,0.4)':'none',...style}}>{children}</button>;
 const Label=({t})=><label style={{display:'block',fontSize:11,fontWeight:700,color:C.textMid,marginBottom:5,textTransform:'uppercase',letterSpacing:0.8}}>{t}</label>;
 function Tag({text,color=C.amber,bg=C.amberPale}){return <span style={{display:'inline-block',padding:'2px 9px',borderRadius:20,background:bg,color,fontSize:11,fontWeight:600,fontFamily:FM,border:`1px solid ${color}30`}}>{text}</span>;}
 function Badge({statut}){const s=STATUTS[statut]||STATUTS.planifié;return <span style={{display:'inline-flex',alignItems:'center',gap:4,padding:'3px 9px',borderRadius:20,background:s.bg,color:s.color,fontSize:11,fontWeight:700,fontFamily:FM}}>{s.dot} {s.label}</span>;}
-function StatCard({label,value,sub,color=C.amber,icon,onClick}){return(<div onClick={onClick} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:12,padding:'14px 16px',position:'relative',overflow:'hidden',cursor:onClick?'pointer':'default'}}><div style={{position:'absolute',top:0,left:0,right:0,height:3,background:color}}/><div style={{fontSize:20,marginBottom:4}}>{icon}</div><div style={{fontSize:'clamp(18px,4vw,26px)',fontFamily:FA,color,lineHeight:1}}>{value}</div><div style={{fontSize:10,color:C.textLight,textTransform:'uppercase',letterSpacing:1.2,marginTop:3}}>{label}</div>{sub&&<div style={{fontSize:11,color:C.textMid,marginTop:2}}>{sub}</div>}</div>);}
+function StatCard({label,value,sub,color=C.amber,icon,onClick}){return(<div onClick={onClick} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:16,padding:'15px 16px',position:'relative',overflow:'hidden',cursor:onClick?'pointer':'default',boxShadow:'0 4px 14px -6px rgba(60,40,10,0.12)'}}><div style={{position:'absolute',top:0,left:0,right:0,height:3,background:color,borderRadius:'16px 16px 0 0'}}/><div style={{fontSize:18,marginBottom:4,opacity:0.9}}>{icon}</div><div style={{fontSize:'clamp(20px,4vw,28px)',fontFamily:FA,fontStyle:'italic',color,lineHeight:1,letterSpacing:-0.5}}>{value}</div><div style={{fontSize:9,color:C.textLight,textTransform:'uppercase',letterSpacing:1.4,marginTop:4,fontFamily:FM}}>{label}</div>{sub&&<div style={{fontSize:11,color:C.textMid,marginTop:3}}>{sub}</div>}</div>);}
 
 const Section = ({label,title,color=C.amber,children}) => (
- <div style={{background:C.bgCard,borderRadius:12,padding:'14px',
+ <div style={{background:C.bgCard,borderRadius:16,padding:'15px',
   marginBottom:12,border:`1px solid ${C.border}`,
-  borderLeft:`3px solid ${color}`}}>
+  borderLeft:`3px solid ${color}`,
+  boxShadow:'0 4px 14px -6px rgba(60,40,10,0.10)'}}>
   <div style={{fontFamily:FM,fontSize:9,
    fontWeight:700,letterSpacing:2,color,textTransform:'uppercase',
    marginBottom:10}}>{label||title}</div>
@@ -63,7 +70,7 @@ const Row = ({label,value,mono}) => (
   borderBottom:`1px solid ${C.border}`}}>
   <span style={{fontSize:12,color:C.textLight}}>{label}</span>
   <span style={{fontFamily:mono?"'DM Mono',monospace":undefined,
-   fontSize:12,fontWeight:600,color:C.cream,textAlign:'right',
+   fontSize:12,fontWeight:600,color:C.text,textAlign:'right',
    maxWidth:'55%',overflow:'hidden',textOverflow:'ellipsis',
    whiteSpace:'nowrap'}}>{value||'—'}</span>
  </div>
@@ -460,18 +467,18 @@ function ModuleDashboard({stock,brassins,fournisseurs,condSessions,recettes,stoc
  return (
   <div style={{paddingBottom:80}}>
 
-   <div style={{background:C.bgDark,borderBottom:`1px solid ${C.border}`,
+   <div style={{background:C.bgCard,borderBottom:`1px solid ${C.border}`,
     display:'flex',overflowX:'auto',scrollbarWidth:'none'}}>
     {TABS.map(t=>{
      const act=view===t.id;
      return (
       <button key={t.id} onClick={()=>setView(t.id)}
-       style={{flexShrink:0,padding:'11px 16px',background:'none',border:'none',
-        cursor:'pointer',fontSize:12,fontWeight:act?700:400,
+       style={{flexShrink:0,padding:'11px 14px',background:'none',border:'none',
+        cursor:'pointer',fontSize:11,fontWeight:act?700:500,
         color:act?C.amber:C.textLight,whiteSpace:'nowrap',
         borderBottom:act?`2px solid ${C.amber}`:'2px solid transparent',
-        fontFamily:FM,letterSpacing:0.5,
-        textTransform:'uppercase',transition:'color 0.15s'}}>
+        fontFamily:FB,transition:'color 0.15s',
+        WebkitTapHighlightColor:'transparent'}}>
        {t.icon} {t.label}
       </button>
      );
@@ -480,55 +487,77 @@ function ModuleDashboard({stock,brassins,fournisseurs,condSessions,recettes,stoc
 
    {view==='dashboard'&&(
     <div style={{padding:'16px'}}>
-     <div style={{marginBottom:16}}>
-      <h1 style={{fontFamily:FA,
-       fontSize:'clamp(22px,6vw,30px)',color:C.text}}>Tableau de bord</h1>
-      <p style={{color:C.textLight,fontSize:12,marginTop:3,
-       fontFamily:FM,textTransform:'capitalize'}}>{today}</p>
+     {/* Greeting */}
+     <div style={{marginBottom:18,paddingBottom:16,borderBottom:`1px solid ${C.border}`}}>
+      <div style={{fontSize:10,color:C.textLight,fontFamily:FM,letterSpacing:1,textTransform:'uppercase',marginBottom:4}}>{today}</div>
+      <h1 style={{fontFamily:FA,fontStyle:'italic',fontSize:'clamp(26px,7vw,34px)',color:C.text,lineHeight:1,letterSpacing:-0.5}}>Tableau de bord</h1>
      </div>
+     {/* Hero KPI — volume */}
+     {totalVol>0&&(
+      <div style={{background:`linear-gradient(135deg,${C.amber} 0%,#A85E10 100%)`,borderRadius:20,padding:'20px 22px',marginBottom:16,position:'relative',overflow:'hidden',boxShadow:`0 8px 24px -8px ${C.amber}60`}}>
+       <div style={{position:'absolute',right:-20,bottom:-20,width:100,height:100,borderRadius:'50%',background:'rgba(255,255,255,0.07)'}}/>
+       <div style={{fontSize:9,color:'rgba(255,255,255,0.7)',fontFamily:FM,letterSpacing:1.6,textTransform:'uppercase',marginBottom:6}}>Volume brassé total</div>
+       <div style={{fontFamily:FA,fontStyle:'italic',fontSize:'clamp(38px,9vw,52px)',color:'#fff',lineHeight:1,letterSpacing:-1}}>
+        {(totalVol/1000).toFixed(2)}<span style={{fontSize:20,marginLeft:6,fontStyle:'normal',fontWeight:600,opacity:0.85}}>hL</span>
+       </div>
+       <div style={{marginTop:10,display:'flex',gap:8,flexWrap:'wrap'}}>
+        <span style={{background:'rgba(255,255,255,0.18)',color:'#fff',fontSize:10,padding:'3px 10px',borderRadius:99,fontFamily:FM,fontWeight:600}}>{actifs.length} en cours</span>
+        <span style={{background:'rgba(255,255,255,0.18)',color:'#fff',fontSize:10,padding:'3px 10px',borderRadius:99,fontFamily:FM,fontWeight:600}}>{termines.length} terminés</span>
+       </div>
+      </div>
+     )}
+     {/* KPI grid */}
      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:16}}>
       <StatCard label="En cours" value={actifs.length} icon="⚗️" color={C.amber}
        sub={`${actifs.filter(b=>b.statut==='fermentation').length} en fermentation`}
        onClick={()=>setModule('production')}/>
-      <StatCard label="Volume" value={`${(totalVol/1000).toFixed(2)} hL`} icon="🪣" color={C.green}
-       sub="Oct.25–Mar.26" onClick={()=>setModule('historique')}/>
+      <StatCard label="Bouteilles" value={totalBt.toLocaleString('fr')} icon="🍾"
+       color={"#2A6080"} sub={`${condSessions.length} sessions`}
+       onClick={()=>setModule('conditionnement')}/>
       <StatCard label="Alertes stock" value={alertes.length} icon="📦"
        color={critiques.length>0?C.alert:C.warn}
        sub={critiques.length>0?`⚠ ${critiques.length} critique(s)`:'Surveiller'}
        onClick={()=>setModule('stocks')}/>
-      <StatCard label="Bouteilles" value={totalBt.toLocaleString('fr')} icon="🍾"
-       color={"#2A6080"} sub={`${condSessions.length} sessions`}
-       onClick={()=>setModule('conditionnement')}/>
+      <StatCard label="Locations" value={locations.filter(l=>l.statut==='confirmée').length} icon="🍻"
+       color={C.green} sub="confirmées"
+       onClick={()=>setModule('tireuses')}/>
      </div>
      <div style={{background:C.bgCard,border:`1px solid ${C.border}`,
-      borderRadius:14,padding:'14px 16px',marginBottom:14}}>
+      borderRadius:18,padding:'15px 16px',marginBottom:14,
+      boxShadow:'0 4px 14px -6px rgba(60,40,10,0.10)'}}>
       <div style={{display:'flex',justifyContent:'space-between',
        alignItems:'center',marginBottom:12}}>
-       <h3 style={{fontFamily:FA,fontSize:17,color:C.text}}>
-        Fermenteurs actifs
-       </h3>
+       <div>
+        <div style={{fontSize:9,color:C.amber,fontFamily:FM,letterSpacing:2,fontWeight:700,textTransform:'uppercase',marginBottom:2}}>Brasserie</div>
+        <h3 style={{fontFamily:FA,fontStyle:'italic',fontSize:18,color:C.text,lineHeight:1}}>Fermenteurs actifs</h3>
+       </div>
        <button onClick={()=>setModule('production')}
-        style={{background:'none',border:`1px solid ${C.border}`,
-         borderRadius:8,padding:'5px 12px',cursor:'pointer',
-         fontSize:12,color:C.textMid}}>Voir →</button>
+        style={{background:C.bgDark,border:`1px solid ${C.border}`,
+         borderRadius:10,padding:'6px 14px',cursor:'pointer',
+         fontSize:12,color:C.textMid,fontFamily:FM,fontWeight:600}}>Voir →</button>
       </div>
       {actifs.length===0&&<p style={{color:C.textLight,textAlign:'center',
-       padding:'12px 0',fontSize:13}}>Aucun brassin en cours</p>}
-      {actifs.map(b=>{const j=Math.floor((Date.now()-new Date(b.dateDebut))/86400000);return(
-       <div key={b.id} style={{display:'flex',alignItems:'center',gap:10,
-        padding:'10px 12px',borderRadius:10,background:C.bg,
-        marginBottom:6,border:`1px solid ${C.border}`}}>
-        <div style={{width:34,height:34,borderRadius:8,background:C.bgDark,
+       padding:'16px 0',fontSize:13,fontFamily:FA,fontStyle:'italic'}}>Aucun brassin en cours</p>}
+      {actifs.map(b=>{
+       const j=Math.floor((Date.now()-new Date(b.dateDebut))/86400000);
+       const s=STATUTS[b.statut]||STATUTS.planifié;
+       return(
+       <div key={b.id} style={{display:'flex',alignItems:'center',gap:12,
+        padding:'11px 12px',borderRadius:12,background:C.bg,
+        marginBottom:6,border:`1px solid ${C.border}`,
+        borderLeft:`3px solid ${s.color}`}}>
+        <div style={{width:36,height:36,borderRadius:10,
+         background:C.bgDark,border:`1px solid ${C.border}`,
          display:'flex',alignItems:'center',justifyContent:'center',
-         fontFamily:FM,fontSize:9,color:C.amberL,
+         fontFamily:FM,fontSize:10,color:C.amber,fontWeight:700,
          flexShrink:0,lineHeight:1,textAlign:'center'}}>{b.fermenteur}</div>
         <div style={{flex:1,minWidth:0}}>
-         <div style={{fontWeight:700,color:C.text,fontSize:14,
+         <div style={{fontFamily:FA,fontStyle:'italic',fontWeight:600,color:C.text,fontSize:15,
           overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
           {b.recette}
          </div>
-         <div style={{fontSize:11,color:C.textLight,
-          fontFamily:FM,marginTop:1}}>
+         <div style={{fontSize:10,color:C.textLight,
+          fontFamily:FM,marginTop:2}}>
           {fmtDate(b.dateDebut)} · J+{j}
          </div>
         </div>
@@ -537,17 +566,21 @@ function ModuleDashboard({stock,brassins,fournisseurs,condSessions,recettes,stoc
       );})}
      </div>
      <div style={{background:C.bgCard,
-      border:`1.5px solid ${critiques.length>0?C.alert:C.border}`,
-      borderRadius:14,padding:'14px 16px'}}>
+      border:`1px solid ${critiques.length>0?C.alert+'60':C.border}`,
+      borderRadius:18,padding:'15px 16px',
+      boxShadow:'0 4px 14px -6px rgba(60,40,10,0.10)'}}>
       <div style={{display:'flex',justifyContent:'space-between',
        alignItems:'center',marginBottom:10}}>
-       <h3 style={{fontFamily:FA,fontSize:17,color:C.text}}>
-        {critiques.length>0?'⚠ ':''}Alertes stock
-       </h3>
+       <div>
+        <div style={{fontSize:9,color:critiques.length>0?C.alert:C.amber,fontFamily:FM,letterSpacing:2,fontWeight:700,textTransform:'uppercase',marginBottom:2}}>Achats</div>
+        <h3 style={{fontFamily:FA,fontStyle:'italic',fontSize:18,color:C.text,lineHeight:1}}>
+         {critiques.length>0?'⚠ ':''}Alertes stock
+        </h3>
+       </div>
        <button onClick={()=>setModule('stocks')}
-        style={{background:'none',border:`1px solid ${C.border}`,
-         borderRadius:8,padding:'5px 12px',cursor:'pointer',
-         fontSize:12,color:C.textMid}}>Gérer →</button>
+        style={{background:C.bgDark,border:`1px solid ${C.border}`,
+         borderRadius:10,padding:'6px 14px',cursor:'pointer',
+         fontSize:12,color:C.textMid,fontFamily:FM,fontWeight:600}}>Gérer →</button>
       </div>
       {alertes.length===0
        ?<div style={{textAlign:'center',padding:'10px 0',color:C.ok}}>
@@ -784,7 +817,7 @@ function ModuleDashboard({stock,brassins,fournisseurs,condSessions,recettes,stoc
           cursor:'pointer',borderLeft:`3px solid ${C.amber}`}}>
          <div style={{flex:1,minWidth:0}}>
           <div style={{fontFamily:FM,fontWeight:700,
-           fontSize:13,color:C.cream,marginBottom:3}}>
+           fontSize:13,color:C.text,marginBottom:3}}>
            {lot.lot}
           </div>
           <div style={{fontSize:11,color:C.textLight,
@@ -910,7 +943,7 @@ function ModuleDashboard({stock,brassins,fournisseurs,condSessions,recettes,stoc
               display:'flex',justifyContent:'space-between',
               alignItems:'center'}}>
               <div style={{flex:1,minWidth:0}}>
-               <div style={{fontWeight:600,color:C.cream,
+               <div style={{fontWeight:600,color:C.text,
                 fontSize:12}}>{ing.nom}</div>
                <div style={{fontSize:10,color:C.textLight,
                 fontFamily:FM,marginTop:1}}>
@@ -2783,7 +2816,7 @@ function ModuleProduction({brassins,setBrassins,recettes}){
           fontSize:12,color:C.textMid}}>
           <span>{l}</span>
           <span style={{fontFamily:FM,
-           fontWeight:600,color:C.cream}}>{v}</span>
+           fontWeight:600,color:C.text}}>{v}</span>
          </div>
         ))}
        </div>
@@ -5809,8 +5842,8 @@ function ModuleTireuses({tireuses,setTireuses,locations,setLocations,stockCond,s
  ];
 
  return (
-  <div style={{paddingBottom:80}}>
-   <div style={{background:C.bgDark,padding:'10px 16px 0',position:'sticky',top:57,zIndex:50}}>
+  <div>
+   <div style={{background:C.bgDark,padding:'10px 16px 0',position:'sticky',top:0,zIndex:50}}>
     <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
      <div>
       <div style={{fontFamily:FA,fontSize:20,color:C.amberL,lineHeight:1}}>
@@ -7335,7 +7368,7 @@ function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,setStockPF,condS
        NOS BIÈRES
       </div>
       <div style={{fontFamily:"'Bebas Neue',sans-serif",
-       fontSize:38,color:C.cream,lineHeight:0.9,letterSpacing:2}}>
+       fontSize:38,color:C.text,lineHeight:0.9,letterSpacing:2}}>
        ARTISANALES
       </div>
       <div style={{fontFamily:FM,
@@ -7430,7 +7463,7 @@ function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,setStockPF,condS
          {r.style} · {r.permanent?'Permanente':'Éphémère'}
         </div>
         <div style={{fontFamily:"'Bebas Neue',sans-serif",
-         fontSize:32,color:C.cream,lineHeight:0.95,letterSpacing:1,
+         fontSize:32,color:C.text,lineHeight:0.95,letterSpacing:1,
          marginBottom:10}}>
          {r.nom}
         </div>
@@ -7514,7 +7547,7 @@ function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,setStockPF,condS
           letterSpacing:2,color:srm,textTransform:'uppercase',
           marginBottom:3}}>{r.style}</div>
          <div style={{fontFamily:"'Bebas Neue',sans-serif",
-          fontSize:20,color:C.cream,lineHeight:0.95,
+          fontSize:20,color:C.text,lineHeight:0.95,
           letterSpacing:0.5,marginBottom:6}}>{r.nom}</div>
          <div style={{display:'flex',gap:5,alignItems:'center',
           flexWrap:'wrap'}}>
@@ -7629,7 +7662,7 @@ function ModuleCatalogue({recettes,setRecettes,brassins,stockPF,setStockPF,condS
         <div style={{fontFamily:FM,fontSize:8,letterSpacing:3,color:srm,
          textTransform:'uppercase',marginBottom:4}}>{r.style}</div>
         <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:34,
-         color:C.cream,lineHeight:0.9,letterSpacing:1}}>{r.nom}</div>
+         color:C.text,lineHeight:0.9,letterSpacing:1}}>{r.nom}</div>
         <div style={{fontFamily:FM,fontSize:9,color:C.textMid,marginTop:5}}>
          {r.abv}% vol · IBU {r.ibu}
         </div>
@@ -9141,7 +9174,7 @@ function ModuleAgendaImport({locations,setLocations,brassins,setBrassins,recette
         </div>
         <div style={{flex:1,minWidth:0}}>
          <div style={{display:'flex',gap:6,alignItems:'center',marginBottom:2}}>
-          <div style={{fontWeight:700,color:C.cream,fontSize:13,
+          <div style={{fontWeight:700,color:C.text,fontSize:13,
            overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',flex:1}}>
            {cat.key==='location'?evt.client:evt.recette||evt.summary}
           </div>
@@ -9524,7 +9557,7 @@ function ModuleAnticipation({brassins,setBrassins,recettes,locations,stock,stock
         <div style={{display:'flex',gap:10,alignItems:'center',
          marginBottom:12,fontSize:11,color:C.textMid,
          fontFamily:FM}}>
-         <span>Stock dispo : <strong style={{color:C.cream}}>{s.dispo}L</strong></span>
+         <span>Stock dispo : <strong style={{color:C.text}}>{s.dispo}L</strong></span>
          <span>Besoin : <strong style={{color:C.amber}}>{s.volNecessaire}L</strong></span>
          {s.volEnCours>0&&<span>En fermentation : <strong style={{color:C.green}}>{s.volEnCours}L</strong></span>}
         </div>
@@ -9653,7 +9686,7 @@ function ModuleAnticipation({brassins,setBrassins,recettes,locations,stock,stock
         <div style={{flexShrink:0,width:100,textAlign:'right',
          fontSize:9,color:C.textLight,fontFamily:FM,
          lineHeight:1.4,paddingTop:2}}>
-         <div style={{fontWeight:700,color:C.cream}}>
+         <div style={{fontWeight:700,color:C.text}}>
           {fmtD(debut)} →
          </div>
          <div>{fmtD(fin)}</div>
@@ -9717,6 +9750,21 @@ export default function App(){
  const [stockPF,setStockPF]=useState([]);
  const [inventaires,setInventaires]=useState([]);
  const [module,setModule]=useState('dashboard');
+ const [darkMode,setDarkMode]=useState(()=>localStorage.getItem('ppb_dark')==='1');
+ const [,forceRender]=useState(0);
+ const [isMobile,setIsMobile]=useState(()=>window.innerWidth<900);
+
+ useEffect(()=>{
+  Object.assign(C, darkMode ? C_DARK : C_LIGHT);
+  forceRender(n=>n+1);
+  localStorage.setItem('ppb_dark', darkMode?'1':'0');
+ },[darkMode]);
+
+ useEffect(()=>{
+  const handler=()=>setIsMobile(window.innerWidth<900);
+  window.addEventListener('resize',handler);
+  return ()=>window.removeEventListener('resize',handler);
+ },[]);
 
  useEffect(()=>{
   try{
@@ -9809,103 +9857,187 @@ export default function App(){
  };
  const sousMods = FAMILLES.find(f=>f.id===familleActive)?.modules || [];
 
- return (
+ const MODULES_JSX = (
+  <>
+   {module==='dashboard'       &&<ModuleDashboard stock={stock} brassins={brassins} fournisseurs={fournisseurs} condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} locations={locations} setModule={setModule}/>}
+   {module==='stocks'          &&<ModuleStocks stock={stock} setStock={setStock} fournisseurs={fournisseurs}/>}
+   {module==='recettes'        &&<ModuleRecettes recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond}/>}
+   {module==='production'      &&<ModuleProduction brassins={brassins} setBrassins={setBrassins} recettes={recettes}/>}
+   {module==='conditionnement' &&<ModuleConditionnement brassins={brassins} setBrassins={setBrassins} stockCond={stockCond} setStockCond={setStockCond} condSessions={condSessions} setCondSessions={setCondSessions}/>}
+   {module==='fournisseurs'    &&<ModuleFournisseurs fournisseurs={fournisseurs} setFournisseurs={setFournisseurs} stock={stock}/>}
+   {module==='historique'      &&<ModuleHistorique brassins={brassins}/>}
+   {module==='planification'   &&<ModulePlanification brassins={brassins} setBrassins={setBrassins} condSessions={condSessions} recettes={recettes} locations={locations}/>}
+   {module==='tireuses'        &&<ModuleTireuses tireuses={tireuses} setTireuses={setTireuses} locations={locations} setLocations={setLocations} stockCond={stockCond} setStockCond={setStockCond} recettes={recettes}/>}
+   {module==='stockpf'         &&<ModuleStockPF condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} setStockPF={setStockPF} stock={stock} inventaires={inventaires} setInventaires={setInventaires}/>}
+   {module==='catalogue'       &&<ModuleCatalogue recettes={recettes} setRecettes={setRecettes} brassins={brassins} stockPF={stockPF} setStockPF={setStockPF} condSessions={condSessions} stock={stock} stockCond={stockCond}/>}
+   {module==='pl'              &&<ModulePL brassins={brassins} recettes={recettes} condSessions={condSessions} stockPF={stockPF} locations={locations} stock={stock} stockCond={stockCond}/>}
+   {module==='encaissement'    &&<ModuleEncaissement locations={locations} setLocations={setLocations}/>}
+   {module==='simulation'      &&<ModuleSimulation recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond} condSessions={condSessions} stockPF={stockPF}/>}
+   {module==='prediction'      &&<ModulePrediction brassins={brassins} recettes={recettes}/>}
+   {module==='agenda'          &&<ModuleAgendaImport locations={locations} setLocations={setLocations} brassins={brassins} setBrassins={setBrassins} recettes={recettes}/>}
+   {module==='anticipation'    &&<ModuleAnticipation brassins={brassins} setBrassins={setBrassins} recettes={recettes} locations={locations} stock={stock} stockPF={stockPF} condSessions={condSessions}/>}
+  </>
+ );
+
+ const DarkToggle = () => (
+  <button onClick={()=>setDarkMode(d=>!d)}
+   title={darkMode?'Mode clair':'Mode sombre'}
+   style={{width:36,height:36,borderRadius:999,border:`1px solid ${C.border}`,
+    background:'transparent',display:'flex',alignItems:'center',justifyContent:'center',
+    fontSize:16,cursor:'pointer',flexShrink:0,color:C.textMid,transition:'background 0.15s'}}>
+   {darkMode?'☀️':'🌙'}
+  </button>
+ );
+
+ const SubNav = () => sousMods.length>1 ? (
+  <div style={{flexShrink:0,padding:'0 28px',height:46,background:C.bgCard,borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',gap:4,overflowX:'auto',scrollbarWidth:'none'}}>
+   {sousMods.map(m=>{
+    const act=module===m.id;
+    return (
+     <button key={m.id} onClick={()=>setModule(m.id)}
+      style={{flexShrink:0,padding:'5px 12px',borderRadius:999,
+       background:act?C.amber:'transparent',color:act?'#FFF':C.textMid,
+       fontSize:11,fontWeight:act?600:500,fontFamily:FB,
+       border:act?'none':`1px solid ${C.border}`,
+       cursor:'pointer',whiteSpace:'nowrap',
+       transition:'background 0.15s,color 0.15s',
+       WebkitTapHighlightColor:'transparent'}}>
+      {m.icon} {m.label}
+      {m.badge&&<span style={{marginLeft:4,background:act?'rgba(255,255,255,0.3)':(m.bc||C.amber),color:'#fff',borderRadius:99,padding:'1px 5px',fontSize:8,fontWeight:900}}>{m.badge}</span>}
+     </button>
+    );
+   })}
+  </div>
+ ) : null;
+
+ /* ── MOBILE LAYOUT ── */
+ if(isMobile) return (
   <div style={{minHeight:'100vh',background:C.bg,fontFamily:"'DM Sans',sans-serif",color:C.text,maxWidth:640,margin:'0 auto'}}>
    <style>{FONTS}</style>
-   <header style={{position:'sticky',top:0,zIndex:100,background:C.bgDark,
-    borderBottom:`1px solid ${C.border}`}}>
-    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',
-     padding:'10px 16px 0'}}>
-     <div style={{fontFamily:FA,fontSize:18,
-      color:C.amberL,lineHeight:1}}>Les Papas Brasseurs Dashboard</div>
-     <div style={{display:'flex',gap:5}}>
-      <span style={{background:C.greenPale,color:C.greenL,fontSize:9,
-       padding:'2px 8px',borderRadius:4,fontFamily:FM,
-       fontWeight:700,letterSpacing:0.5}}>🌿 BIO</span>
-      {actifs>0&&<span style={{background:C.amberPale,color:C.amberL,fontSize:9,
-       padding:'2px 8px',borderRadius:4,fontFamily:FM,
-       fontWeight:700}}>⚗️ {actifs}</span>}
+   <header style={{position:'sticky',top:0,zIndex:100,background:C.bgCard,
+    borderBottom:`1px solid ${C.border}`,boxShadow:'0 2px 12px -4px rgba(60,40,10,0.10)'}}>
+    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 16px 0'}}>
+     <div style={{fontFamily:FD,fontSize:22,color:C.amber,lineHeight:1}}>Les Papas Brasseurs</div>
+     <div style={{display:'flex',gap:6,alignItems:'center'}}>
+      <DarkToggle/>
+      <span style={{background:C.greenPale,color:C.green,fontSize:9,padding:'3px 9px',borderRadius:99,fontFamily:FM,fontWeight:700,letterSpacing:0.5,border:`1px solid ${C.green}30`}}>🌿 BIO</span>
+      {actifs>0&&<span style={{background:C.amberPale,color:C.amber,fontSize:9,padding:'3px 9px',borderRadius:99,fontFamily:FM,fontWeight:700,border:`1px solid ${C.amber}30`}}>⚗️ {actifs}</span>}
      </div>
     </div>
     {sousMods.length>1&&(
-     <div style={{display:'flex',overflowX:'auto',scrollbarWidth:'none',
-      WebkitOverflowScrolling:'touch',
-      padding:'8px 12px 0',marginTop:8,borderTop:`1px solid ${C.border}`}}>
+     <div style={{display:'flex',overflowX:'auto',scrollbarWidth:'none',WebkitOverflowScrolling:'touch',padding:'6px 10px 0',marginTop:6,borderTop:`1px solid ${C.border}`}}>
       {sousMods.map(m=>{
        const act=module===m.id;
        return (
         <button key={m.id} onClick={()=>setModule(m.id)}
-         style={{flexShrink:0,padding:'6px 14px 8px',fontSize:'clamp(10px,2.5vw,12px)',
-          fontWeight:700,fontFamily:FM,
-          letterSpacing:0.5,textTransform:'uppercase',whiteSpace:'nowrap',
-          background:'none',border:'none',cursor:'pointer',minHeight:40,
-          color:act?C.amber:C.textLight,
-          borderBottom:act?`2px solid ${C.amber}`:'2px solid transparent',
-          transition:'color 0.15s',WebkitTapHighlightColor:'transparent'}}>
+         style={{flexShrink:0,padding:'6px 12px 9px',fontSize:11,fontWeight:act?700:500,fontFamily:FB,whiteSpace:'nowrap',background:'none',border:'none',cursor:'pointer',minHeight:38,color:act?C.amber:C.textLight,borderBottom:act?`2px solid ${C.amber}`:'2px solid transparent',transition:'color 0.15s',WebkitTapHighlightColor:'transparent'}}>
          {m.icon} {m.label}
-         {m.badge&&<span style={{marginLeft:4,background:m.bc||C.amber,
-          color:C.bgDark,borderRadius:6,padding:'1px 5px',
-          fontSize:8,fontWeight:900}}>{m.badge}</span>}
+         {m.badge&&<span style={{marginLeft:5,background:m.bc||C.amber,color:'#fff',borderRadius:99,padding:'1px 6px',fontSize:8,fontWeight:900}}>{m.badge}</span>}
         </button>
        );
       })}
      </div>
     )}
    </header>
-   <main>
-    {module==='dashboard'       &&<ModuleDashboard stock={stock} brassins={brassins} fournisseurs={fournisseurs} condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} locations={locations} setModule={setModule}/>}
-    {module==='stocks'          &&<ModuleStocks stock={stock} setStock={setStock} fournisseurs={fournisseurs}/>}
-    {module==='recettes'        &&<ModuleRecettes recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond}/>}
-    {module==='production'      &&<ModuleProduction brassins={brassins} setBrassins={setBrassins} recettes={recettes}/>}
-    {module==='conditionnement' &&<ModuleConditionnement brassins={brassins} setBrassins={setBrassins} stockCond={stockCond} setStockCond={setStockCond} condSessions={condSessions} setCondSessions={setCondSessions}/>}
-    {module==='fournisseurs'    &&<ModuleFournisseurs fournisseurs={fournisseurs} setFournisseurs={setFournisseurs} stock={stock}/>}
-    {module==='historique'      &&<ModuleHistorique brassins={brassins}/>}
-    {module==='planification'   &&<ModulePlanification brassins={brassins} setBrassins={setBrassins} condSessions={condSessions} recettes={recettes} locations={locations}/>}
-    {module==='tireuses'        &&<ModuleTireuses tireuses={tireuses} setTireuses={setTireuses} locations={locations} setLocations={setLocations} stockCond={stockCond} setStockCond={setStockCond} recettes={recettes}/>}
-    {module==='stockpf'         &&<ModuleStockPF condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} setStockPF={setStockPF} stock={stock} inventaires={inventaires} setInventaires={setInventaires}/>}
-    {module==='catalogue'       &&<ModuleCatalogue recettes={recettes} setRecettes={setRecettes} brassins={brassins} stockPF={stockPF} setStockPF={setStockPF} condSessions={condSessions} stock={stock} stockCond={stockCond}/>}
-    {module==='pl'              &&<ModulePL brassins={brassins} recettes={recettes} condSessions={condSessions} stockPF={stockPF} locations={locations} stock={stock} stockCond={stockCond}/>}
-    {module==='encaissement'    &&<ModuleEncaissement locations={locations} setLocations={setLocations}/>}
-    {module==='simulation'      &&<ModuleSimulation recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond} condSessions={condSessions} stockPF={stockPF}/>}
-    {module==='prediction'      &&<ModulePrediction brassins={brassins} recettes={recettes}/>}
-    {module==='agenda'          &&<ModuleAgendaImport locations={locations} setLocations={setLocations} brassins={brassins} setBrassins={setBrassins} recettes={recettes}/>}
-    {module==='anticipation'   &&<ModuleAnticipation brassins={brassins} setBrassins={setBrassins} recettes={recettes} locations={locations} stock={stock} stockPF={stockPF} condSessions={condSessions}/>}
-   </main>
-   <nav style={{position:'fixed',bottom:0,left:'50%',
-    transform:'translateX(-50%)',width:'100%',maxWidth:640,
-    background:C.bgDark,borderTop:`1px solid ${C.border}`,
-    zIndex:200,paddingBottom:'env(safe-area-inset-bottom,0px)'}}>
-    <div style={{display:'flex',height:56}}>
+   <main style={{paddingBottom:80}}>{MODULES_JSX}</main>
+   <nav style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:640,background:`${C.bgCard}F0`,borderTop:`1px solid ${C.border}`,backdropFilter:'blur(14px)',WebkitBackdropFilter:'blur(14px)',zIndex:200,paddingBottom:'env(safe-area-inset-bottom,0px)'}}>
+    <div style={{display:'flex',height:60}}>
      {FAMILLES.map(f=>{
-      const act = familleActive===f.id;
+      const act=familleActive===f.id;
       return (
        <button key={f.id} onClick={()=>setFamille(f.id)}
-        style={{flex:1,display:'flex',flexDirection:'column',
-         alignItems:'center',justifyContent:'center',gap:2,
-         background:'none',border:'none',cursor:'pointer',
-         position:'relative',padding:'4px 2px',minHeight:56,
-         transition:'opacity 0.15s'}}>
-        {act&&<div style={{position:'absolute',top:0,left:'20%',right:'20%',
-         height:2,background:C.amber,borderRadius:'0 0 2px 2px'}}/>}
-        <span style={{fontSize:17,lineHeight:1,
-         opacity:act?1:0.4,
-         transition:'opacity 0.15s'}}>{f.icon}</span>
-        <span style={{fontFamily:FM,
-         fontSize:8.5,letterSpacing:0.3,textTransform:'uppercase',
-         color:act?C.amber:C.textLight,fontWeight:act?700:400,
-         whiteSpace:'nowrap'}}>
-         {f.label}
-        </span>
-        {f.badge&&<div style={{position:'absolute',top:3,right:'8%',
-         background:f.bc||C.amber,color:C.bgDark,
-         borderRadius:8,padding:'1px 4px',
-         fontSize:8,fontWeight:900,minWidth:13,
-         textAlign:'center',lineHeight:'14px'}}>{f.badge}</div>}
+        style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:3,background:'none',border:'none',cursor:'pointer',position:'relative',padding:'4px 2px',minHeight:60,WebkitTapHighlightColor:'transparent'}}>
+        <div style={{width:36,height:26,borderRadius:8,background:act?C.amber+'20':'transparent',display:'flex',alignItems:'center',justifyContent:'center',transition:'background 0.15s'}}>
+         <span style={{fontSize:16,lineHeight:1,filter:act?'none':'grayscale(0.3)',opacity:act?1:0.55}}>{f.icon}</span>
+        </div>
+        <span style={{fontFamily:FM,fontSize:8,letterSpacing:0.5,textTransform:'uppercase',fontWeight:act?700:500,color:act?C.amber:C.textLight,whiteSpace:'nowrap'}}>{f.label}</span>
+        {f.badge&&<div style={{position:'absolute',top:6,right:'10%',background:f.bc||C.amber,color:'#fff',borderRadius:99,padding:'1px 5px',fontSize:8,fontWeight:900,minWidth:14,textAlign:'center',lineHeight:'14px',boxShadow:`0 1px 4px ${f.bc||C.amber}60`}}>{f.badge}</div>}
        </button>
       );
      })}
     </div>
    </nav>
+  </div>
+ );
+
+ /* ── DESKTOP LAYOUT ── */
+ return (
+  <div style={{display:'flex',height:'100vh',background:C.bg,fontFamily:"'DM Sans',sans-serif",color:C.text,overflow:'hidden'}}>
+   <style>{FONTS}</style>
+
+   {/* SIDEBAR */}
+   <aside style={{width:240,flexShrink:0,background:C.bgCard,borderRight:`1px solid ${C.border}`,display:'flex',flexDirection:'column',overflow:'hidden'}}>
+    {/* Brand */}
+    <div style={{padding:'20px 18px 16px',display:'flex',alignItems:'center',gap:10}}>
+     <div style={{width:38,height:38,borderRadius:10,background:C.amber,display:'flex',alignItems:'center',justifyContent:'center',color:'#FFF',fontFamily:FD,fontSize:20,flexShrink:0,letterSpacing:-0.5}}>P</div>
+     <div style={{minWidth:0}}>
+      <div style={{fontFamily:FP,fontSize:14,color:C.text,lineHeight:1.1,letterSpacing:0.2}}>Papas Brasseurs</div>
+      <div style={{fontSize:9,fontFamily:FM,color:C.textLight,letterSpacing:1.4,marginTop:2,textTransform:'uppercase'}}>Brasserie · v2.4</div>
+     </div>
+    </div>
+    {/* Nav */}
+    <nav style={{flex:1,padding:'8px 10px',display:'flex',flexDirection:'column',gap:2,overflowY:'auto',borderTop:`1px solid ${C.border}`}}>
+     {FAMILLES.map(f=>{
+      const a=familleActive===f.id;
+      return (
+       <button key={f.id} onClick={()=>setFamille(f.id)}
+        style={{padding:'10px 14px',borderRadius:10,
+         background:a?`${C.amber}18`:'transparent',
+         color:a?C.amber:C.textMid,
+         display:'flex',alignItems:'center',gap:12,
+         fontWeight:a?600:500,fontSize:13,fontFamily:FB,
+         border:'none',cursor:'pointer',textAlign:'left',
+         transition:'background 0.15s,color 0.15s',
+         WebkitTapHighlightColor:'transparent'}}>
+        <span style={{fontSize:16,opacity:a?1:0.7}}>{f.icon}</span>
+        <span style={{flex:1}}>{f.label}</span>
+        {f.badge&&<span style={{background:f.bc||C.amber,color:'#fff',borderRadius:99,padding:'1px 6px',fontSize:9,fontWeight:900}}>{f.badge}</span>}
+       </button>
+      );
+     })}
+    </nav>
+    {/* User card */}
+    <div style={{padding:'12px 14px',borderTop:`1px solid ${C.border}`,display:'flex',alignItems:'center',gap:10}}>
+     <div style={{width:32,height:32,borderRadius:999,background:C.amber,color:'#FFF',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:FA,fontWeight:700,fontSize:13,flexShrink:0}}>👋</div>
+     <div style={{minWidth:0}}>
+      <div style={{fontSize:13,fontFamily:FP,color:C.text,letterSpacing:0.2}}>Salut !</div>
+      <div style={{fontSize:10,color:C.textLight,fontFamily:FM}}>Brasseur · admin</div>
+     </div>
+    </div>
+   </aside>
+
+   {/* MAIN */}
+   <main style={{flex:1,display:'flex',flexDirection:'column',minWidth:0,overflow:'hidden'}}>
+    {/* Topbar */}
+    <header style={{height:64,flexShrink:0,padding:'0 28px',background:C.bgCard,borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',justifyContent:'space-between',gap:12}}>
+     <div style={{minWidth:0,flex:1}}>
+      <div style={{fontSize:10,fontFamily:FM,color:C.textLight,letterSpacing:1.4,textTransform:'uppercase',marginBottom:1}}>
+       {FAMILLES.find(f=>f.id===familleActive)?.label}
+      </div>
+      <div style={{fontFamily:FA,fontWeight:600,fontStyle:'italic',fontSize:20,color:C.text,letterSpacing:-0.5,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+       {sousMods.find(m=>m.id===module)?.label||FAMILLES.find(f=>f.id===familleActive)?.label}
+      </div>
+     </div>
+     <div style={{display:'flex',alignItems:'center',gap:8,flexShrink:0}}>
+      <div style={{padding:'8px 14px',background:C.bg,border:`1px solid ${C.border}`,borderRadius:999,fontSize:12,color:C.textLight,fontFamily:FB,display:'flex',alignItems:'center',gap:8,minWidth:200}}>
+       <span style={{opacity:0.6}}>🔍</span>
+       <span>Rechercher…</span>
+       <span style={{marginLeft:'auto',fontFamily:FM,fontSize:10,opacity:0.6}}>⌘K</span>
+      </div>
+      <div style={{width:36,height:36,borderRadius:999,border:`1px solid ${C.border}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,color:C.textMid,position:'relative',cursor:'pointer',flexShrink:0}}>
+       🔔
+       {alerts>0&&<span style={{position:'absolute',top:6,right:7,width:7,height:7,borderRadius:999,background:C.alert}}/>}
+      </div>
+      <DarkToggle/>
+      <Btn p onClick={()=>setModule('production')}>+ Nouveau brassin</Btn>
+     </div>
+    </header>
+    <SubNav/>
+    {/* Content */}
+    <div style={{flex:1,overflow:'auto',padding:'24px 32px',background:C.bg}}>
+     {MODULES_JSX}
+    </div>
+   </main>
   </div>
  );
 }

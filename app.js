@@ -1,9 +1,13 @@
 const { useState, useEffect, useRef } = React;
 const FM = "'DM Mono',monospace";
-const FB = "'Barlow Condensed',sans-serif";
-const FA = "'Abril Fatface',serif";
+const FB = "'DM Sans',sans-serif";
+const FA = "'Fraunces',serif";
+const FP = "'PoetsenOne',sans-serif";
+const FD = "'DKLemonYellowSun',cursive";
 const FONTS = `
-@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Abril+Fatface&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+@font-face{font-family:'PoetsenOne';src:url('/fonts/PoetsenOne.ttf') format('truetype');font-weight:normal;font-style:normal}
+@font-face{font-family:'DKLemonYellowSun';src:url('/fonts/DKLemonYellowSun.otf') format('opentype');font-weight:normal;font-style:normal}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -12,28 +16,54 @@ html,body{font-family:'DM Sans',sans-serif;-webkit-text-size-adjust:100%}
 input,textarea,select{font-family:'DM Sans',sans-serif;font-size:16px!important;border-radius:8px}
 button{-webkit-tap-highlight-color:transparent;cursor:pointer}
 `;
-const C = {
-  bg: "#1A1612",
-  bgCard: "#252018",
-  bgDark: "#120F0C",
-  cream: "#F2E8D5",
-  border: "#3D3228",
-  amber: "#E8A020",
-  amberL: "#FFBB44",
-  amberPale: "#2E2410",
+const C_LIGHT = {
+  bg: "#F4ECDC",
+  bgCard: "#FBF6E9",
+  bgDark: "#EBE0C8",
+  cream: "#F0E6D0",
+  border: "#D9CCAC",
+  amber: "#D8901E",
+  amberL: "#E8A030",
+  amberPale: "#FEEFD5",
   green: "#4A8040",
   greenL: "#66A858",
-  greenPale: "#182414",
+  greenPale: "#E4F0DE",
   brick: "#A03828",
-  brickPale: "#281208",
+  brickPale: "#FAE8E4",
   hop: "#6A7E30",
-  hopPale: "#1A2008",
-  text: "#F2E8D5",
-  textMid: "#C0A880",
-  textLight: "#8A7458",
-  alert: "#E04040",
+  hopPale: "#EFF2DC",
+  text: "#1F1A12",
+  textMid: "#5C4F3A",
+  textLight: "#9A8A6E",
+  alert: "#C83030",
   ok: "#4A8040",
-  warn: "#E8A020"
+  warn: "#D8901E"
+};
+const C_DARK = {
+  bg: "#1F1A12",
+  bgCard: "#28221A",
+  bgDark: "#141008",
+  cream: "#2A2218",
+  border: "#3D3428",
+  amber: "#E8A030",
+  amberL: "#F0B040",
+  amberPale: "#3D2A08",
+  green: "#66A858",
+  greenL: "#80C060",
+  greenPale: "#1A2E16",
+  brick: "#C04838",
+  brickPale: "#2E1410",
+  hop: "#8A9E40",
+  hopPale: "#1E2410",
+  text: "#F4ECDC",
+  textMid: "#C0AE8E",
+  textLight: "#806E50",
+  alert: "#E04040",
+  ok: "#66A858",
+  warn: "#E8A030"
+};
+let C = {
+  ...C_LIGHT
 };
 const CAT_COLORS = {
   Malt: "#C8820A",
@@ -124,7 +154,7 @@ const iSt = {
   background: C.bgCard,
   border: `1px solid ${C.border}`,
   borderRadius: 8,
-  color: C.cream,
+  color: C.text,
   padding: '10px 13px',
   fontSize: 16,
   outline: 'none',
@@ -138,14 +168,18 @@ const Btn = ({
 }) => /*#__PURE__*/React.createElement("button", {
   onClick: onClick,
   style: {
-    padding: '10px 18px',
-    borderRadius: 8,
+    padding: '10px 20px',
+    borderRadius: 12,
     border: 'none',
     fontWeight: 700,
     fontSize: 14,
-    background: p ? C.amber : C.cream,
+    fontFamily: p ? FA : FB,
+    fontStyle: p ? 'italic' : 'normal',
+    background: p ? C.amber : C.bgCard,
     color: p ? '#fff' : C.text,
     minHeight: 44,
+    border: p ? 'none' : `1px solid ${C.border}`,
+    boxShadow: p ? '0 4px 14px -4px rgba(216,144,30,0.4)' : 'none',
     ...style
   }
 }, children);
@@ -213,11 +247,12 @@ function StatCard({
     style: {
       background: C.bgCard,
       border: `1px solid ${C.border}`,
-      borderRadius: 12,
-      padding: '14px 16px',
+      borderRadius: 16,
+      padding: '15px 16px',
       position: 'relative',
       overflow: 'hidden',
-      cursor: onClick ? 'pointer' : 'default'
+      cursor: onClick ? 'pointer' : 'default',
+      boxShadow: '0 4px 14px -6px rgba(60,40,10,0.12)'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -226,33 +261,38 @@ function StatCard({
       left: 0,
       right: 0,
       height: 3,
-      background: color
+      background: color,
+      borderRadius: '16px 16px 0 0'
     }
   }), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 20,
-      marginBottom: 4
+      fontSize: 18,
+      marginBottom: 4,
+      opacity: 0.9
     }
   }, icon), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 'clamp(18px,4vw,26px)',
+      fontSize: 'clamp(20px,4vw,28px)',
       fontFamily: FA,
+      fontStyle: 'italic',
       color,
-      lineHeight: 1
+      lineHeight: 1,
+      letterSpacing: -0.5
     }
   }, value), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 10,
+      fontSize: 9,
       color: C.textLight,
       textTransform: 'uppercase',
-      letterSpacing: 1.2,
-      marginTop: 3
+      letterSpacing: 1.4,
+      marginTop: 4,
+      fontFamily: FM
     }
   }, label), sub && /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 11,
       color: C.textMid,
-      marginTop: 2
+      marginTop: 3
     }
   }, sub));
 }
@@ -264,11 +304,12 @@ const Section = ({
 }) => /*#__PURE__*/React.createElement("div", {
   style: {
     background: C.bgCard,
-    borderRadius: 12,
-    padding: '14px',
+    borderRadius: 16,
+    padding: '15px',
     marginBottom: 12,
     border: `1px solid ${C.border}`,
-    borderLeft: `3px solid ${color}`
+    borderLeft: `3px solid ${color}`,
+    boxShadow: '0 4px 14px -6px rgba(60,40,10,0.10)'
   }
 }, /*#__PURE__*/React.createElement("div", {
   style: {
@@ -303,7 +344,7 @@ const Row = ({
     fontFamily: mono ? "'DM Mono',monospace" : undefined,
     fontSize: 12,
     fontWeight: 600,
-    color: C.cream,
+    color: C.text,
     textAlign: 'right',
     maxWidth: '55%',
     overflow: 'hidden',
@@ -4824,7 +4865,7 @@ function ModuleDashboard({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      background: C.bgDark,
+      background: C.bgCard,
       borderBottom: `1px solid ${C.border}`,
       display: 'flex',
       overflowX: 'auto',
@@ -4837,19 +4878,18 @@ function ModuleDashboard({
       onClick: () => setView(t.id),
       style: {
         flexShrink: 0,
-        padding: '11px 16px',
+        padding: '11px 14px',
         background: 'none',
         border: 'none',
         cursor: 'pointer',
-        fontSize: 12,
-        fontWeight: act ? 700 : 400,
+        fontSize: 11,
+        fontWeight: act ? 700 : 500,
         color: act ? C.amber : C.textLight,
         whiteSpace: 'nowrap',
         borderBottom: act ? `2px solid ${C.amber}` : '2px solid transparent',
-        fontFamily: FM,
-        letterSpacing: 0.5,
-        textTransform: 'uppercase',
-        transition: 'color 0.15s'
+        fontFamily: FB,
+        transition: 'color 0.15s',
+        WebkitTapHighlightColor: 'transparent'
       }
     }, t.icon, " ", t.label);
   })), view === 'dashboard' && /*#__PURE__*/React.createElement("div", {
@@ -4858,23 +4898,102 @@ function ModuleDashboard({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      marginBottom: 16
+      marginBottom: 18,
+      paddingBottom: 16,
+      borderBottom: `1px solid ${C.border}`
     }
-  }, /*#__PURE__*/React.createElement("h1", {
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: C.textLight,
+      fontFamily: FM,
+      letterSpacing: 1,
+      textTransform: 'uppercase',
+      marginBottom: 4
+    }
+  }, today), /*#__PURE__*/React.createElement("h1", {
     style: {
       fontFamily: FA,
-      fontSize: 'clamp(22px,6vw,30px)',
-      color: C.text
+      fontStyle: 'italic',
+      fontSize: 'clamp(26px,7vw,34px)',
+      color: C.text,
+      lineHeight: 1,
+      letterSpacing: -0.5
     }
-  }, "Tableau de bord"), /*#__PURE__*/React.createElement("p", {
+  }, "Tableau de bord")), totalVol > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
-      color: C.textLight,
-      fontSize: 12,
-      marginTop: 3,
-      fontFamily: FM,
-      textTransform: 'capitalize'
+      background: `linear-gradient(135deg,${C.amber} 0%,#A85E10 100%)`,
+      borderRadius: 20,
+      padding: '20px 22px',
+      marginBottom: 16,
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: `0 8px 24px -8px ${C.amber}60`
     }
-  }, today)), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      right: -20,
+      bottom: -20,
+      width: 100,
+      height: 100,
+      borderRadius: '50%',
+      background: 'rgba(255,255,255,0.07)'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: 'rgba(255,255,255,0.7)',
+      fontFamily: FM,
+      letterSpacing: 1.6,
+      textTransform: 'uppercase',
+      marginBottom: 6
+    }
+  }, "Volume brass\xE9 total"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: FA,
+      fontStyle: 'italic',
+      fontSize: 'clamp(38px,9vw,52px)',
+      color: '#fff',
+      lineHeight: 1,
+      letterSpacing: -1
+    }
+  }, (totalVol / 1000).toFixed(2), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 20,
+      marginLeft: 6,
+      fontStyle: 'normal',
+      fontWeight: 600,
+      opacity: 0.85
+    }
+  }, "hL")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 10,
+      display: 'flex',
+      gap: 8,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      background: 'rgba(255,255,255,0.18)',
+      color: '#fff',
+      fontSize: 10,
+      padding: '3px 10px',
+      borderRadius: 99,
+      fontFamily: FM,
+      fontWeight: 600
+    }
+  }, actifs.length, " en cours"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      background: 'rgba(255,255,255,0.18)',
+      color: '#fff',
+      fontSize: 10,
+      padding: '3px 10px',
+      borderRadius: 99,
+      fontFamily: FM,
+      fontWeight: 600
+    }
+  }, termines.length, " termin\xE9s"))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
@@ -4889,12 +5008,12 @@ function ModuleDashboard({
     sub: `${actifs.filter(b => b.statut === 'fermentation').length} en fermentation`,
     onClick: () => setModule('production')
   }), /*#__PURE__*/React.createElement(StatCard, {
-    label: "Volume",
-    value: `${(totalVol / 1000).toFixed(2)} hL`,
-    icon: "\uD83E\uDEA3",
-    color: C.green,
-    sub: "Oct.25\u2013Mar.26",
-    onClick: () => setModule('historique')
+    label: "Bouteilles",
+    value: totalBt.toLocaleString('fr'),
+    icon: "\uD83C\uDF7E",
+    color: "#2A6080",
+    sub: `${condSessions.length} sessions`,
+    onClick: () => setModule('conditionnement')
   }), /*#__PURE__*/React.createElement(StatCard, {
     label: "Alertes stock",
     value: alertes.length,
@@ -4903,19 +5022,20 @@ function ModuleDashboard({
     sub: critiques.length > 0 ? `⚠ ${critiques.length} critique(s)` : 'Surveiller',
     onClick: () => setModule('stocks')
   }), /*#__PURE__*/React.createElement(StatCard, {
-    label: "Bouteilles",
-    value: totalBt.toLocaleString('fr'),
-    icon: "\uD83C\uDF7E",
-    color: "#2A6080",
-    sub: `${condSessions.length} sessions`,
-    onClick: () => setModule('conditionnement')
+    label: "Locations",
+    value: locations.filter(l => l.statut === 'confirmée').length,
+    icon: "\uD83C\uDF7B",
+    color: C.green,
+    sub: "confirm\xE9es",
+    onClick: () => setModule('tireuses')
   })), /*#__PURE__*/React.createElement("div", {
     style: {
       background: C.bgCard,
       border: `1px solid ${C.border}`,
-      borderRadius: 14,
-      padding: '14px 16px',
-      marginBottom: 14
+      borderRadius: 18,
+      padding: '15px 16px',
+      marginBottom: 14,
+      boxShadow: '0 4px 14px -6px rgba(60,40,10,0.10)'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -4924,56 +5044,76 @@ function ModuleDashboard({
       alignItems: 'center',
       marginBottom: 12
     }
-  }, /*#__PURE__*/React.createElement("h3", {
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: C.amber,
+      fontFamily: FM,
+      letterSpacing: 2,
+      fontWeight: 700,
+      textTransform: 'uppercase',
+      marginBottom: 2
+    }
+  }, "Brasserie"), /*#__PURE__*/React.createElement("h3", {
     style: {
       fontFamily: FA,
-      fontSize: 17,
-      color: C.text
+      fontStyle: 'italic',
+      fontSize: 18,
+      color: C.text,
+      lineHeight: 1
     }
-  }, "Fermenteurs actifs"), /*#__PURE__*/React.createElement("button", {
+  }, "Fermenteurs actifs")), /*#__PURE__*/React.createElement("button", {
     onClick: () => setModule('production'),
     style: {
-      background: 'none',
+      background: C.bgDark,
       border: `1px solid ${C.border}`,
-      borderRadius: 8,
-      padding: '5px 12px',
+      borderRadius: 10,
+      padding: '6px 14px',
       cursor: 'pointer',
       fontSize: 12,
-      color: C.textMid
+      color: C.textMid,
+      fontFamily: FM,
+      fontWeight: 600
     }
   }, "Voir \u2192")), actifs.length === 0 && /*#__PURE__*/React.createElement("p", {
     style: {
       color: C.textLight,
       textAlign: 'center',
-      padding: '12px 0',
-      fontSize: 13
+      padding: '16px 0',
+      fontSize: 13,
+      fontFamily: FA,
+      fontStyle: 'italic'
     }
   }, "Aucun brassin en cours"), actifs.map(b => {
     const j = Math.floor((Date.now() - new Date(b.dateDebut)) / 86400000);
+    const s = STATUTS[b.statut] || STATUTS.planifié;
     return /*#__PURE__*/React.createElement("div", {
       key: b.id,
       style: {
         display: 'flex',
         alignItems: 'center',
-        gap: 10,
-        padding: '10px 12px',
-        borderRadius: 10,
+        gap: 12,
+        padding: '11px 12px',
+        borderRadius: 12,
         background: C.bg,
         marginBottom: 6,
-        border: `1px solid ${C.border}`
+        border: `1px solid ${C.border}`,
+        borderLeft: `3px solid ${s.color}`
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        width: 34,
-        height: 34,
-        borderRadius: 8,
+        width: 36,
+        height: 36,
+        borderRadius: 10,
         background: C.bgDark,
+        border: `1px solid ${C.border}`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         fontFamily: FM,
-        fontSize: 9,
-        color: C.amberL,
+        fontSize: 10,
+        color: C.amber,
+        fontWeight: 700,
         flexShrink: 0,
         lineHeight: 1,
         textAlign: 'center'
@@ -4985,19 +5125,21 @@ function ModuleDashboard({
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        fontWeight: 700,
+        fontFamily: FA,
+        fontStyle: 'italic',
+        fontWeight: 600,
         color: C.text,
-        fontSize: 14,
+        fontSize: 15,
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap'
       }
     }, b.recette), /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 11,
+        fontSize: 10,
         color: C.textLight,
         fontFamily: FM,
-        marginTop: 1
+        marginTop: 2
       }
     }, fmtDate(b.dateDebut), " \xB7 J+", j)), /*#__PURE__*/React.createElement(Badge, {
       statut: b.statut
@@ -5005,9 +5147,10 @@ function ModuleDashboard({
   })), /*#__PURE__*/React.createElement("div", {
     style: {
       background: C.bgCard,
-      border: `1.5px solid ${critiques.length > 0 ? C.alert : C.border}`,
-      borderRadius: 14,
-      padding: '14px 16px'
+      border: `1px solid ${critiques.length > 0 ? C.alert + '60' : C.border}`,
+      borderRadius: 18,
+      padding: '15px 16px',
+      boxShadow: '0 4px 14px -6px rgba(60,40,10,0.10)'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -5016,22 +5159,36 @@ function ModuleDashboard({
       alignItems: 'center',
       marginBottom: 10
     }
-  }, /*#__PURE__*/React.createElement("h3", {
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: critiques.length > 0 ? C.alert : C.amber,
+      fontFamily: FM,
+      letterSpacing: 2,
+      fontWeight: 700,
+      textTransform: 'uppercase',
+      marginBottom: 2
+    }
+  }, "Achats"), /*#__PURE__*/React.createElement("h3", {
     style: {
       fontFamily: FA,
-      fontSize: 17,
-      color: C.text
+      fontStyle: 'italic',
+      fontSize: 18,
+      color: C.text,
+      lineHeight: 1
     }
-  }, critiques.length > 0 ? '⚠ ' : '', "Alertes stock"), /*#__PURE__*/React.createElement("button", {
+  }, critiques.length > 0 ? '⚠ ' : '', "Alertes stock")), /*#__PURE__*/React.createElement("button", {
     onClick: () => setModule('stocks'),
     style: {
-      background: 'none',
+      background: C.bgDark,
       border: `1px solid ${C.border}`,
-      borderRadius: 8,
-      padding: '5px 12px',
+      borderRadius: 10,
+      padding: '6px 14px',
       cursor: 'pointer',
       fontSize: 12,
-      color: C.textMid
+      color: C.textMid,
+      fontFamily: FM,
+      fontWeight: 600
     }
   }, "G\xE9rer \u2192")), alertes.length === 0 ? /*#__PURE__*/React.createElement("div", {
     style: {
@@ -5529,7 +5686,7 @@ function ModuleDashboard({
       fontFamily: FM,
       fontWeight: 700,
       fontSize: 13,
-      color: C.cream,
+      color: C.text,
       marginBottom: 3
     }
   }, lot.lot), /*#__PURE__*/React.createElement("div", {
@@ -5805,7 +5962,7 @@ function ModuleDashboard({
     }, /*#__PURE__*/React.createElement("div", {
       style: {
         fontWeight: 600,
-        color: C.cream,
+        color: C.text,
         fontSize: 12
       }
     }, ing.nom), /*#__PURE__*/React.createElement("div", {
@@ -9812,7 +9969,7 @@ function ModuleProduction({
       style: {
         fontFamily: FM,
         fontWeight: 600,
-        color: C.cream
+        color: C.text
       }
     }, v)))), /*#__PURE__*/React.createElement("div", {
       style: {
@@ -15971,16 +16128,12 @@ function ModuleTireuses({
     label: 'Agenda',
     icon: '🔄'
   }];
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      paddingBottom: 80
-    }
-  }, /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
       background: C.bgDark,
       padding: '10px 16px 0',
       position: 'sticky',
-      top: 57,
+      top: 0,
       zIndex: 50
     }
   }, /*#__PURE__*/React.createElement("div", {
@@ -19282,7 +19435,7 @@ function ModuleCatalogue({
     style: {
       fontFamily: "'Bebas Neue',sans-serif",
       fontSize: 38,
-      color: C.cream,
+      color: C.text,
       lineHeight: 0.9,
       letterSpacing: 2
     }
@@ -19458,7 +19611,7 @@ function ModuleCatalogue({
       style: {
         fontFamily: "'Bebas Neue',sans-serif",
         fontSize: 32,
-        color: C.cream,
+        color: C.text,
         lineHeight: 0.95,
         letterSpacing: 1,
         marginBottom: 10
@@ -19604,7 +19757,7 @@ function ModuleCatalogue({
       style: {
         fontFamily: "'Bebas Neue',sans-serif",
         fontSize: 20,
-        color: C.cream,
+        color: C.text,
         lineHeight: 0.95,
         letterSpacing: 0.5,
         marginBottom: 6
@@ -19841,7 +19994,7 @@ function ModuleCatalogue({
       style: {
         fontFamily: "'Bebas Neue',sans-serif",
         fontSize: 34,
-        color: C.cream,
+        color: C.text,
         lineHeight: 0.9,
         letterSpacing: 1
       }
@@ -22695,7 +22848,7 @@ function ModuleAgendaImport({
     }, /*#__PURE__*/React.createElement("div", {
       style: {
         fontWeight: 700,
-        color: C.cream,
+        color: C.text,
         fontSize: 13,
         overflow: 'hidden',
         textOverflow: 'ellipsis',
@@ -23377,7 +23530,7 @@ function ModuleAnticipation({
     }
   }, /*#__PURE__*/React.createElement("span", null, "Stock dispo : ", /*#__PURE__*/React.createElement("strong", {
     style: {
-      color: C.cream
+      color: C.text
     }
   }, s.dispo, "L")), /*#__PURE__*/React.createElement("span", null, "Besoin : ", /*#__PURE__*/React.createElement("strong", {
     style: {
@@ -23641,7 +23794,7 @@ function ModuleAnticipation({
     }, /*#__PURE__*/React.createElement("div", {
       style: {
         fontWeight: 700,
-        color: C.cream
+        color: C.text
       }
     }, fmtD(debut), " \u2192"), /*#__PURE__*/React.createElement("div", null, fmtD(fin))), /*#__PURE__*/React.createElement("div", {
       style: {
@@ -23733,6 +23886,19 @@ function App() {
   const [stockPF, setStockPF] = useState([]);
   const [inventaires, setInventaires] = useState([]);
   const [module, setModule] = useState('dashboard');
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('ppb_dark') === '1');
+  const [, forceRender] = useState(0);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 900);
+  useEffect(() => {
+    Object.assign(C, darkMode ? C_DARK : C_LIGHT);
+    forceRender(n => n + 1);
+    localStorage.setItem('ppb_dark', darkMode ? '1' : '0');
+  }, [darkMode]);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 900);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
   useEffect(() => {
     try {
       const saved = localStorage.getItem('ppb_data');
@@ -23885,108 +24051,7 @@ function App() {
     if (f) setModule(f.modules[0].id);
   };
   const sousMods = FAMILLES.find(f => f.id === familleActive)?.modules || [];
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      minHeight: '100vh',
-      background: C.bg,
-      fontFamily: "'DM Sans',sans-serif",
-      color: C.text,
-      maxWidth: 640,
-      margin: '0 auto'
-    }
-  }, /*#__PURE__*/React.createElement("style", null, FONTS), /*#__PURE__*/React.createElement("header", {
-    style: {
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
-      background: C.bgDark,
-      borderBottom: `1px solid ${C.border}`
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '10px 16px 0'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: FA,
-      fontSize: 18,
-      color: C.amberL,
-      lineHeight: 1
-    }
-  }, "Les Papas Brasseurs Dashboard"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      gap: 5
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      background: C.greenPale,
-      color: C.greenL,
-      fontSize: 9,
-      padding: '2px 8px',
-      borderRadius: 4,
-      fontFamily: FM,
-      fontWeight: 700,
-      letterSpacing: 0.5
-    }
-  }, "\uD83C\uDF3F BIO"), actifs > 0 && /*#__PURE__*/React.createElement("span", {
-    style: {
-      background: C.amberPale,
-      color: C.amberL,
-      fontSize: 9,
-      padding: '2px 8px',
-      borderRadius: 4,
-      fontFamily: FM,
-      fontWeight: 700
-    }
-  }, "\u2697\uFE0F ", actifs))), sousMods.length > 1 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      overflowX: 'auto',
-      scrollbarWidth: 'none',
-      WebkitOverflowScrolling: 'touch',
-      padding: '8px 12px 0',
-      marginTop: 8,
-      borderTop: `1px solid ${C.border}`
-    }
-  }, sousMods.map(m => {
-    const act = module === m.id;
-    return /*#__PURE__*/React.createElement("button", {
-      key: m.id,
-      onClick: () => setModule(m.id),
-      style: {
-        flexShrink: 0,
-        padding: '6px 14px 8px',
-        fontSize: 'clamp(10px,2.5vw,12px)',
-        fontWeight: 700,
-        fontFamily: FM,
-        letterSpacing: 0.5,
-        textTransform: 'uppercase',
-        whiteSpace: 'nowrap',
-        background: 'none',
-        border: 'none',
-        cursor: 'pointer',
-        minHeight: 40,
-        color: act ? C.amber : C.textLight,
-        borderBottom: act ? `2px solid ${C.amber}` : '2px solid transparent',
-        transition: 'color 0.15s',
-        WebkitTapHighlightColor: 'transparent'
-      }
-    }, m.icon, " ", m.label, m.badge && /*#__PURE__*/React.createElement("span", {
-      style: {
-        marginLeft: 4,
-        background: m.bc || C.amber,
-        color: C.bgDark,
-        borderRadius: 6,
-        padding: '1px 5px',
-        fontSize: 8,
-        fontWeight: 900
-      }
-    }, m.badge));
-  }))), /*#__PURE__*/React.createElement("main", null, module === 'dashboard' && /*#__PURE__*/React.createElement(ModuleDashboard, {
+  const MODULES_JSX = /*#__PURE__*/React.createElement(React.Fragment, null, module === 'dashboard' && /*#__PURE__*/React.createElement(ModuleDashboard, {
     stock: stock,
     brassins: brassins,
     fournisseurs: fournisseurs,
@@ -24089,7 +24154,181 @@ function App() {
     stock: stock,
     stockPF: stockPF,
     condSessions: condSessions
-  })), /*#__PURE__*/React.createElement("nav", {
+  }));
+  const DarkToggle = () => /*#__PURE__*/React.createElement("button", {
+    onClick: () => setDarkMode(d => !d),
+    title: darkMode ? 'Mode clair' : 'Mode sombre',
+    style: {
+      width: 36,
+      height: 36,
+      borderRadius: 999,
+      border: `1px solid ${C.border}`,
+      background: 'transparent',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 16,
+      cursor: 'pointer',
+      flexShrink: 0,
+      color: C.textMid,
+      transition: 'background 0.15s'
+    }
+  }, darkMode ? '☀️' : '🌙');
+  const SubNav = () => sousMods.length > 1 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      flexShrink: 0,
+      padding: '0 28px',
+      height: 46,
+      background: C.bgCard,
+      borderBottom: `1px solid ${C.border}`,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 4,
+      overflowX: 'auto',
+      scrollbarWidth: 'none'
+    }
+  }, sousMods.map(m => {
+    const act = module === m.id;
+    return /*#__PURE__*/React.createElement("button", {
+      key: m.id,
+      onClick: () => setModule(m.id),
+      style: {
+        flexShrink: 0,
+        padding: '5px 12px',
+        borderRadius: 999,
+        background: act ? C.amber : 'transparent',
+        color: act ? '#FFF' : C.textMid,
+        fontSize: 11,
+        fontWeight: act ? 600 : 500,
+        fontFamily: FB,
+        border: act ? 'none' : `1px solid ${C.border}`,
+        cursor: 'pointer',
+        whiteSpace: 'nowrap',
+        transition: 'background 0.15s,color 0.15s',
+        WebkitTapHighlightColor: 'transparent'
+      }
+    }, m.icon, " ", m.label, m.badge && /*#__PURE__*/React.createElement("span", {
+      style: {
+        marginLeft: 4,
+        background: act ? 'rgba(255,255,255,0.3)' : m.bc || C.amber,
+        color: '#fff',
+        borderRadius: 99,
+        padding: '1px 5px',
+        fontSize: 8,
+        fontWeight: 900
+      }
+    }, m.badge));
+  })) : null;
+
+  /* ── MOBILE LAYOUT ── */
+  if (isMobile) return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: '100vh',
+      background: C.bg,
+      fontFamily: "'DM Sans',sans-serif",
+      color: C.text,
+      maxWidth: 640,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement("style", null, FONTS), /*#__PURE__*/React.createElement("header", {
+    style: {
+      position: 'sticky',
+      top: 0,
+      zIndex: 100,
+      background: C.bgCard,
+      borderBottom: `1px solid ${C.border}`,
+      boxShadow: '0 2px 12px -4px rgba(60,40,10,0.10)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '12px 16px 0'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: FD,
+      fontSize: 22,
+      color: C.amber,
+      lineHeight: 1
+    }
+  }, "Les Papas Brasseurs"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 6,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(DarkToggle, null), /*#__PURE__*/React.createElement("span", {
+    style: {
+      background: C.greenPale,
+      color: C.green,
+      fontSize: 9,
+      padding: '3px 9px',
+      borderRadius: 99,
+      fontFamily: FM,
+      fontWeight: 700,
+      letterSpacing: 0.5,
+      border: `1px solid ${C.green}30`
+    }
+  }, "\uD83C\uDF3F BIO"), actifs > 0 && /*#__PURE__*/React.createElement("span", {
+    style: {
+      background: C.amberPale,
+      color: C.amber,
+      fontSize: 9,
+      padding: '3px 9px',
+      borderRadius: 99,
+      fontFamily: FM,
+      fontWeight: 700,
+      border: `1px solid ${C.amber}30`
+    }
+  }, "\u2697\uFE0F ", actifs))), sousMods.length > 1 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      overflowX: 'auto',
+      scrollbarWidth: 'none',
+      WebkitOverflowScrolling: 'touch',
+      padding: '6px 10px 0',
+      marginTop: 6,
+      borderTop: `1px solid ${C.border}`
+    }
+  }, sousMods.map(m => {
+    const act = module === m.id;
+    return /*#__PURE__*/React.createElement("button", {
+      key: m.id,
+      onClick: () => setModule(m.id),
+      style: {
+        flexShrink: 0,
+        padding: '6px 12px 9px',
+        fontSize: 11,
+        fontWeight: act ? 700 : 500,
+        fontFamily: FB,
+        whiteSpace: 'nowrap',
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        minHeight: 38,
+        color: act ? C.amber : C.textLight,
+        borderBottom: act ? `2px solid ${C.amber}` : '2px solid transparent',
+        transition: 'color 0.15s',
+        WebkitTapHighlightColor: 'transparent'
+      }
+    }, m.icon, " ", m.label, m.badge && /*#__PURE__*/React.createElement("span", {
+      style: {
+        marginLeft: 5,
+        background: m.bc || C.amber,
+        color: '#fff',
+        borderRadius: 99,
+        padding: '1px 6px',
+        fontSize: 8,
+        fontWeight: 900
+      }
+    }, m.badge));
+  }))), /*#__PURE__*/React.createElement("main", {
+    style: {
+      paddingBottom: 80
+    }
+  }, MODULES_JSX), /*#__PURE__*/React.createElement("nav", {
     style: {
       position: 'fixed',
       bottom: 0,
@@ -24097,15 +24336,17 @@ function App() {
       transform: 'translateX(-50%)',
       width: '100%',
       maxWidth: 640,
-      background: C.bgDark,
+      background: `${C.bgCard}F0`,
       borderTop: `1px solid ${C.border}`,
+      backdropFilter: 'blur(14px)',
+      WebkitBackdropFilter: 'blur(14px)',
       zIndex: 200,
       paddingBottom: 'env(safe-area-inset-bottom,0px)'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
-      height: 56
+      height: 60
     }
   }, FAMILLES.map(f => {
     const act = familleActive === f.id;
@@ -24118,58 +24359,329 @@ function App() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 2,
+        gap: 3,
         background: 'none',
         border: 'none',
         cursor: 'pointer',
         position: 'relative',
         padding: '4px 2px',
-        minHeight: 56,
-        transition: 'opacity 0.15s'
+        minHeight: 60,
+        WebkitTapHighlightColor: 'transparent'
       }
-    }, act && /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("div", {
       style: {
-        position: 'absolute',
-        top: 0,
-        left: '20%',
-        right: '20%',
-        height: 2,
-        background: C.amber,
-        borderRadius: '0 0 2px 2px'
+        width: 36,
+        height: 26,
+        borderRadius: 8,
+        background: act ? C.amber + '20' : 'transparent',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        transition: 'background 0.15s'
       }
-    }), /*#__PURE__*/React.createElement("span", {
+    }, /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 17,
+        fontSize: 16,
         lineHeight: 1,
-        opacity: act ? 1 : 0.4,
-        transition: 'opacity 0.15s'
+        filter: act ? 'none' : 'grayscale(0.3)',
+        opacity: act ? 1 : 0.55
       }
-    }, f.icon), /*#__PURE__*/React.createElement("span", {
+    }, f.icon)), /*#__PURE__*/React.createElement("span", {
       style: {
         fontFamily: FM,
-        fontSize: 8.5,
-        letterSpacing: 0.3,
+        fontSize: 8,
+        letterSpacing: 0.5,
         textTransform: 'uppercase',
+        fontWeight: act ? 700 : 500,
         color: act ? C.amber : C.textLight,
-        fontWeight: act ? 700 : 400,
         whiteSpace: 'nowrap'
       }
     }, f.label), f.badge && /*#__PURE__*/React.createElement("div", {
       style: {
         position: 'absolute',
-        top: 3,
-        right: '8%',
+        top: 6,
+        right: '10%',
         background: f.bc || C.amber,
-        color: C.bgDark,
-        borderRadius: 8,
-        padding: '1px 4px',
+        color: '#fff',
+        borderRadius: 99,
+        padding: '1px 5px',
         fontSize: 8,
         fontWeight: 900,
-        minWidth: 13,
+        minWidth: 14,
         textAlign: 'center',
-        lineHeight: '14px'
+        lineHeight: '14px',
+        boxShadow: `0 1px 4px ${f.bc || C.amber}60`
       }
     }, f.badge));
   }))));
+
+  /* ── DESKTOP LAYOUT ── */
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      height: '100vh',
+      background: C.bg,
+      fontFamily: "'DM Sans',sans-serif",
+      color: C.text,
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("style", null, FONTS), /*#__PURE__*/React.createElement("aside", {
+    style: {
+      width: 240,
+      flexShrink: 0,
+      background: C.bgCard,
+      borderRight: `1px solid ${C.border}`,
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '20px 18px 16px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 38,
+      height: 38,
+      borderRadius: 10,
+      background: C.amber,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#FFF',
+      fontFamily: FD,
+      fontSize: 20,
+      flexShrink: 0,
+      letterSpacing: -0.5
+    }
+  }, "P"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      minWidth: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: FP,
+      fontSize: 14,
+      color: C.text,
+      lineHeight: 1.1,
+      letterSpacing: 0.2
+    }
+  }, "Papas Brasseurs"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      fontFamily: FM,
+      color: C.textLight,
+      letterSpacing: 1.4,
+      marginTop: 2,
+      textTransform: 'uppercase'
+    }
+  }, "Brasserie \xB7 v2.4"))), /*#__PURE__*/React.createElement("nav", {
+    style: {
+      flex: 1,
+      padding: '8px 10px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 2,
+      overflowY: 'auto',
+      borderTop: `1px solid ${C.border}`
+    }
+  }, FAMILLES.map(f => {
+    const a = familleActive === f.id;
+    return /*#__PURE__*/React.createElement("button", {
+      key: f.id,
+      onClick: () => setFamille(f.id),
+      style: {
+        padding: '10px 14px',
+        borderRadius: 10,
+        background: a ? `${C.amber}18` : 'transparent',
+        color: a ? C.amber : C.textMid,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
+        fontWeight: a ? 600 : 500,
+        fontSize: 13,
+        fontFamily: FB,
+        border: 'none',
+        cursor: 'pointer',
+        textAlign: 'left',
+        transition: 'background 0.15s,color 0.15s',
+        WebkitTapHighlightColor: 'transparent'
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 16,
+        opacity: a ? 1 : 0.7
+      }
+    }, f.icon), /*#__PURE__*/React.createElement("span", {
+      style: {
+        flex: 1
+      }
+    }, f.label), f.badge && /*#__PURE__*/React.createElement("span", {
+      style: {
+        background: f.bc || C.amber,
+        color: '#fff',
+        borderRadius: 99,
+        padding: '1px 6px',
+        fontSize: 9,
+        fontWeight: 900
+      }
+    }, f.badge));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '12px 14px',
+      borderTop: `1px solid ${C.border}`,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 32,
+      height: 32,
+      borderRadius: 999,
+      background: C.amber,
+      color: '#FFF',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: FA,
+      fontWeight: 700,
+      fontSize: 13,
+      flexShrink: 0
+    }
+  }, "\uD83D\uDC4B"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      minWidth: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontFamily: FP,
+      color: C.text,
+      letterSpacing: 0.2
+    }
+  }, "Salut !"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: C.textLight,
+      fontFamily: FM
+    }
+  }, "Brasseur \xB7 admin")))), /*#__PURE__*/React.createElement("main", {
+    style: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      minWidth: 0,
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("header", {
+    style: {
+      height: 64,
+      flexShrink: 0,
+      padding: '0 28px',
+      background: C.bgCard,
+      borderBottom: `1px solid ${C.border}`,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      minWidth: 0,
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      fontFamily: FM,
+      color: C.textLight,
+      letterSpacing: 1.4,
+      textTransform: 'uppercase',
+      marginBottom: 1
+    }
+  }, FAMILLES.find(f => f.id === familleActive)?.label), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: FA,
+      fontWeight: 600,
+      fontStyle: 'italic',
+      fontSize: 20,
+      color: C.text,
+      letterSpacing: -0.5,
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
+    }
+  }, sousMods.find(m => m.id === module)?.label || FAMILLES.find(f => f.id === familleActive)?.label)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 14px',
+      background: C.bg,
+      border: `1px solid ${C.border}`,
+      borderRadius: 999,
+      fontSize: 12,
+      color: C.textLight,
+      fontFamily: FB,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      minWidth: 200
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      opacity: 0.6
+    }
+  }, "\uD83D\uDD0D"), /*#__PURE__*/React.createElement("span", null, "Rechercher\u2026"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      marginLeft: 'auto',
+      fontFamily: FM,
+      fontSize: 10,
+      opacity: 0.6
+    }
+  }, "\u2318K")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 36,
+      height: 36,
+      borderRadius: 999,
+      border: `1px solid ${C.border}`,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 14,
+      color: C.textMid,
+      position: 'relative',
+      cursor: 'pointer',
+      flexShrink: 0
+    }
+  }, "\uD83D\uDD14", alerts > 0 && /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: 'absolute',
+      top: 6,
+      right: 7,
+      width: 7,
+      height: 7,
+      borderRadius: 999,
+      background: C.alert
+    }
+  })), /*#__PURE__*/React.createElement(DarkToggle, null), /*#__PURE__*/React.createElement(Btn, {
+    p: true,
+    onClick: () => setModule('production')
+  }, "+ Nouveau brassin"))), /*#__PURE__*/React.createElement(SubNav, null), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      overflow: 'auto',
+      padding: '24px 32px',
+      background: C.bg
+    }
+  }, MODULES_JSX)));
 }
 ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
