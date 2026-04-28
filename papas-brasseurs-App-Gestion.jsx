@@ -3904,13 +3904,33 @@ const FORM_VIDE_T = {
  statut:"confirmée",notes:"",
 };
 
-function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
+function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel,stockPF=[]}) {
  const [form,setForm] = useState(() =>
   editLoc
    ? {...editLoc}
    : {...FORM_VIDE_T}
  );
  const [err,setErr] = useState("");
+
+ // ── Modèles ────────────────────────────────────────────────────────────
+ const [templates,setTemplates] = useState(()=>{try{return JSON.parse(localStorage.getItem('ppb_loc_tpl')||'[]');}catch{return[];}});
+ const [showTplSave,setShowTplSave] = useState(false);
+ const [tplName,setTplName] = useState('');
+ const saveTpl=()=>{
+  if(!tplName.trim())return;
+  const tpl={id:Date.now(),name:tplName.trim(),data:{tireuses:form.tireuses,futs:form.futs,gobelets25:form.gobelets25,gobelets50:form.gobelets50,statut:form.statut,montant:form.montant,acompte:form.acompte,notes:form.notes}};
+  const updated=[tpl,...templates].slice(0,10);
+  setTemplates(updated);localStorage.setItem('ppb_loc_tpl',JSON.stringify(updated));
+  setShowTplSave(false);setTplName('');
+ };
+ const loadTpl=id=>{
+  const tpl=templates.find(t=>t.id===parseInt(id));
+  if(tpl) setForm(f=>({...f,...tpl.data}));
+ };
+ const delTpl=id=>{const updated=templates.filter(t=>t.id!==id);setTemplates(updated);localStorage.setItem('ppb_loc_tpl',JSON.stringify(updated));};
+
+ // ── Vérif stock PF ─────────────────────────────────────────────────────
+ const futDispo=(biere,typeFut)=>(stockPF||[]).filter(pf=>pf.brassinNom&&biere&&pf.brassinNom.toLowerCase().includes(biere.toLowerCase())&&pf.type===`Fût ${typeFut}`&&pf.qteDispo>0).reduce((s,pf)=>s+pf.qteDispo,0);
 
  const applyTarifAuto = (nextForm) => {
   if(editLoc) return nextForm;
@@ -3987,6 +4007,26 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
 
  return (
   <div>
+   {/* ── Modèles ── */}
+   {(templates.length>0||true)&&<div style={{background:C.bgDark,borderRadius:8,padding:'10px 12px',marginBottom:10,border:`1px solid ${C.border}`,display:'flex',alignItems:'center',gap:8,flexWrap:'wrap'}}>
+    <span style={{fontSize:10,fontFamily:FM,color:C.textLight,letterSpacing:1,textTransform:'uppercase',flexShrink:0}}>Modèle</span>
+    <select defaultValue="" onChange={e=>e.target.value&&loadTpl(e.target.value)}
+     style={{flex:1,minWidth:0,fontSize:11,fontFamily:FM,background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:6,padding:'4px 8px',color:C.text}}>
+     <option value="">— Charger un modèle —</option>
+     {templates.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
+    </select>
+    {showTplSave
+     ?<div style={{display:'flex',gap:4,flex:1}}>
+       <input value={tplName} onChange={e=>setTplName(e.target.value)} autoFocus placeholder="Nom du modèle"
+        onKeyDown={e=>e.key==='Enter'&&saveTpl()}
+        style={{flex:1,fontSize:11,fontFamily:FM,background:C.bgCard,border:`1px solid ${C.amber}`,borderRadius:6,padding:'4px 8px',color:C.text,outline:'none'}}/>
+       <button onClick={saveTpl} style={{padding:'3px 10px',background:C.amber,border:'none',borderRadius:6,color:'#000',fontWeight:700,fontSize:11,cursor:'pointer'}}>OK</button>
+       <button onClick={()=>{setShowTplSave(false);setTplName('');}} style={{padding:'3px 8px',background:'none',border:`1px solid ${C.border}`,borderRadius:6,color:C.textMid,fontSize:11,cursor:'pointer'}}>✕</button>
+      </div>
+     :<button onClick={()=>setShowTplSave(true)} style={{flexShrink:0,padding:'3px 10px',background:'none',border:`1px solid ${C.border}`,borderRadius:6,color:C.textLight,fontSize:11,cursor:'pointer',fontFamily:FM}}>💾 Sauver</button>
+    }
+    {templates.map(t=><button key={t.id} onClick={()=>delTpl(t.id)} title={`Supprimer "${t.name}"`} style={{display:'none'}}/>)}
+   </div>}
    {err&&(
     <div style={{background:C.brickPale,border:`1px solid ${C.alert}`,borderRadius:6,
      padding:"10px 14px",marginBottom:12,color:C.alert,fontWeight:600,fontSize:13,
@@ -4177,6 +4217,19 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
         )}
        </div>
       </div>
+      {(() => {
+       if(!ft.biere) return null;
+       const dispo=futDispo(ft.biere,ft.typeFut);
+       const demande=parseInt(ft.nbFuts)||0;
+       if(dispo===0&&demande===0) return null;
+       const ok=dispo>=demande;
+       return <div style={{marginTop:8,padding:'6px 10px',borderRadius:6,background:ok?C.greenPale:C.brickPale,border:`1px solid ${ok?C.green:C.alert}40`,display:'flex',alignItems:'center',gap:6,fontSize:11,fontFamily:FM}}>
+        <span>{ok?'✓':'⚠'}</span>
+        <span style={{color:ok?C.green:C.alert,fontWeight:600}}>
+         {ok?`Stock OK — ${dispo} fût${dispo>1?'s':''} dispo en PF`:`Stock insuffisant — ${dispo} dispo pour ${demande} demandé${demande>1?'s':''}`}
+        </span>
+       </div>;
+      })()}
      </div>
     ))}
     <button onClick={addFut}
@@ -6025,7 +6078,7 @@ function VueImport({locations,setLocations,onDone}){
  );
 }
 
-function ModuleTireuses({tireuses,setTireuses,locations,setLocations,stockCond,setStockCond,recettes}) {
+function ModuleTireuses({tireuses,setTireuses,locations,setLocations,stockCond,setStockCond,recettes,stockPF=[]}) {
  const [ongletT,setOngletT] = useState('planning');
  const [showForm,setShowForm] = useState(false);
  const [editLoc,setEditLoc]   = useState(null);
@@ -6117,6 +6170,7 @@ function ModuleTireuses({tireuses,setTireuses,locations,setLocations,stockCond,s
       editLoc={editLoc}
       tireuses={tireuses}
       recettes={recettes}
+      stockPF={stockPF}
       onSave={handleSave}
       onCancel={closeForm}
      />
@@ -10437,7 +10491,7 @@ export default function App(){
    {module==='fournisseurs'    &&<ModuleFournisseurs fournisseurs={fournisseurs} setFournisseurs={setFournisseurs} stock={stock}/>}
    {module==='historique'      &&<ModuleHistorique brassins={brassins}/>}
    {module==='planification'   &&<ModulePlanification brassins={brassins} setBrassins={setBrassins} condSessions={condSessions} recettes={recettes} locations={locations}/>}
-   {module==='tireuses'        &&<ModuleTireuses tireuses={tireuses} setTireuses={setTireuses} locations={locations} setLocations={setLocations} stockCond={stockCond} setStockCond={setStockCond} recettes={recettes}/>}
+   {module==='tireuses'        &&<ModuleTireuses tireuses={tireuses} setTireuses={setTireuses} locations={locations} setLocations={setLocations} stockCond={stockCond} setStockCond={setStockCond} recettes={recettes} stockPF={stockPF}/>}
    {module==='stockpf'         &&<ModuleStockPF condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} setStockPF={setStockPF} stock={stock} inventaires={inventaires} setInventaires={setInventaires}/>}
    {module==='catalogue'       &&<ModuleCatalogue recettes={recettes} setRecettes={setRecettes} brassins={brassins} stockPF={stockPF} setStockPF={setStockPF} condSessions={condSessions} stock={stock} stockCond={stockCond}/>}
    {module==='pl'              &&<ModulePL brassins={brassins} recettes={recettes} condSessions={condSessions} stockPF={stockPF} locations={locations} stock={stock} stockCond={stockCond}/>}
@@ -10508,7 +10562,58 @@ export default function App(){
      </div>
     )}
    </header>
-   <main style={{paddingBottom:80}}>{MODULES_JSX}</main>
+   <main style={{paddingBottom:80}}>
+    {/* Vue terrain cave (Brasserie mobile) */}
+    {familleActive==='brasserie'&&module==='production'&&(()=>{
+     const actifsList=brassins.filter(b=>b.statut!=='terminé'&&b.statut!=='planifié');
+     const planifiesList=brassins.filter(b=>b.statut==='planifié');
+     return <div style={{padding:'12px 14px'}}>
+      <div style={{marginBottom:14}}>
+       <div style={{fontSize:9,fontFamily:FM,color:C.textLight,letterSpacing:1.5,textTransform:'uppercase',marginBottom:2}}>Mode terrain</div>
+       <h2 style={{fontFamily:FA,fontStyle:'italic',fontSize:22,color:C.text,lineHeight:1}}>Cave en cours</h2>
+      </div>
+      {actifsList.length===0&&<p style={{color:C.textLight,textAlign:'center',padding:'24px 0',fontFamily:FA,fontStyle:'italic'}}>Aucun brassin actif</p>}
+      {actifsList.map(b=>{
+       const j=Math.floor((Date.now()-new Date(b.dateDebut))/86400000);
+       const s=STATUTS[b.statut]||STATUTS.planifié;
+       const lastDens=b.mesures?.filter(m=>m.type==='densité'||!m.type).slice(-1)[0];
+       const att=calcAtt(b);
+       return <div key={b.id} style={{background:C.bgCard,borderRadius:16,padding:'16px',marginBottom:10,border:`2px solid ${s.color}30`,boxShadow:`0 2px 12px -4px ${s.color}20`}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}}>
+         <div>
+          <div style={{fontFamily:FA,fontStyle:'italic',fontSize:18,color:C.text,lineHeight:1.1}}>{b.recette}</div>
+          <div style={{fontSize:11,color:C.textLight,fontFamily:FM,marginTop:3}}>{b.fermenteur}</div>
+         </div>
+         <div style={{background:s.color+'20',border:`1px solid ${s.color}50`,borderRadius:20,padding:'4px 10px',fontSize:11,color:s.color,fontWeight:700,fontFamily:FM}}>{s.dot} {b.statut}</div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:12}}>
+         <div style={{textAlign:'center',padding:'8px 4px',background:C.bg,borderRadius:8}}>
+          <div style={{fontSize:9,color:C.textLight,fontFamily:FM,letterSpacing:1,textTransform:'uppercase',marginBottom:2}}>Jours</div>
+          <div style={{fontSize:20,fontWeight:700,color:C.amber,fontFamily:FA}}>J+{j}</div>
+         </div>
+         <div style={{textAlign:'center',padding:'8px 4px',background:C.bg,borderRadius:8}}>
+          <div style={{fontSize:9,color:C.textLight,fontFamily:FM,letterSpacing:1,textTransform:'uppercase',marginBottom:2}}>Dens.</div>
+          <div style={{fontSize:18,fontWeight:700,color:C.text,fontFamily:FA}}>{lastDens?.valeur||'—'}</div>
+         </div>
+         <div style={{textAlign:'center',padding:'8px 4px',background:C.bg,borderRadius:8}}>
+          <div style={{fontSize:9,color:C.textLight,fontFamily:FM,letterSpacing:1,textTransform:'uppercase',marginBottom:2}}>Att.</div>
+          <div style={{fontSize:18,fontWeight:700,color:att>=85?C.green:C.amber,fontFamily:FA}}>{att?att.toFixed(0)+'%':'—'}</div>
+         </div>
+        </div>
+        {b.notes&&<div style={{fontSize:11,color:C.textMid,padding:'8px 10px',background:C.bg,borderRadius:8,borderLeft:`3px solid ${C.amber}`,lineHeight:1.5}}>{b.notes}</div>}
+       </div>;
+      })}
+      {planifiesList.length>0&&<div style={{marginTop:6,padding:'10px 12px',background:C.bgCard,borderRadius:10,border:`1px solid ${C.border}`}}>
+       <div style={{fontSize:9,fontFamily:FM,color:C.textLight,letterSpacing:1,textTransform:'uppercase',marginBottom:8}}>Planifiés ({planifiesList.length})</div>
+       {planifiesList.map(b=><div key={b.id} style={{display:'flex',justifyContent:'space-between',padding:'5px 0',borderBottom:`1px solid ${C.border}`,fontSize:12,color:C.textMid}}>
+        <span>{b.recette}</span><span style={{fontFamily:FM,color:C.textLight}}>{fmtDate(b.dateDebut)}</span>
+       </div>)}
+      </div>}
+     </div>;
+    })()}
+    {/* Modules normaux pour les autres sections */}
+    {!(familleActive==='brasserie'&&module==='production')&&MODULES_JSX}
+   </main>
    <nav style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:640,background:`${C.bgCard}F0`,borderTop:`1px solid ${C.border}`,backdropFilter:'blur(14px)',WebkitBackdropFilter:'blur(14px)',zIndex:200,paddingBottom:'env(safe-area-inset-bottom,0px)'}}>
     <div style={{display:'flex',height:60}}>
      {FAMILLES.map(f=>{
