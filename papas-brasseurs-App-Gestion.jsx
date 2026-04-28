@@ -384,7 +384,7 @@ function Modal({onClose,children,wide}){
  );
 }
 
-function ModuleDashboard({stock,brassins,fournisseurs,condSessions,recettes,stockCond,stockPF,locations,setModule}){
+function ModuleDashboard({stock,brassins,fournisseurs,condSessions,recettes,stockCond,stockPF,locations,setModule,journal=[]}){
  const [view,setView]        = useState('dashboard'); // 'dashboard'|'hof'|'scoring'|'tracabilite'
  const [tracLot,setTracLot]  = useState(null);        // lot sélectionné pour tracabilité
 
@@ -607,6 +607,24 @@ function ModuleDashboard({stock,brassins,fournisseurs,condSessions,recettes,stoc
       {alertes.length>5&&<p style={{fontSize:11,color:C.textLight,
        textAlign:'center',marginTop:4}}>+{alertes.length-5} autres</p>}
      </div>
+     {journal.length>0&&<div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:18,padding:'15px 16px',boxShadow:'0 4px 14px -6px rgba(60,40,10,0.10)'}}>
+      <div style={{marginBottom:12}}>
+       <div style={{fontSize:9,color:C.textLight,fontFamily:FM,letterSpacing:2,textTransform:'uppercase',marginBottom:2}}>Activité</div>
+       <h3 style={{fontFamily:FA,fontStyle:'italic',fontSize:18,color:C.text,lineHeight:1}}>Journal</h3>
+      </div>
+      {journal.slice(0,8).map(e=>{
+       const icons={production:'⚗️',conditionnement:'🍾',location:'🍺',stock:'📦',synchro:'☁️'};
+       return <div key={e.id} style={{display:'flex',alignItems:'flex-start',gap:10,padding:'8px 0',borderBottom:`1px solid ${C.border}`}}>
+        <span style={{fontSize:13,flexShrink:0,marginTop:1}}>{icons[e.type]||'•'}</span>
+        <div style={{flex:1,minWidth:0}}>
+         <div style={{fontSize:12,color:C.text,fontWeight:500}}>{e.msg}</div>
+         <div style={{fontSize:10,color:C.textLight,fontFamily:FM,marginTop:1}}>
+          {new Date(e.ts).toLocaleDateString('fr',{day:'2-digit',month:'short'})} à {new Date(e.ts).toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})}
+         </div>
+        </div>
+       </div>;
+      })}
+     </div>}
     </div>
    )}
 
@@ -2141,7 +2159,7 @@ function CourbeDensite({mesures,og,fg}){
  );
 }
 
-function ModuleProduction({brassins,setBrassins,recettes}){
+function ModuleProduction({brassins,setBrassins,recettes,logAction}){
  const [filter,setFilter]   = useState('actifs');
  const [sel,setSel]         = useState(null);
  const [selTab,setSelTab]   = useState('suivi');
@@ -2236,6 +2254,27 @@ function ModuleProduction({brassins,setBrassins,recettes}){
        </div>
       </div>
       <div style={{display:'flex',gap:6,flexShrink:0}}>
+       <button onClick={()=>{
+        const w=window.open('','_blank','width=820,height=960');
+        w.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Brassin – ${b.recette}</title><style>body{font-family:sans-serif;padding:28px 32px;color:#1F1A12;background:#fff;max-width:760px;margin:0 auto}h1{font-size:26px;margin-bottom:3px}h2{font-size:16px;margin:18px 0 8px;color:#888}hr{border:none;border-top:1px solid #ddd;margin:16px 0}.sub{color:#888;font-size:13px;margin-bottom:18px}.grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:18px}.card{border:1px solid #e8e0d0;border-radius:8px;padding:10px 12px;background:#faf7f0}.label{font-size:10px;text-transform:uppercase;color:#999;letter-spacing:1px;margin-bottom:3px}.val{font-size:18px;font-weight:700;color:#1F1A12}table{width:100%;border-collapse:collapse;font-size:12px}th{background:#f5f0e8;padding:6px 10px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;color:#888}td{padding:5px 10px;border-bottom:1px solid #eee}.lot{background:#f5f0e8;border-radius:4px;padding:3px 9px;margin:2px;display:inline-block;font-size:11px}@media print{button{display:none}}</style></head><body>
+<h1>${b.recette}</h1><div class="sub">${b.fermenteur} · ${fmtDate(b.dateDebut)} · J+${jours} · <strong>${b.statut}</strong></div>
+<div class="grid">
+<div class="card"><div class="label">Volume</div><div class="val">${b.volume||'—'}L</div></div>
+<div class="card"><div class="label">OG → FG</div><div class="val">${b.og||'—'} → ${b.fg||'—'}</div></div>
+<div class="card"><div class="label">ABV</div><div class="val">${b.abv||abvCalc?.toFixed(1)||'—'}%</div></div>
+<div class="card"><div class="label">Atténuation</div><div class="val">${att?.toFixed(0)||'—'}%</div></div>
+</div>
+${b.notes?`<h2>Notes brasseur</h2><p style="font-size:13px;line-height:1.6;padding:10px 12px;background:#faf7f0;border-radius:8px;border:1px solid #e8e0d0">${b.notes}</p>`:''}
+${b.mesures?.length?`<h2>Mesures</h2><table><tr><th>Date</th><th>Type</th><th>Valeur</th><th>Temp.</th><th>Note</th></tr>${b.mesures.map(m=>`<tr><td>${m.date||''}</td><td>${m.type||'densité'}</td><td>${m.valeur}</td><td>${m.temp?m.temp+'°C':''}</td><td>${m.note||''}</td></tr>`).join('')}</table>`:''}
+<hr><p style="font-size:10px;color:#aaa;text-align:right">Imprimé le ${new Date().toLocaleDateString('fr')} — Les Papas Brasseurs</p>
+<button onclick="window.print()" style="margin-top:12px;padding:8px 20px;background:#D8901E;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-weight:700">🖨 Imprimer</button>
+</body></html>`);
+        w.document.close();
+       }} style={{background:C.bgCard,border:`1px solid ${C.border}`,
+        borderRadius:20,padding:'5px 12px',fontSize:12,
+        fontWeight:700,color:C.textMid,flexShrink:0}}>
+        🖨 PDF
+       </button>
        <button onClick={()=>{
         setSel(null);setSelTab('suivi');
         setEditB(b);
@@ -3132,6 +3171,7 @@ function ModuleProduction({brassins,setBrassins,recettes}){
        };
        if(editB) setBrassins(brassins.map(x=>x.id===editB.id?newB:x));
        else      setBrassins([...brassins, newB]);
+       logAction?.('production', editB?`Brassin modifié : ${newB.recette}`:`Nouveau brassin : ${newB.recette}${newB.volume?` — ${newB.volume}L`:''}`);
        setShowF(false);setForm(EF);setEditB(null);
       }}>{editB?'Enregistrer':'Créer'}</Btn>
      </div>
@@ -3141,7 +3181,7 @@ function ModuleProduction({brassins,setBrassins,recettes}){
  );
 }
 
-function ModuleConditionnement({brassins,setBrassins,stockCond,setStockCond,condSessions,setCondSessions}){
+function ModuleConditionnement({brassins,setBrassins,stockCond,setStockCond,condSessions,setCondSessions,logAction}){
  const [view,setView]=useState('sessions');
  const [q,setQ]=useState('');
  const [selId,setSelId]=useState(null);
@@ -3220,6 +3260,7 @@ function ModuleConditionnement({brassins,setBrassins,stockCond,setStockCond,cond
   setStockCond(newStock);
   setCondSessions([session,...condSessions]);
   const totalVol=session.lots.reduce((s,l)=>s+l.volume,0);
+  logAction?.('conditionnement',`Conditionnement ${session.brassinNom} : ${session.lots.reduce((s,l)=>s+l.contenants,0)} contenants (${totalVol}L)`);
   setBrassins(brassins.map(x=>x.id===session.brassinId?{...x,volume:totalVol,statut:'terminé',dateCond:session.date}:x));
   setView('sessions');setCondForm(EF);
  };
@@ -10153,6 +10194,8 @@ export default function App(){
  const [locations,setLocations]=useState(LOCATIONS_INIT);
  const [stockPF,setStockPF]=useState([]);
  const [inventaires,setInventaires]=useState([]);
+ const [journal,setJournal]=useState(()=>{try{return JSON.parse(localStorage.getItem('ppb_journal')||'[]');}catch{return[];}});
+ const logAction=(type,msg)=>{const e={id:Date.now(),ts:new Date().toISOString(),type,msg};setJournal(j=>{const u=[e,...j].slice(0,100);try{localStorage.setItem('ppb_journal',JSON.stringify(u));}catch{}return u;});};
  const [module,setModule]=useState('dashboard');
  const [darkMode,setDarkMode]=useState(()=>localStorage.getItem('ppb_dark')==='1');
  const [,forceRender]=useState(0);
@@ -10386,11 +10429,11 @@ export default function App(){
  const MODULES_JSX = (
   <>
    {module==='sauvegarde'      &&<ModuleSauvegarde data={allData} onRestore={restoreData}/>}
-   {module==='dashboard'       &&<ModuleDashboard stock={stock} brassins={brassins} fournisseurs={fournisseurs} condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} locations={locations} setModule={setModule}/>}
+   {module==='dashboard'       &&<ModuleDashboard stock={stock} brassins={brassins} fournisseurs={fournisseurs} condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} locations={locations} setModule={setModule} journal={journal}/>}
    {module==='stocks'          &&<ModuleStocks stock={stock} setStock={setStock} fournisseurs={fournisseurs}/>}
    {module==='recettes'        &&<ModuleRecettes recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond}/>}
-   {module==='production'      &&<ModuleProduction brassins={brassins} setBrassins={setBrassins} recettes={recettes}/>}
-   {module==='conditionnement' &&<ModuleConditionnement brassins={brassins} setBrassins={setBrassins} stockCond={stockCond} setStockCond={setStockCond} condSessions={condSessions} setCondSessions={setCondSessions}/>}
+   {module==='production'      &&<ModuleProduction brassins={brassins} setBrassins={setBrassins} recettes={recettes} logAction={logAction}/>}
+   {module==='conditionnement' &&<ModuleConditionnement brassins={brassins} setBrassins={setBrassins} stockCond={stockCond} setStockCond={setStockCond} condSessions={condSessions} setCondSessions={setCondSessions} logAction={logAction}/>}
    {module==='fournisseurs'    &&<ModuleFournisseurs fournisseurs={fournisseurs} setFournisseurs={setFournisseurs} stock={stock}/>}
    {module==='historique'      &&<ModuleHistorique brassins={brassins}/>}
    {module==='planification'   &&<ModulePlanification brassins={brassins} setBrassins={setBrassins} condSessions={condSessions} recettes={recettes} locations={locations}/>}
@@ -10587,8 +10630,15 @@ export default function App(){
     {/* Topbar */}
     <header style={{height:64,flexShrink:0,padding:'0 28px',background:C.bgCard,borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',justifyContent:'space-between',gap:12}}>
      <div style={{minWidth:0,flex:1}}>
-      <div style={{fontSize:10,fontFamily:FM,color:C.textLight,letterSpacing:1.4,textTransform:'uppercase',marginBottom:1}}>
-       {FAMILLES.find(f=>f.id===familleActive)?.label}
+      <div style={{fontSize:10,fontFamily:FM,letterSpacing:1.4,textTransform:'uppercase',marginBottom:1,display:'flex',alignItems:'center',gap:5}}>
+       <span onClick={()=>setFamille(familleActive)} style={{color:C.amber,cursor:'pointer',opacity:0.85,transition:'opacity 0.1s'}}
+        onMouseEnter={e=>e.target.style.opacity=1} onMouseLeave={e=>e.target.style.opacity=0.85}>
+        {FAMILLES.find(f=>f.id===familleActive)?.label}
+       </span>
+       {sousMods.length>1&&sousMods.find(m=>m.id===module)&&<>
+        <span style={{color:C.textLight,opacity:0.4}}>›</span>
+        <span style={{color:C.textLight}}>{sousMods.find(m=>m.id===module)?.label}</span>
+       </>}
       </div>
       <div style={{fontFamily:FA,fontWeight:600,fontStyle:'italic',fontSize:20,color:C.text,letterSpacing:-0.5,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
        {sousMods.find(m=>m.id===module)?.label||FAMILLES.find(f=>f.id===familleActive)?.label}
