@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 const FM="'DM Mono',monospace";
 const FB="'DM Sans',sans-serif";
 const FA="'Fraunces',serif";
@@ -10179,6 +10179,11 @@ export default function App(){
     if(d.stock?.length)        setStock(d.stock);
     if(d.tireuses?.length)     setTireuses(d.tireuses);
     if(d.inventaires?.length)  setInventaires(d.inventaires);
+    if(d.recettes?.length)     setRecettes(d.recettes);
+    if(d.fournisseurs?.length) setFournisseurs(d.fournisseurs);
+    if(d.stockCond?.length)    setStockCond(d.stockCond);
+    if(d.condSessions?.length) setCondSessions(d.condSessions);
+    if(d.stockPF?.length)      setStockPF(d.stockPF);
    }
   }catch(e){}
  },[]);
@@ -10186,10 +10191,107 @@ export default function App(){
  useEffect(()=>{
   try{
    localStorage.setItem('ppb_data', JSON.stringify({
-    locations, brassins, stock, tireuses, inventaires
+    locations,brassins,stock,tireuses,inventaires,
+    recettes,fournisseurs,stockCond,condSessions,stockPF
    }));
   }catch(e){}
- },[locations,brassins,stock,tireuses]);
+ },[locations,brassins,stock,tireuses,inventaires,recettes,fournisseurs,stockCond,condSessions,stockPF]);
+
+ // ── Sync inter-postes ──────────────────────────────────────────────────────
+ const machineId   = useMemo(()=>{
+  let id=localStorage.getItem('ppb_machine_id');
+  if(!id){id=Math.random().toString(36).slice(2,10);localStorage.setItem('ppb_machine_id',id);}
+  return id;
+ },[]);
+ const machineName = useMemo(()=>
+  localStorage.getItem('ppb_machine_name')||`Poste-${machineId.slice(0,4).toUpperCase()}`
+ ,[machineId]);
+ const [syncStatus,  setSyncStatus]   = useState('idle');
+ const [syncTime,    setSyncTime]     = useState(null);
+ const [lockConflict,setLockConflict] = useState(null);
+ const [serverAvail, setServerAvail]  = useState(false);
+ const saveTimer  = useRef(null);
+ const dataRef    = useRef({});
+ const availRef   = useRef(false);
+
+ useEffect(()=>{
+  dataRef.current={locations,brassins,stock,tireuses,inventaires,
+                   recettes,fournisseurs,stockCond,condSessions,stockPF};
+ },[locations,brassins,stock,tireuses,inventaires,recettes,fournisseurs,stockCond,condSessions,stockPF]);
+
+ useEffect(()=>{ availRef.current=serverAvail; },[serverAvail]);
+
+ // Chargement initial depuis le serveur
+ useEffect(()=>{
+  fetch('/api/data')
+   .then(r=>r.json())
+   .then(remote=>{
+    setServerAvail(true); availRef.current=true;
+    if(remote?.savedAt && remote?.data){
+     const remoteMs=new Date(remote.savedAt).getTime();
+     const localTs =localStorage.getItem('ppb_saved_at');
+     const localMs =localTs?new Date(localTs).getTime():0;
+     if(remoteMs>localMs){
+      const d=remote.data;
+      if(d.locations?.length)    setLocations(d.locations);
+      if(d.brassins?.length)     setBrassins(d.brassins);
+      if(d.stock?.length)        setStock(d.stock);
+      if(d.tireuses?.length)     setTireuses(d.tireuses);
+      if(d.inventaires?.length)  setInventaires(d.inventaires);
+      if(d.recettes?.length)     setRecettes(d.recettes);
+      if(d.fournisseurs?.length) setFournisseurs(d.fournisseurs);
+      if(d.stockCond?.length)    setStockCond(d.stockCond);
+      if(d.condSessions?.length) setCondSessions(d.condSessions);
+      if(d.stockPF?.length)      setStockPF(d.stockPF);
+      localStorage.setItem('ppb_saved_at',remote.savedAt);
+     }
+    }
+    return fetch('/api/lock',{method:'POST',headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({machine:machineName,machineId})});
+   })
+   .then(r=>r?.json())
+   .then(res=>{ if(res&&!res.ok&&res.conflict) setLockConflict(res.lock); })
+   .catch(()=>{});
+ },[]);
+
+ // Auto-save debounced 5 s
+ useEffect(()=>{
+  if(!serverAvail) return;
+  if(saveTimer.current) clearTimeout(saveTimer.current);
+  saveTimer.current=setTimeout(()=>{
+   setSyncStatus('saving');
+   const ts=new Date().toISOString();
+   fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({savedBy:machineId,data:dataRef.current})})
+   .then(()=>{ setSyncStatus('saved'); setSyncTime(new Date()); localStorage.setItem('ppb_saved_at',ts); })
+   .catch(()=>setSyncStatus('error'));
+  },5000);
+ },[locations,brassins,stock,tireuses,inventaires,recettes,fournisseurs,stockCond,condSessions,stockPF,serverAvail]);
+
+ // Ping verrou toutes les 30 s
+ useEffect(()=>{
+  if(!serverAvail) return;
+  const id=setInterval(()=>{
+   fetch('/api/lock',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({machine:machineName,machineId})})
+   .then(r=>r.json())
+   .then(res=>{ if(!res.ok&&res.conflict) setLockConflict(res.lock); });
+  },30000);
+  return ()=>clearInterval(id);
+ },[serverAvail]);
+
+ // Libération verrou + sauvegarde finale à la fermeture
+ useEffect(()=>{
+  const handler=()=>{
+   if(!availRef.current) return;
+   const body=JSON.stringify({savedBy:machineId,data:dataRef.current});
+   try{ navigator.sendBeacon('/api/data',new Blob([body],{type:'application/json'})); }catch{}
+   fetch('/api/lock',{method:'DELETE',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({machineId}),keepalive:true}).catch(()=>{});
+  };
+  window.addEventListener('beforeunload',handler);
+  return ()=>window.removeEventListener('beforeunload',handler);
+ },[]);
 
  const alerts=stock.filter(s=>s.qte<=s.seuil).length;
  const alertsCond=stockCond.filter(s=>s.qte<=s.seuil).length;
@@ -10380,10 +10482,34 @@ export default function App(){
   </div>
  );
 
+ const forceLock=()=>{
+  fetch('/api/lock',{method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({machine:machineName,machineId,force:true})})
+  .then(()=>setLockConflict(null));
+ };
+
  /* ── DESKTOP LAYOUT ── */
  return (
   <div style={{display:'flex',height:'100vh',background:C.bg,fontFamily:"'DM Sans',sans-serif",color:C.text,overflow:'hidden'}}>
    <style>{FONTS}</style>
+   {lockConflict&&<div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.55)',zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center'}}>
+    <div style={{background:C.bgCard,border:`2px solid ${C.amber}`,borderRadius:14,padding:'28px 32px',maxWidth:400,width:'90%',boxShadow:'0 8px 40px rgba(0,0,0,0.3)'}}>
+     <div style={{fontSize:28,marginBottom:12}}>⚠️</div>
+     <div style={{fontFamily:FA,fontStyle:'italic',fontSize:20,color:C.text,marginBottom:8}}>Session active</div>
+     <div style={{fontSize:13,color:C.textMid,lineHeight:1.6,marginBottom:20}}>
+      L'application est déjà ouverte sur <strong style={{color:C.amber}}>{lockConflict.machine}</strong> depuis {new Date(lockConflict.since).toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})}.<br/>
+      Deux sessions simultanées peuvent provoquer des conflits de données.
+     </div>
+     <div style={{display:'flex',gap:10}}>
+      <button onClick={forceLock} style={{flex:1,padding:'10px 16px',borderRadius:8,border:'none',background:C.amber,color:'#000',fontWeight:700,fontSize:13,cursor:'pointer'}}>
+       Forcer l'ouverture
+      </button>
+      <button onClick={()=>setLockConflict(null)} style={{padding:'10px 16px',borderRadius:8,border:`1px solid ${C.border}`,background:'transparent',color:C.textMid,fontSize:13,cursor:'pointer'}}>
+       Ignorer
+      </button>
+     </div>
+    </div>
+   </div>}
 
    {/* SIDEBAR */}
    <aside style={{width:240,flexShrink:0,background:C.bgCard,borderRight:`1px solid ${C.border}`,display:'flex',flexDirection:'column',overflow:'hidden'}}>
@@ -10448,6 +10574,13 @@ export default function App(){
        🔔
        {alerts>0&&<span style={{position:'absolute',top:6,right:7,width:7,height:7,borderRadius:999,background:C.alert}}/>}
       </div>
+      {serverAvail&&<div title={syncTime?`Dernière synchro : ${syncTime.toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})}`:machineName}
+       style={{display:'flex',alignItems:'center',gap:5,fontSize:11,fontFamily:FM,
+        color:syncStatus==='error'?C.alert:syncStatus==='saving'?C.amber:syncStatus==='saved'?C.green:C.textLight,
+        padding:'4px 10px',borderRadius:999,background:C.bgDark,border:`1px solid ${C.border}`,flexShrink:0}}>
+       <span>{syncStatus==='saving'?'⟳':syncStatus==='error'?'⚠':'☁'}</span>
+       <span>{syncStatus==='saving'?'Synchro…':syncStatus==='saved'&&syncTime?syncTime.toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'}):machineName}</span>
+      </div>}
       <DarkToggle/>
       <Btn p onClick={()=>setModule('production')}>+ Nouveau brassin</Btn>
      </div>
