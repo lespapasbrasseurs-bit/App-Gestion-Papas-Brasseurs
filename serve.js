@@ -55,6 +55,28 @@ http.createServer(async(req,res)=>{
     return json(res,{ok:true,savedAt:ts});
   }
 
+  // ── /api/backups : liste et lecture des sauvegardes ──────
+  if(req.url==='/api/backups' && req.method==='GET'){
+    const baks=[];
+    for(let i=1;i<=5;i++){
+      const f=path.join(dir,`ppb_data_bak_${i}.json`);
+      if(fs.existsSync(f)){
+        const d=readJson(f);
+        baks.push({n:i,savedAt:d?.savedAt||null,savedBy:d?.savedBy||null});
+      }
+    }
+    return json(res,baks);
+  }
+  const bakMatch=req.url.match(/^\/api\/backups\/(\d)$/);
+  if(bakMatch && req.method==='GET'){
+    const n=parseInt(bakMatch[1]);
+    if(n<1||n>5){ res.writeHead(404); res.end('Not found'); return; }
+    const f=path.join(dir,`ppb_data_bak_${n}.json`);
+    const d=readJson(f);
+    if(!d){ res.writeHead(404); res.end('Not found'); return; }
+    return json(res,d);
+  }
+
   // ── /api/lock : verrou de session ─────────────────────────
   if(req.url==='/api/lock' && req.method==='GET'){
     const lock=readJson(LOCK_FILE);

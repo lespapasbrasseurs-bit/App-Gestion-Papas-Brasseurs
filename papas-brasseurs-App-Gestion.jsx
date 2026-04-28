@@ -7526,7 +7526,7 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
 }
 
 const BEER_IMAGES = {};  // Images retirées pour performance
-const FERM_JOURS = {
+const FERM_JOURS_DEF = {
  "L'Impèrtinente":22,"La Pèrchée":25,"La Pèrilleuse":17,"La Pèrlimpinpin":21,
  "La Supère":26,"La Blonde des Papas":20,"La Mèrveilleuse":29,"La Mèrlimpinpin":22,
  "La Mary'Stout":28,"La Mamagascar":26,"La Papa Poule":59,"Farmère":35,
@@ -8957,11 +8957,11 @@ function ModuleSimulation({recettes,setRecettes,stock,stockCond,condSessions,sto
  );
 }
 
-function ModulePrediction({brassins,recettes}){
+function ModulePrediction({brassins,recettes,fermJours=FERM_JOURS_DEF}){
  const actifs = brassins.filter(b=>b.statut!=='terminé'&&b.statut!=='planifié');
 
  const predire = b => {
-  const duree = FERM_JOURS[b.recette] || 21;
+  const duree = fermJours[b.recette] || 21;
   const debut = new Date(b.dateDebut+'T00:00');
   const datePrete = new Date(debut.getTime() + duree*86400000);
   const joursRestants = Math.ceil((datePrete-new Date())/86400000);
@@ -9133,7 +9133,7 @@ function ModulePrediction({brassins,recettes}){
      Durées moyennes (historique réel)
     </div>
     <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
-     {Object.entries(FERM_JOURS).map(([nom,j])=>(
+     {Object.entries(fermJours).map(([nom,j])=>(
       <span key={nom} style={{fontSize:10,fontFamily:FM,
        color:C.textMid,background:C.bgCard,padding:'2px 8px',
        borderRadius:10,border:`1px solid ${C.border}`}}>
@@ -10008,37 +10008,22 @@ function ModuleAnticipation({brassins,setBrassins,recettes,locations,stock,stock
 
 // ─── SAUVEGARDE / SYNC ──────────────────────────────────────────────────────
 
-function ModuleSauvegarde({data, onRestore}) {
- const [token,  setToken]  = useState(()=>localStorage.getItem('ppb_gist_token')||'');
- const [gistId, setGistId] = useState(()=>localStorage.getItem('ppb_gist_id')||'');
- const [status, setStatus] = useState('idle'); // idle|syncing|ok|error
- const [msg,    setMsg]    = useState('');
- const [lastSync, setLastSync] = useState(()=>localStorage.getItem('ppb_last_sync')||'');
- const [autoSync, setAutoSync] = useState(()=>localStorage.getItem('ppb_auto_sync')==='1');
- const [showToken, setShowToken] = useState(false);
+function ModuleSauvegarde({data, onRestore, machineName, saveMachineName, darkMode, setDarkMode, fermJours, saveFermJours, recettes}) {
+ const [msg,         setMsg]         = useState('');
+ const [msgType,     setMsgType]     = useState('ok'); // ok|error
+ const [backups,     setBackups]     = useState([]);
+ const [confirmReset,setConfirmReset]= useState(false);
+ const [editFerm,    setEditFerm]    = useState(false);
+ const [fermEdit,    setFermEdit]    = useState({});
+ const [nameEdit,    setNameEdit]    = useState(machineName||'');
  const fileRef = useRef();
- const autoTimer = useRef();
- const prevData  = useRef(null);
 
- const saveToken = t => { setToken(t); localStorage.setItem('ppb_gist_token', t); };
- const saveGistId= id=> { setGistId(id);localStorage.setItem('ppb_gist_id', id); };
+ const notify = (m, t='ok') => { setMsg(m); setMsgType(t); setTimeout(()=>setMsg(''),4000); };
 
- // Auto-sync : push 10s après le dernier changement de données
+ // Charger la liste des backups serveur
  useEffect(()=>{
-  if(!autoSync||!token) return;
-  const cur = JSON.stringify(data);
-  if(prevData.current===null){prevData.current=cur;return;}
-  if(prevData.current===cur) return;
-  prevData.current=cur;
-  clearTimeout(autoTimer.current);
-  autoTimer.current=setTimeout(()=>pushGist(true),10000);
-  return ()=>clearTimeout(autoTimer.current);
- },[data,autoSync,token]);
-
- const stamp = () => {
-  const ts=new Date().toLocaleString('fr-FR');
-  setLastSync(ts); localStorage.setItem('ppb_last_sync',ts);
- };
+  fetch('/api/backups').then(r=>r.json()).then(setBackups).catch(()=>{});
+ },[]);
 
  const exportJSON = () => {
   const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -10046,175 +10031,198 @@ function ModuleSauvegarde({data, onRestore}) {
   const a    = document.createElement('a');
   a.href=url; a.download=`ppb-${new Date().toISOString().slice(0,10)}.json`;
   a.click(); URL.revokeObjectURL(url);
+  notify('Export téléchargé.');
+ };
+
+ const restoreBackup = async n => {
+  try{
+   const r = await fetch(`/api/backups/${n}`);
+   if(!r.ok) throw new Error();
+   const j = await r.json();
+   if(j?.data){ onRestore(j.data); notify(`Restauration depuis backup ${n} effectuée.`); }
+   else notify('Backup vide ou invalide.','error');
+  }catch{ notify('Erreur lors de la restauration.','error'); }
  };
 
  const importJSON = e => {
   const file=e.target.files[0]; if(!file)return;
   const reader=new FileReader();
   reader.onload=ev=>{
-   try{
-    onRestore(JSON.parse(ev.target.result));
-    setStatus('ok'); setMsg('✓ Données restaurées depuis le fichier JSON.');
-   }catch{setStatus('error');setMsg('Fichier JSON invalide.');}
+   try{ onRestore(JSON.parse(ev.target.result)); notify('Données restaurées depuis le fichier.'); }
+   catch{ notify('Fichier JSON invalide.','error'); }
   };
   reader.readAsText(file);
   e.target.value='';
  };
 
- const pushGist = async (silent=false) => {
-  if(!token){setStatus('error');setMsg('Token GitHub manquant.');return;}
-  if(!silent){setStatus('syncing');setMsg('Envoi en cours…');}
-  try{
-   const content=JSON.stringify(data,null,2);
-   const url    = gistId?`https://api.github.com/gists/${gistId}`:'https://api.github.com/gists';
-   const method = gistId?'PATCH':'POST';
-   const body   = gistId
-    ?{files:{'ppb-data.json':{content}}}
-    :{description:'Les Papas Brasseurs — données app',public:false,files:{'ppb-data.json':{content}}};
-   const res=await fetch(url,{method,headers:{'Authorization':`token ${token}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
-   if(!res.ok)throw new Error(`GitHub: HTTP ${res.status}`);
-   const json=await res.json();
-   saveGistId(json.id);
-   stamp();
-   setStatus('ok'); setMsg(`✓ Sauvegardé (Gist ${json.id.slice(0,8)}…)`);
-  }catch(err){setStatus('error');setMsg('Erreur push : '+err.message);}
+ const resetAll = () => {
+  localStorage.removeItem('ppb_data');
+  localStorage.removeItem('ppb_journal');
+  localStorage.removeItem('ppb_ferm_jours');
+  window.location.reload();
  };
 
- const pullGist = async () => {
-  if(!token||!gistId){setStatus('error');setMsg('Token et Gist ID requis.');return;}
-  setStatus('syncing');setMsg('Récupération…');
-  try{
-   const res=await fetch(`https://api.github.com/gists/${gistId}`,{headers:{'Authorization':`token ${token}`}});
-   if(!res.ok)throw new Error(`GitHub: HTTP ${res.status}`);
-   const json=await res.json();
-   const content=json.files['ppb-data.json']?.content;
-   if(!content)throw new Error('Fichier ppb-data.json introuvable dans le Gist');
-   onRestore(JSON.parse(content));
-   stamp();
-   setStatus('ok');setMsg('✓ Données chargées depuis le Gist.');
-  }catch(err){setStatus('error');setMsg('Erreur pull : '+err.message);}
+ const startEditFerm = () => { setFermEdit({...fermJours}); setEditFerm(true); };
+ const saveFerm = () => {
+  const merged = {};
+  Object.entries(fermEdit).forEach(([k,v])=>{ const n=parseInt(v); if(k.trim()&&n>0) merged[k.trim()]=n; });
+  saveFermJours(merged); setEditFerm(false); notify('Durées de fermentation enregistrées.');
  };
 
- const statusColor = {idle:C.textLight,syncing:C.amber,ok:C.green,error:C.alert}[status];
+ const Card = ({label, color=C.amber, children}) => (
+  <div style={{background:C.bgCard,borderRadius:16,border:`1px solid ${C.border}`,
+   padding:'20px 22px',marginBottom:16,boxShadow:'0 4px 14px -6px rgba(60,40,10,0.10)'}}>
+   <div style={{fontSize:9,fontFamily:FM,color,letterSpacing:1.6,textTransform:'uppercase',marginBottom:14}}>{label}</div>
+   {children}
+  </div>
+ );
+
+ const Toggle = ({value, onChange}) => (
+  <div onClick={onChange} style={{width:42,height:24,borderRadius:99,
+   background:value?C.green:C.bgDark,border:`1px solid ${C.border}`,
+   position:'relative',transition:'background 0.2s',cursor:'pointer',flexShrink:0}}>
+   <div style={{position:'absolute',top:3,left:value?20:3,width:18,height:18,
+    borderRadius:99,background:value?'#fff':C.textLight,transition:'left 0.2s'}}/>
+  </div>
+ );
 
  return (
-  <div style={{maxWidth:680}}>
-   {/* Status banner */}
-   {msg&&(
-    <div style={{background:status==='ok'?C.greenPale:status==='error'?C.brickPale:C.amberPale,
-     border:`1px solid ${statusColor}40`,borderRadius:12,padding:'10px 16px',
-     marginBottom:16,display:'flex',alignItems:'center',gap:10}}>
-     <span style={{fontSize:16}}>{status==='syncing'?'⏳':status==='ok'?'✅':'❌'}</span>
-     <span style={{fontSize:13,color:C.text,flex:1}}>{msg}</span>
-     {lastSync&&<span style={{fontSize:10,fontFamily:FM,color:C.textLight}}>Dernier sync : {lastSync}</span>}
-    </div>
-   )}
+  <div style={{maxWidth:700}}>
+   {msg&&<div style={{background:msgType==='ok'?C.greenPale:C.brickPale,
+    border:`1px solid ${msgType==='ok'?C.green:C.brick}40`,borderRadius:12,
+    padding:'10px 16px',marginBottom:16,fontSize:13,color:C.text,display:'flex',gap:8,alignItems:'center'}}>
+    <span>{msgType==='ok'?'✅':'❌'}</span>{msg}
+   </div>}
 
-   {/* Export / Import */}
-   <div style={{background:C.bgCard,borderRadius:16,border:`1px solid ${C.border}`,padding:'20px 22px',marginBottom:16,boxShadow:'0 4px 14px -6px rgba(60,40,10,0.10)'}}>
-    <div style={{fontSize:9,fontFamily:FM,color:C.amber,letterSpacing:1.6,textTransform:'uppercase',marginBottom:6}}>SAUVEGARDE LOCALE</div>
-    <div style={{fontFamily:FA,fontSize:18,fontStyle:'italic',color:C.text,marginBottom:14}}>Export / Import JSON</div>
-    <div style={{fontSize:12,color:C.textMid,marginBottom:16,lineHeight:1.6}}>
-     Téléchargez vos données en fichier <code style={{fontFamily:FM,background:C.bgDark,padding:'1px 6px',borderRadius:4}}>.json</code> ou restaurez depuis une sauvegarde précédente.
+   {/* ── Identité du poste ── */}
+   <Card label="IDENTITÉ DU POSTE">
+    <div style={{display:'flex',gap:16,alignItems:'flex-end',flexWrap:'wrap'}}>
+     <div style={{flex:1,minWidth:180}}>
+      <div style={{fontSize:11,fontWeight:700,color:C.textMid,marginBottom:6,textTransform:'uppercase',letterSpacing:0.8}}>Nom du poste</div>
+      <input value={nameEdit} onChange={e=>setNameEdit(e.target.value)}
+       style={{width:'100%',boxSizing:'border-box',background:C.bg,border:`1px solid ${C.border}`,
+        borderRadius:8,color:C.text,padding:'9px 13px',fontSize:13,outline:'none',fontFamily:FM}}/>
+     </div>
+     <button onClick={()=>{saveMachineName(nameEdit);notify('Nom enregistré.');}}
+      style={{padding:'9px 18px',borderRadius:10,background:C.amber,color:'#fff',
+       border:'none',fontWeight:700,fontSize:13,fontFamily:FB,cursor:'pointer'}}>
+      Enregistrer
+     </button>
     </div>
-    <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+    <div style={{marginTop:10,fontSize:11,fontFamily:FM,color:C.textLight}}>
+     ID machine : <code style={{background:C.bgDark,padding:'1px 6px',borderRadius:4}}>{localStorage.getItem('ppb_machine_id')||'—'}</code>
+    </div>
+   </Card>
+
+   {/* ── Interface ── */}
+   <Card label="INTERFACE" color={C.hop}>
+    <div style={{display:'flex',alignItems:'center',gap:14}}>
+     <Toggle value={darkMode} onChange={()=>setDarkMode(v=>!v)}/>
+     <div>
+      <div style={{fontSize:13,fontWeight:700,color:C.text,fontFamily:FB}}>Mode sombre</div>
+      <div style={{fontSize:11,color:C.textMid}}>Actuellement : {darkMode?'sombre':'clair'}</div>
+     </div>
+    </div>
+   </Card>
+
+   {/* ── Durées de fermentation ── */}
+   <Card label="DURÉES DE FERMENTATION" color={C.green}>
+    {!editFerm
+     ? <>
+        <div style={{display:'flex',flexWrap:'wrap',gap:6,marginBottom:14}}>
+         {Object.entries(fermJours).map(([nom,j])=>(
+          <span key={nom} style={{fontSize:11,fontFamily:FM,color:C.textMid,
+           background:C.bg,padding:'3px 10px',borderRadius:10,border:`1px solid ${C.border}`}}>
+           {nom.replace(/^La\s|^L'/i,'').trim()}: <b style={{color:C.text}}>{j}j</b>
+          </span>
+         ))}
+        </div>
+        <button onClick={startEditFerm}
+         style={{padding:'8px 18px',borderRadius:10,background:C.bgDark,color:C.text,
+          border:`1px solid ${C.border}`,fontWeight:600,fontSize:12,fontFamily:FB,cursor:'pointer'}}>
+         ✏ Modifier
+        </button>
+       </>
+     : <>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:8,marginBottom:14}}>
+         {Object.entries(fermEdit).map(([nom,j])=>(
+          <div key={nom} style={{display:'flex',alignItems:'center',gap:6}}>
+           <div style={{fontSize:11,color:C.textMid,flex:1,fontFamily:FM,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
+            {nom.replace(/^La\s|^L'/i,'').trim()}
+           </div>
+           <input type="number" min="1" max="365" value={j}
+            onChange={e=>setFermEdit(f=>({...f,[nom]:e.target.value}))}
+            style={{width:54,background:C.bg,border:`1px solid ${C.border}`,borderRadius:6,
+             color:C.text,padding:'4px 7px',fontSize:12,fontFamily:FM,outline:'none',textAlign:'right'}}/>
+           <span style={{fontSize:10,color:C.textLight,fontFamily:FM}}>j</span>
+          </div>
+         ))}
+        </div>
+        <div style={{display:'flex',gap:10}}>
+         <button onClick={saveFerm}
+          style={{padding:'8px 18px',borderRadius:10,background:C.green,color:'#fff',
+           border:'none',fontWeight:700,fontSize:12,fontFamily:FB,cursor:'pointer'}}>
+          Enregistrer
+         </button>
+         <button onClick={()=>setEditFerm(false)}
+          style={{padding:'8px 14px',borderRadius:10,background:C.bgDark,color:C.textMid,
+           border:`1px solid ${C.border}`,fontWeight:600,fontSize:12,fontFamily:FB,cursor:'pointer'}}>
+          Annuler
+         </button>
+         <button onClick={()=>{saveFermJours({...FERM_JOURS_DEF});setFermEdit({...FERM_JOURS_DEF});notify('Valeurs par défaut restaurées.');}}
+          style={{padding:'8px 14px',borderRadius:10,background:C.bgDark,color:C.textLight,
+           border:`1px solid ${C.border}`,fontWeight:600,fontSize:11,fontFamily:FB,cursor:'pointer',marginLeft:'auto'}}>
+          Défauts
+         </button>
+        </div>
+       </>
+    }
+   </Card>
+
+   {/* ── Sauvegardes ── */}
+   <Card label="SAUVEGARDES" color={C.textMid}>
+    <div style={{display:'flex',gap:10,flexWrap:'wrap',marginBottom:16}}>
      <button onClick={exportJSON}
-      style={{padding:'10px 20px',borderRadius:10,background:C.amber,color:'#fff',
+      style={{padding:'9px 18px',borderRadius:10,background:C.amber,color:'#fff',
        border:'none',fontWeight:700,fontSize:13,fontFamily:FB,cursor:'pointer',
        boxShadow:'0 4px 14px -4px rgba(216,144,30,0.4)'}}>
       ⬇ Exporter JSON
      </button>
      <button onClick={()=>fileRef.current.click()}
-      style={{padding:'10px 20px',borderRadius:10,background:C.bgDark,color:C.text,
+      style={{padding:'9px 18px',borderRadius:10,background:C.bgDark,color:C.text,
        border:`1px solid ${C.border}`,fontWeight:600,fontSize:13,fontFamily:FB,cursor:'pointer'}}>
       ⬆ Importer JSON
      </button>
      <input ref={fileRef} type="file" accept=".json" onChange={importJSON} style={{display:'none'}}/>
     </div>
-   </div>
-
-   {/* GitHub Gist sync */}
-   <div style={{background:C.bgCard,borderRadius:16,border:`1px solid ${C.border}`,padding:'20px 22px',marginBottom:16,boxShadow:'0 4px 14px -6px rgba(60,40,10,0.10)'}}>
-    <div style={{fontSize:9,fontFamily:FM,color:C.green,letterSpacing:1.6,textTransform:'uppercase',marginBottom:6}}>SYNC MULTI-POSTE</div>
-    <div style={{fontFamily:FA,fontSize:18,fontStyle:'italic',color:C.text,marginBottom:8}}>GitHub Gist</div>
-    <div style={{fontSize:12,color:C.textMid,marginBottom:16,lineHeight:1.6}}>
-     Les données sont stockées dans un <b>Gist privé</b> sur votre compte GitHub. Toutes les machines partageant le même token accèdent aux mêmes données.
-    </div>
-
-    {/* Token */}
-    <div style={{marginBottom:12}}>
-     <div style={{fontSize:11,fontWeight:700,color:C.textMid,marginBottom:5,textTransform:'uppercase',letterSpacing:0.8}}>Token GitHub (Personal Access Token)</div>
-     <div style={{display:'flex',gap:8,alignItems:'center'}}>
-      <input
-       type={showToken?'text':'password'}
-       value={token}
-       onChange={e=>saveToken(e.target.value)}
-       placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-       style={{flex:1,background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,padding:'9px 13px',fontSize:13,outline:'none',fontFamily:FM}}
-      />
-      <button onClick={()=>setShowToken(v=>!v)}
-       style={{padding:'9px 12px',borderRadius:8,background:C.bgDark,border:`1px solid ${C.border}`,cursor:'pointer',fontSize:13,color:C.textMid}}>
-       {showToken?'🙈':'👁'}
-      </button>
+    {backups.length>0&&<>
+     <div style={{fontSize:10,fontFamily:FM,color:C.textLight,textTransform:'uppercase',letterSpacing:1.2,marginBottom:8}}>Backups automatiques (serveur)</div>
+     <div style={{display:'flex',flexDirection:'column',gap:6}}>
+      {backups.map(bk=>(
+       <div key={bk.n} style={{display:'flex',alignItems:'center',gap:10,background:C.bg,
+        borderRadius:8,padding:'8px 12px',border:`1px solid ${C.border}`}}>
+        <span style={{fontSize:11,fontFamily:FM,color:C.textLight,width:18,textAlign:'center'}}>#{bk.n}</span>
+        <div style={{flex:1}}>
+         <div style={{fontSize:12,color:C.text,fontFamily:FB,fontWeight:600}}>
+          {bk.savedAt?new Date(bk.savedAt).toLocaleString('fr-FR'):'Date inconnue'}
+         </div>
+         {bk.savedBy&&<div style={{fontSize:10,color:C.textLight,fontFamily:FM}}>par {bk.savedBy}</div>}
+        </div>
+        <button onClick={()=>restoreBackup(bk.n)}
+         style={{padding:'5px 12px',borderRadius:8,background:C.bgDark,color:C.textMid,
+          border:`1px solid ${C.border}`,fontSize:11,fontFamily:FB,fontWeight:600,cursor:'pointer'}}>
+         Restaurer
+        </button>
+       </div>
+      ))}
      </div>
-     <div style={{fontSize:10,color:C.textLight,marginTop:4,fontFamily:FM}}>
-      github.com → Settings → Developer settings → Personal access tokens → Gist (scope)
-     </div>
-    </div>
+    </>}
+    {backups.length===0&&<div style={{fontSize:12,color:C.textLight,fontFamily:FM}}>Aucun backup disponible (serveur requis).</div>}
+   </Card>
 
-    {/* Gist ID (optionnel) */}
-    {gistId&&(
-     <div style={{marginBottom:16}}>
-      <div style={{fontSize:11,fontWeight:700,color:C.textMid,marginBottom:5,textTransform:'uppercase',letterSpacing:0.8}}>Gist ID (auto-rempli)</div>
-      <div style={{display:'flex',gap:8,alignItems:'center'}}>
-       <input
-        type="text" value={gistId} onChange={e=>saveGistId(e.target.value)}
-        style={{flex:1,background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.textLight,padding:'7px 13px',fontSize:12,outline:'none',fontFamily:FM}}
-       />
-       <button onClick={()=>saveGistId('')}
-        style={{padding:'7px 10px',borderRadius:8,background:C.brickPale,border:`1px solid ${C.border}`,cursor:'pointer',fontSize:12,color:C.brick}}>
-        ✕
-       </button>
-      </div>
-     </div>
-    )}
-
-    {/* Actions */}
-    <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}>
-     <button onClick={()=>pushGist(false)}
-      disabled={!token||status==='syncing'}
-      style={{padding:'10px 18px',borderRadius:10,background:C.green,color:'#fff',
-       border:'none',fontWeight:700,fontSize:13,fontFamily:FB,cursor:'pointer',
-       opacity:(!token||status==='syncing')?0.5:1,
-       boxShadow:'0 4px 14px -4px rgba(74,128,64,0.4)'}}>
-      ☁ Push (sauvegarder)
-     </button>
-     <button onClick={pullGist}
-      disabled={!token||!gistId||status==='syncing'}
-      style={{padding:'10px 18px',borderRadius:10,background:C.bgDark,color:C.text,
-       border:`1px solid ${C.border}`,fontWeight:600,fontSize:13,fontFamily:FB,cursor:'pointer',
-       opacity:(!token||!gistId||status==='syncing')?0.5:1}}>
-      ⬇ Pull (charger)
-     </button>
-
-     {/* Auto-sync toggle */}
-     <label style={{display:'flex',alignItems:'center',gap:8,cursor:'pointer',marginLeft:'auto'}}>
-      <div onClick={()=>{const v=!autoSync;setAutoSync(v);localStorage.setItem('ppb_auto_sync',v?'1':'0');}}
-       style={{width:42,height:24,borderRadius:99,background:autoSync?C.green:C.bgDark,
-        border:`1px solid ${C.border}`,position:'relative',transition:'background 0.2s',cursor:'pointer'}}>
-       <div style={{position:'absolute',top:3,left:autoSync?20:3,width:18,height:18,
-        borderRadius:99,background:autoSync?'#fff':C.textLight,transition:'left 0.2s'}}/>
-      </div>
-      <span style={{fontSize:12,fontFamily:FB,color:C.textMid,fontWeight:600}}>Auto-sync</span>
-      <span style={{fontSize:10,fontFamily:FM,color:C.textLight}}>(10 s après modif.)</span>
-     </label>
-    </div>
-   </div>
-
-   {/* Résumé données */}
-   <div style={{background:C.bgCard,borderRadius:16,border:`1px solid ${C.border}`,padding:'16px 22px',boxShadow:'0 4px 14px -6px rgba(60,40,10,0.10)'}}>
-    <div style={{fontSize:9,fontFamily:FM,color:C.textLight,letterSpacing:1.6,textTransform:'uppercase',marginBottom:10}}>CONTENU SAUVEGARDÉ</div>
-    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(130px,1fr))',gap:8}}>
+   {/* ── Résumé données ── */}
+   <Card label="CONTENU SAUVEGARDÉ" color={C.textLight}>
+    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(120px,1fr))',gap:8}}>
      {[
       {k:'Brassins',       v:data.brassins?.length||0,       icon:'⚗️'},
       {k:'Locations',      v:data.locations?.length||0,      icon:'🍻'},
@@ -10232,7 +10240,34 @@ function ModuleSauvegarde({data, onRestore}) {
       </div>
      ))}
     </div>
-   </div>
+   </Card>
+
+   {/* ── Zone dangereuse ── */}
+   <Card label="ZONE DANGEREUSE" color={C.brick}>
+    <div style={{fontSize:12,color:C.textMid,marginBottom:14,lineHeight:1.6}}>
+     Efface toutes les données locales et recharge l'application. <b style={{color:C.brick}}>Action irréversible.</b>
+    </div>
+    {!confirmReset
+     ? <button onClick={()=>setConfirmReset(true)}
+        style={{padding:'9px 18px',borderRadius:10,background:C.brickPale,color:C.brick,
+         border:`1px solid ${C.brick}60`,fontWeight:700,fontSize:13,fontFamily:FB,cursor:'pointer'}}>
+        🗑 Réinitialiser les données
+       </button>
+     : <div style={{display:'flex',gap:10,alignItems:'center'}}>
+        <span style={{fontSize:12,color:C.brick,fontFamily:FB,fontWeight:700}}>Confirmer ?</span>
+        <button onClick={resetAll}
+         style={{padding:'9px 18px',borderRadius:10,background:C.brick,color:'#fff',
+          border:'none',fontWeight:700,fontSize:13,fontFamily:FB,cursor:'pointer'}}>
+         Oui, tout effacer
+        </button>
+        <button onClick={()=>setConfirmReset(false)}
+         style={{padding:'9px 14px',borderRadius:10,background:C.bgDark,color:C.textMid,
+          border:`1px solid ${C.border}`,fontWeight:600,fontSize:12,fontFamily:FB,cursor:'pointer'}}>
+         Annuler
+        </button>
+       </div>
+    }
+   </Card>
   </div>
  );
 }
@@ -10307,6 +10342,11 @@ export default function App(){
  });
  const [editingMachineName, setEditingMachineName] = useState(false);
  const saveMachineName = name=>{setMachineName(name);localStorage.setItem('ppb_machine_name',name);};
+ const [fermJours, setFermJours] = useState(()=>{
+  try{ const s=localStorage.getItem('ppb_ferm_jours'); return s?{...FERM_JOURS_DEF,...JSON.parse(s)}:{...FERM_JOURS_DEF}; }
+  catch{ return {...FERM_JOURS_DEF}; }
+ });
+ const saveFermJours = fj => { setFermJours(fj); try{localStorage.setItem('ppb_ferm_jours',JSON.stringify(fj));}catch{} };
  const [syncStatus,  setSyncStatus]   = useState('idle');
  const [syncTime,    setSyncTime]     = useState(null);
  const [lockConflict,setLockConflict] = useState(null);
@@ -10403,7 +10443,7 @@ export default function App(){
  const brassinsActifs = brassins.filter(b=>b.statut!=='terminé'&&b.statut!=='planifié');
  const brassinsPrets  = brassinsActifs.filter(b=>{
   const debut=new Date(b.dateDebut+'T00:00');
-  const duree=(FERM_JOURS&&FERM_JOURS[b.recette])||21;
+  const duree=fermJours[b.recette]||21;
   const jr=Math.ceil((new Date(debut.getTime()+duree*86400000)-new Date())/86400000);
   return jr<=2;
  }).length;
@@ -10455,7 +10495,7 @@ export default function App(){
   },
   {
    id:'reglages', label:'Réglages', icon:'⚙️',
-   modules:[{id:'sauvegarde',label:'Sync & Sauvegarde',icon:'☁️'}],
+   modules:[{id:'sauvegarde',label:'Réglages',icon:'⚙️'}],
   },
  ];
 
@@ -10482,7 +10522,7 @@ export default function App(){
 
  const MODULES_JSX = (
   <>
-   {module==='sauvegarde'      &&<ModuleSauvegarde data={allData} onRestore={restoreData}/>}
+   {module==='sauvegarde'      &&<ModuleSauvegarde data={allData} onRestore={restoreData} machineName={machineName} saveMachineName={saveMachineName} darkMode={darkMode} setDarkMode={setDarkMode} fermJours={fermJours} saveFermJours={saveFermJours} recettes={recettes}/>}
    {module==='dashboard'       &&<ModuleDashboard stock={stock} brassins={brassins} fournisseurs={fournisseurs} condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} locations={locations} setModule={setModule} journal={journal}/>}
    {module==='stocks'          &&<ModuleStocks stock={stock} setStock={setStock} fournisseurs={fournisseurs}/>}
    {module==='recettes'        &&<ModuleRecettes recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond}/>}
@@ -10496,7 +10536,7 @@ export default function App(){
    {module==='catalogue'       &&<ModuleCatalogue recettes={recettes} setRecettes={setRecettes} brassins={brassins} stockPF={stockPF} setStockPF={setStockPF} condSessions={condSessions} stock={stock} stockCond={stockCond}/>}
    {module==='pl'              &&<ModulePL brassins={brassins} recettes={recettes} condSessions={condSessions} stockPF={stockPF} locations={locations} stock={stock} stockCond={stockCond}/>}
    {module==='simulation'      &&<ModuleSimulation recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond} condSessions={condSessions} stockPF={stockPF}/>}
-   {module==='prediction'      &&<ModulePrediction brassins={brassins} recettes={recettes}/>}
+   {module==='prediction'      &&<ModulePrediction brassins={brassins} recettes={recettes} fermJours={fermJours}/>}
    {module==='agenda'          &&<ModuleAgendaImport locations={locations} setLocations={setLocations} brassins={brassins} setBrassins={setBrassins} recettes={recettes}/>}
    {module==='anticipation'    &&<ModuleAnticipation brassins={brassins} setBrassins={setBrassins} recettes={recettes} locations={locations} stock={stock} stockPF={stockPF} condSessions={condSessions}/>}
   </>
