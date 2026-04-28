@@ -191,40 +191,40 @@ const RECETTES_INIT=[
  {id:20,nom:"La Témèraire",style:"Black IPA",abv:5.0,ibu:53,srm:40,og:1.048,fg:1.01,volume:500,permanent:false,prix:{b33:1.96,b75:4.29,f20:91.60,f30:137.40},description:"Black IPA — robe noire, amertume tranchante, Sabro + Simcoe en dry hop.",houblons:["Sabro","Simcoe"],levure:"Nottingham",ingredients:[{nom:"Pale",qte:62.5,"u":"kg"},{nom:"Cara Vienne 55",qte:25,"u":"kg"},{nom:"Cara 240",qte:7,"u":"kg"},{nom:"Chocolat",qte:6,"u":"kg"},{nom:"Black",qte:6,"u":"kg"},{nom:"Flocon Avoine",qte:12.5,"u":"kg",note:"non concassé"},{nom:"Amèrisant",qte:0.8,"u":"kg",note:"60min"},{nom:"Sabro",qte:1.0,"u":"kg",note:"aroma 80°C"},{nom:"Nottingham",qte:0.25,"u":"kg"},{nom:"Sabro",qte:1.5,"u":"kg",note:"DH"},{nom:"Simcoe",qte:0.5,"u":"kg",note:"DH"}]},
 ];
 const PRODUCTION_INIT=[
- {id:1,recette:"La Pèrilleuse",volume:460,statut:"terminé",dateDebut:"2025-09-19",dateCond:"2025-10-07",fermenteur:"FV-05",og:1.061,fg:1.020,abv:6,notes:"pH=4,37",mesures:[{date:"2025-09-19",valeur:1.061,temp:20,note:"DI"},{date:"2025-10-07",valeur:1.020,temp:5,note:"DF"}]},
- {id:2,recette:"L'Impèrtinente",volume:1629,statut:"terminé",dateDebut:"2025-09-16",dateCond:"2025-10-09",fermenteur:"FV-01",og:1.049,fg:1.006,abv:6,notes:"pH=4,31",mesures:[{date:"2025-09-16",valeur:1.049,temp:20,note:"DI"},{date:"2025-10-09",valeur:1.006,temp:5,note:"DF"}]},
- {id:3,recette:"La Blonde des Papas",volume:1840,statut:"terminé",dateDebut:"2025-09-25",dateCond:"2025-10-16",fermenteur:"FV-02",og:1.047,fg:1.011,abv:5,notes:"",mesures:[{date:"2025-09-25",valeur:1.047,temp:20,note:"DI"},{date:"2025-10-16",valeur:1.011,temp:5,note:"DF"}]},
- {id:4,recette:"La Supère",volume:915,statut:"terminé",dateDebut:"2025-09-30",dateCond:"2025-10-23",fermenteur:"FV-03",og:1.070,fg:1.007,abv:8.5,notes:"",mesures:[{date:"2025-09-30",valeur:1.070,temp:20,note:"DI"},{date:"2025-10-23",valeur:1.007,temp:5,note:"DF"}]},
- {id:5,recette:"La Mamagascar",volume:1108,statut:"terminé",dateDebut:"2025-10-03",dateCond:"2025-10-28",fermenteur:"FV-04",og:1.069,fg:1.018,abv:7,notes:"",mesures:[{date:"2025-10-03",valeur:1.069,temp:20,note:"DI"},{date:"2025-10-28",valeur:1.018,temp:5,note:"DF"}]},
- {id:6,recette:"La Pèrchée",volume:593,statut:"terminé",dateDebut:"2025-10-07",dateCond:"2025-10-30",fermenteur:"FV-05",og:1.036,fg:1.004,abv:4.5,notes:"",mesures:[{date:"2025-10-07",valeur:1.036,temp:20,note:"DI"},{date:"2025-10-30",valeur:1.004,temp:5,note:"DF"}]},
- {id:7,recette:"La Mary'Stout",volume:475,statut:"terminé",dateDebut:"2025-10-07",dateCond:"2025-11-04",fermenteur:"FV-01",og:1.071,fg:1.027,abv:6,notes:"",mesures:[{date:"2025-10-07",valeur:1.071,temp:20,note:"DI"},{date:"2025-11-04",valeur:1.027,temp:5,note:"DF"}]},
- {id:8,recette:"La Pèrlimpinpin",volume:1624,statut:"terminé",dateDebut:"2025-10-17",dateCond:"2025-11-06",fermenteur:"FV-01",og:1.056,fg:1.008,abv:6.5,notes:"",mesures:[{date:"2025-10-17",valeur:1.056,temp:20,note:"DI"},{date:"2025-11-06",valeur:1.008,temp:5,note:"DF"}]},
- {id:9,recette:"Papa Noël",volume:1503,statut:"terminé",dateDebut:"2025-10-21",dateCond:"2025-11-13",fermenteur:"FV-02",og:1.053,fg:1.003,abv:7.2,notes:"Coriandre 0.5kg",mesures:[{date:"2025-10-21",valeur:1.053,temp:20,note:"DI"},{date:"2025-11-13",valeur:1.003,temp:5,note:"DF"}]},
- {id:10,recette:"La Pèrilleuse",volume:974,statut:"terminé",dateDebut:"2025-10-28",dateCond:"2025-11-18",fermenteur:"FV-03",og:1.061,fg:1.021,abv:6,notes:"",mesures:[{date:"2025-10-28",valeur:1.061,temp:20,note:"DI"},{date:"2025-11-18",valeur:1.021,temp:5,note:"DF"}]},
- {id:11,recette:"La Pèrchée",volume:1261,statut:"terminé",dateDebut:"2025-10-30",dateCond:"2025-11-25",fermenteur:"FV-04",og:1.037,fg:1.006,abv:4.5,notes:"",mesures:[{date:"2025-10-30",valeur:1.037,temp:20,note:"DI"},{date:"2025-11-25",valeur:1.006,temp:5,note:"DF"}]},
- {id:12,recette:"La Mèrveilleuse",volume:475,statut:"terminé",dateDebut:"2025-11-03",dateCond:"2025-11-27",fermenteur:"FV-05",og:1.059,fg:1.015,abv:6,notes:"",mesures:[{date:"2025-11-03",valeur:1.059,temp:20,note:"DI"},{date:"2025-11-27",valeur:1.015,temp:5,note:"DF"}]},
- {id:13,recette:"L'Impèrtinente",volume:1810,statut:"terminé",dateDebut:"2025-11-13",dateCond:"2025-12-02",fermenteur:"FV-01",og:1.049,fg:1.006,abv:6,notes:"",mesures:[{date:"2025-11-13",valeur:1.049,temp:20,note:"DI"},{date:"2025-12-02",valeur:1.006,temp:5,note:"DF"}]},
- {id:14,recette:"La Pèrlimpinpin",volume:1789,statut:"terminé",dateDebut:"2025-11-20",dateCond:"2025-12-09",fermenteur:"FV-02",og:1.052,fg:1.006,abv:6.5,notes:"",mesures:[{date:"2025-11-20",valeur:1.052,temp:20,note:"DI"},{date:"2025-12-09",valeur:1.006,temp:5,note:"DF"}]},
- {id:15,recette:"La Mèrlimpinpin",volume:468,statut:"terminé",dateDebut:"2025-11-25",dateCond:"2025-12-11",fermenteur:"FV-03",og:1.070,fg:1.015,abv:8,notes:"",mesures:[{date:"2025-11-25",valeur:1.070,temp:20,note:"DI"},{date:"2025-12-11",valeur:1.015,temp:5,note:"DF"}]},
- {id:16,recette:"La Pèrilleuse",volume:1008,statut:"terminé",dateDebut:"2025-12-02",dateCond:"2025-12-16",fermenteur:"FV-04",og:1.059,fg:1.020,abv:6,notes:"",mesures:[{date:"2025-12-02",valeur:1.059,temp:20,note:"DI"},{date:"2025-12-16",valeur:1.020,temp:5,note:"DF"}]},
- {id:17,recette:"La Blonde des Papas",volume:1320,statut:"terminé",dateDebut:"2025-12-04",dateCond:"2025-12-23",fermenteur:"FV-01",og:1.040,fg:1.011,abv:5,notes:"",mesures:[{date:"2025-12-04",valeur:1.040,temp:20,note:"DI"},{date:"2025-12-23",valeur:1.011,temp:5,note:"DF"}]},
- {id:18,recette:"Single Hop Idaho7",volume:570,statut:"terminé",dateDebut:"2025-12-09",dateCond:"2025-12-29",fermenteur:"FV-05",og:1.046,fg:1.006,abv:5,notes:"",mesures:[{date:"2025-12-09",valeur:1.046,temp:20,note:"DI"},{date:"2025-12-29",valeur:1.006,temp:5,note:"DF"}]},
- {id:19,recette:"La Supère",volume:975,statut:"terminé",dateDebut:"2025-12-17",dateCond:"2026-01-15",fermenteur:"FV-03",og:1.069,fg:1.009,abv:8.5,notes:"",mesures:[{date:"2025-12-17",valeur:1.069,temp:20,note:"DI"},{date:"2026-01-15",valeur:1.009,temp:5,note:"DF"}]},
- {id:20,recette:"La Mèrveilleuse",volume:1453,statut:"terminé",dateDebut:"2025-12-12",dateCond:"2026-01-16",fermenteur:"FV-02",og:1.054,fg:1.018,abv:6,notes:"",mesures:[{date:"2025-12-12",valeur:1.054,temp:20,note:"DI"},{date:"2026-01-16",valeur:1.018,temp:5,note:"DF"}]},
+ {id:1,recette:"La Pèrilleuse",volume:460,statut:"terminé",dateDebut:"2025-09-19",dateCond:"2025-10-07",fermenteur:"C5",og:1.061,fg:1.020,abv:6,notes:"pH=4,37",mesures:[{date:"2025-09-19",valeur:1.061,temp:20,note:"DI"},{date:"2025-10-07",valeur:1.020,temp:5,note:"DF"}]},
+ {id:2,recette:"L'Impèrtinente",volume:1629,statut:"terminé",dateDebut:"2025-09-16",dateCond:"2025-10-09",fermenteur:"C1",og:1.049,fg:1.006,abv:6,notes:"pH=4,31",mesures:[{date:"2025-09-16",valeur:1.049,temp:20,note:"DI"},{date:"2025-10-09",valeur:1.006,temp:5,note:"DF"}]},
+ {id:3,recette:"La Blonde des Papas",volume:1840,statut:"terminé",dateDebut:"2025-09-25",dateCond:"2025-10-16",fermenteur:"C2",og:1.047,fg:1.011,abv:5,notes:"",mesures:[{date:"2025-09-25",valeur:1.047,temp:20,note:"DI"},{date:"2025-10-16",valeur:1.011,temp:5,note:"DF"}]},
+ {id:4,recette:"La Supère",volume:915,statut:"terminé",dateDebut:"2025-09-30",dateCond:"2025-10-23",fermenteur:"C3",og:1.070,fg:1.007,abv:8.5,notes:"",mesures:[{date:"2025-09-30",valeur:1.070,temp:20,note:"DI"},{date:"2025-10-23",valeur:1.007,temp:5,note:"DF"}]},
+ {id:5,recette:"La Mamagascar",volume:1108,statut:"terminé",dateDebut:"2025-10-03",dateCond:"2025-10-28",fermenteur:"C4",og:1.069,fg:1.018,abv:7,notes:"",mesures:[{date:"2025-10-03",valeur:1.069,temp:20,note:"DI"},{date:"2025-10-28",valeur:1.018,temp:5,note:"DF"}]},
+ {id:6,recette:"La Pèrchée",volume:593,statut:"terminé",dateDebut:"2025-10-07",dateCond:"2025-10-30",fermenteur:"C5",og:1.036,fg:1.004,abv:4.5,notes:"",mesures:[{date:"2025-10-07",valeur:1.036,temp:20,note:"DI"},{date:"2025-10-30",valeur:1.004,temp:5,note:"DF"}]},
+ {id:7,recette:"La Mary'Stout",volume:475,statut:"terminé",dateDebut:"2025-10-07",dateCond:"2025-11-04",fermenteur:"C1",og:1.071,fg:1.027,abv:6,notes:"",mesures:[{date:"2025-10-07",valeur:1.071,temp:20,note:"DI"},{date:"2025-11-04",valeur:1.027,temp:5,note:"DF"}]},
+ {id:8,recette:"La Pèrlimpinpin",volume:1624,statut:"terminé",dateDebut:"2025-10-17",dateCond:"2025-11-06",fermenteur:"C1",og:1.056,fg:1.008,abv:6.5,notes:"",mesures:[{date:"2025-10-17",valeur:1.056,temp:20,note:"DI"},{date:"2025-11-06",valeur:1.008,temp:5,note:"DF"}]},
+ {id:9,recette:"Papa Noël",volume:1503,statut:"terminé",dateDebut:"2025-10-21",dateCond:"2025-11-13",fermenteur:"C2",og:1.053,fg:1.003,abv:7.2,notes:"Coriandre 0.5kg",mesures:[{date:"2025-10-21",valeur:1.053,temp:20,note:"DI"},{date:"2025-11-13",valeur:1.003,temp:5,note:"DF"}]},
+ {id:10,recette:"La Pèrilleuse",volume:974,statut:"terminé",dateDebut:"2025-10-28",dateCond:"2025-11-18",fermenteur:"C3",og:1.061,fg:1.021,abv:6,notes:"",mesures:[{date:"2025-10-28",valeur:1.061,temp:20,note:"DI"},{date:"2025-11-18",valeur:1.021,temp:5,note:"DF"}]},
+ {id:11,recette:"La Pèrchée",volume:1261,statut:"terminé",dateDebut:"2025-10-30",dateCond:"2025-11-25",fermenteur:"C4",og:1.037,fg:1.006,abv:4.5,notes:"",mesures:[{date:"2025-10-30",valeur:1.037,temp:20,note:"DI"},{date:"2025-11-25",valeur:1.006,temp:5,note:"DF"}]},
+ {id:12,recette:"La Mèrveilleuse",volume:475,statut:"terminé",dateDebut:"2025-11-03",dateCond:"2025-11-27",fermenteur:"C5",og:1.059,fg:1.015,abv:6,notes:"",mesures:[{date:"2025-11-03",valeur:1.059,temp:20,note:"DI"},{date:"2025-11-27",valeur:1.015,temp:5,note:"DF"}]},
+ {id:13,recette:"L'Impèrtinente",volume:1810,statut:"terminé",dateDebut:"2025-11-13",dateCond:"2025-12-02",fermenteur:"C1",og:1.049,fg:1.006,abv:6,notes:"",mesures:[{date:"2025-11-13",valeur:1.049,temp:20,note:"DI"},{date:"2025-12-02",valeur:1.006,temp:5,note:"DF"}]},
+ {id:14,recette:"La Pèrlimpinpin",volume:1789,statut:"terminé",dateDebut:"2025-11-20",dateCond:"2025-12-09",fermenteur:"C2",og:1.052,fg:1.006,abv:6.5,notes:"",mesures:[{date:"2025-11-20",valeur:1.052,temp:20,note:"DI"},{date:"2025-12-09",valeur:1.006,temp:5,note:"DF"}]},
+ {id:15,recette:"La Mèrlimpinpin",volume:468,statut:"terminé",dateDebut:"2025-11-25",dateCond:"2025-12-11",fermenteur:"C3",og:1.070,fg:1.015,abv:8,notes:"",mesures:[{date:"2025-11-25",valeur:1.070,temp:20,note:"DI"},{date:"2025-12-11",valeur:1.015,temp:5,note:"DF"}]},
+ {id:16,recette:"La Pèrilleuse",volume:1008,statut:"terminé",dateDebut:"2025-12-02",dateCond:"2025-12-16",fermenteur:"C4",og:1.059,fg:1.020,abv:6,notes:"",mesures:[{date:"2025-12-02",valeur:1.059,temp:20,note:"DI"},{date:"2025-12-16",valeur:1.020,temp:5,note:"DF"}]},
+ {id:17,recette:"La Blonde des Papas",volume:1320,statut:"terminé",dateDebut:"2025-12-04",dateCond:"2025-12-23",fermenteur:"C1",og:1.040,fg:1.011,abv:5,notes:"",mesures:[{date:"2025-12-04",valeur:1.040,temp:20,note:"DI"},{date:"2025-12-23",valeur:1.011,temp:5,note:"DF"}]},
+ {id:18,recette:"Single Hop Idaho7",volume:570,statut:"terminé",dateDebut:"2025-12-09",dateCond:"2025-12-29",fermenteur:"C5",og:1.046,fg:1.006,abv:5,notes:"",mesures:[{date:"2025-12-09",valeur:1.046,temp:20,note:"DI"},{date:"2025-12-29",valeur:1.006,temp:5,note:"DF"}]},
+ {id:19,recette:"La Supère",volume:975,statut:"terminé",dateDebut:"2025-12-17",dateCond:"2026-01-15",fermenteur:"C3",og:1.069,fg:1.009,abv:8.5,notes:"",mesures:[{date:"2025-12-17",valeur:1.069,temp:20,note:"DI"},{date:"2026-01-15",valeur:1.009,temp:5,note:"DF"}]},
+ {id:20,recette:"La Mèrveilleuse",volume:1453,statut:"terminé",dateDebut:"2025-12-12",dateCond:"2026-01-16",fermenteur:"C2",og:1.054,fg:1.018,abv:6,notes:"",mesures:[{date:"2025-12-12",valeur:1.054,temp:20,note:"DI"},{date:"2026-01-16",valeur:1.018,temp:5,note:"DF"}]},
  {id:21,recette:"La Papa Poule",volume:534,statut:"terminé",dateDebut:"2025-11-21",dateCond:"2026-01-19",fermenteur:"Eau",og:1.045,fg:null,abv:4.5,notes:"Sour",mesures:[{date:"2025-11-21",valeur:1.045,temp:20,note:"DI"}]},
- {id:22,recette:"Farmère",volume:1279,statut:"terminé",dateDebut:"2025-12-19",dateCond:"2026-01-23",fermenteur:"FV-04",og:1.048,fg:1.012,abv:5,notes:"",mesures:[{date:"2025-12-19",valeur:1.048,temp:20,note:"DI"},{date:"2026-01-23",valeur:1.012,temp:5,note:"DF"}]},
- {id:23,recette:"La Mamagascar",volume:554,statut:"terminé",dateDebut:"2025-12-30",dateCond:"2026-01-26",fermenteur:"FV-05",og:1.069,fg:null,abv:7,notes:"Poivre 0.75kg",mesures:[{date:"2025-12-30",valeur:1.069,temp:20,note:"DI"}]},
- {id:24,recette:"L'Impèrtinente",volume:1735,statut:"terminé",dateDebut:"2026-01-09",dateCond:"2026-02-03",fermenteur:"FV-01",og:1.049,fg:1.006,abv:6,notes:"",mesures:[{date:"2026-01-09",valeur:1.049,temp:20,note:"DI"},{date:"2026-02-03",valeur:1.006,temp:5,note:"DF"}]},
- {id:25,recette:"La Pèrlimpinpin",volume:1740,statut:"terminé",dateDebut:"2026-01-19",dateCond:"2026-02-10",fermenteur:"FV-02",og:1.052,fg:1.008,abv:6.5,notes:"",mesures:[{date:"2026-01-19",valeur:1.052,temp:20,note:"DI"},{date:"2026-02-10",valeur:1.008,temp:5,note:"DF"}]},
- {id:26,recette:"La Mèrlimpinpin",volume:879,statut:"terminé",dateDebut:"2026-01-14",dateCond:"2026-02-12",fermenteur:"FV-03",og:1.073,fg:1.016,abv:8,notes:"",mesures:[{date:"2026-01-14",valeur:1.073,temp:20,note:"DI"},{date:"2026-02-12",valeur:1.016,temp:5,note:"DF"}]},
- {id:27,recette:"La Mèrcure",volume:1159,statut:"terminé",dateDebut:"2026-01-26",dateCond:"2026-02-19",fermenteur:"FV-04",og:1.034,fg:null,abv:4,notes:"Session IPA",mesures:[{date:"2026-01-26",valeur:1.034,temp:20,note:"DI"}]},
- {id:28,recette:"La Pèrchée",volume:600,statut:"terminé",dateDebut:"2026-01-29",dateCond:"2026-02-24",fermenteur:"FV-05",og:1.037,fg:1.005,abv:4.5,notes:"",mesures:[{date:"2026-01-29",valeur:1.037,temp:20,note:"DI"},{date:"2026-02-24",valeur:1.005,temp:5,note:"DF"}]},
- {id:29,recette:"La Pèrlimpinpin",volume:1675,statut:"terminé",dateDebut:"2026-02-06",dateCond:"2026-03-03",fermenteur:"FV-01",og:1.055,fg:1.008,abv:6.5,notes:"",mesures:[{date:"2026-02-06",valeur:1.055,temp:20,note:"DI"},{date:"2026-03-03",valeur:1.008,temp:5,note:"DF"}]},
- {id:30,recette:"L'Impèrtinente",volume:0,statut:"brassage",dateDebut:"2026-02-13",dateCond:null,fermenteur:"FV-02",og:1.049,fg:null,abv:6,notes:"DI 1049",mesures:[{date:"2026-02-13",valeur:1.049,temp:20,note:"DI"}]},
- {id:31,recette:"Comère",volume:0,statut:"fermentation",dateDebut:"2026-02-19",dateCond:null,fermenteur:"FV-03",og:1.043,fg:null,abv:5,notes:"Azacca + Centennial",mesures:[{date:"2026-02-19",valeur:1.043,temp:20,note:"DI"}]},
- {id:32,recette:"La Supère",volume:0,statut:"fermentation",dateDebut:"2026-02-26",dateCond:null,fermenteur:"FV-04",og:1.069,fg:null,abv:8.5,notes:"Coriandre 0.8kg",mesures:[{date:"2026-02-26",valeur:1.069,temp:20,note:"DI"}]},
- {id:33,recette:"La Pèrilleuse",volume:0,statut:"fermentation",dateDebut:"2026-02-27",dateCond:null,fermenteur:"FV-05",og:1.060,fg:null,abv:6,notes:"",mesures:[{date:"2026-02-27",valeur:1.060,temp:20,note:"DI"}]},
- {id:34,recette:"La Blonde des Papas",volume:0,statut:"brassage",dateDebut:"2026-03-06",dateCond:null,fermenteur:"FV-01",og:null,fg:null,abv:5,notes:"Brassage en cours",mesures:[]},
+ {id:22,recette:"Farmère",volume:1279,statut:"terminé",dateDebut:"2025-12-19",dateCond:"2026-01-23",fermenteur:"C4",og:1.048,fg:1.012,abv:5,notes:"",mesures:[{date:"2025-12-19",valeur:1.048,temp:20,note:"DI"},{date:"2026-01-23",valeur:1.012,temp:5,note:"DF"}]},
+ {id:23,recette:"La Mamagascar",volume:554,statut:"terminé",dateDebut:"2025-12-30",dateCond:"2026-01-26",fermenteur:"C5",og:1.069,fg:null,abv:7,notes:"Poivre 0.75kg",mesures:[{date:"2025-12-30",valeur:1.069,temp:20,note:"DI"}]},
+ {id:24,recette:"L'Impèrtinente",volume:1735,statut:"terminé",dateDebut:"2026-01-09",dateCond:"2026-02-03",fermenteur:"C1",og:1.049,fg:1.006,abv:6,notes:"",mesures:[{date:"2026-01-09",valeur:1.049,temp:20,note:"DI"},{date:"2026-02-03",valeur:1.006,temp:5,note:"DF"}]},
+ {id:25,recette:"La Pèrlimpinpin",volume:1740,statut:"terminé",dateDebut:"2026-01-19",dateCond:"2026-02-10",fermenteur:"C2",og:1.052,fg:1.008,abv:6.5,notes:"",mesures:[{date:"2026-01-19",valeur:1.052,temp:20,note:"DI"},{date:"2026-02-10",valeur:1.008,temp:5,note:"DF"}]},
+ {id:26,recette:"La Mèrlimpinpin",volume:879,statut:"terminé",dateDebut:"2026-01-14",dateCond:"2026-02-12",fermenteur:"C3",og:1.073,fg:1.016,abv:8,notes:"",mesures:[{date:"2026-01-14",valeur:1.073,temp:20,note:"DI"},{date:"2026-02-12",valeur:1.016,temp:5,note:"DF"}]},
+ {id:27,recette:"La Mèrcure",volume:1159,statut:"terminé",dateDebut:"2026-01-26",dateCond:"2026-02-19",fermenteur:"C4",og:1.034,fg:null,abv:4,notes:"Session IPA",mesures:[{date:"2026-01-26",valeur:1.034,temp:20,note:"DI"}]},
+ {id:28,recette:"La Pèrchée",volume:600,statut:"terminé",dateDebut:"2026-01-29",dateCond:"2026-02-24",fermenteur:"C5",og:1.037,fg:1.005,abv:4.5,notes:"",mesures:[{date:"2026-01-29",valeur:1.037,temp:20,note:"DI"},{date:"2026-02-24",valeur:1.005,temp:5,note:"DF"}]},
+ {id:29,recette:"La Pèrlimpinpin",volume:1675,statut:"terminé",dateDebut:"2026-02-06",dateCond:"2026-03-03",fermenteur:"C1",og:1.055,fg:1.008,abv:6.5,notes:"",mesures:[{date:"2026-02-06",valeur:1.055,temp:20,note:"DI"},{date:"2026-03-03",valeur:1.008,temp:5,note:"DF"}]},
+ {id:30,recette:"L'Impèrtinente",volume:0,statut:"brassage",dateDebut:"2026-02-13",dateCond:null,fermenteur:"C2",og:1.049,fg:null,abv:6,notes:"DI 1049",mesures:[{date:"2026-02-13",valeur:1.049,temp:20,note:"DI"}]},
+ {id:31,recette:"Comère",volume:0,statut:"fermentation",dateDebut:"2026-02-19",dateCond:null,fermenteur:"C3",og:1.043,fg:null,abv:5,notes:"Azacca + Centennial",mesures:[{date:"2026-02-19",valeur:1.043,temp:20,note:"DI"}]},
+ {id:32,recette:"La Supère",volume:0,statut:"fermentation",dateDebut:"2026-02-26",dateCond:null,fermenteur:"C4",og:1.069,fg:null,abv:8.5,notes:"Coriandre 0.8kg",mesures:[{date:"2026-02-26",valeur:1.069,temp:20,note:"DI"}]},
+ {id:33,recette:"La Pèrilleuse",volume:0,statut:"fermentation",dateDebut:"2026-02-27",dateCond:null,fermenteur:"C5",og:1.060,fg:null,abv:6,notes:"",mesures:[{date:"2026-02-27",valeur:1.060,temp:20,note:"DI"}]},
+ {id:34,recette:"La Blonde des Papas",volume:0,statut:"brassage",dateDebut:"2026-03-06",dateCond:null,fermenteur:"C1",og:null,fg:null,abv:5,notes:"Brassage en cours",mesures:[]},
  {id:35,recette:"La Blonde des Papas",volume:0,statut:"planifié",dateDebut:"2026-04-27",dateCond:null,fermenteur:"C1",og:null,fg:null,abv:5,notes:"Brassage C1",mesures:[]},
  {id:36,recette:"COLLAB26",volume:0,statut:"planifié",dateDebut:"2026-04-30",dateCond:null,fermenteur:"C2",og:null,fg:null,abv:null,notes:"Embouteillage C2 — 100% 75cl (collab)",mesures:[]},
  {id:37,recette:"La Pèrlimpinpin",volume:0,statut:"planifié",dateDebut:"2026-05-04",dateCond:null,fermenteur:"C2",og:null,fg:null,abv:6.5,notes:"Brassage C2",mesures:[]},
@@ -2143,8 +2143,9 @@ function CourbeDensite({mesures,og,fg}){
 function ModuleProduction({brassins,setBrassins,recettes}){
  const [filter,setFilter]   = useState('actifs');
  const [sel,setSel]         = useState(null);
- const [selTab,setSelTab]   = useState('suivi');   // onglets fiche : suivi|brassage|fermentation|notes
+ const [selTab,setSelTab]   = useState('suivi');
  const [showF,setShowF]     = useState(false);
+ const [editB,setEditB]     = useState(null); // brassin en cours d'édition
  const [q,setQ]             = useState('');
 
  const EF = {
@@ -2233,12 +2234,24 @@ function ModuleProduction({brassins,setBrassins,recettes}){
          color:C.textLight}}>{fmtDate(b.dateDebut)} · J+{jours}</span>
        </div>
       </div>
-      <button onClick={()=>{setSel(null);setSelTab('suivi');}}
-       style={{background:'none',border:`1px solid ${C.border}`,
+      <div style={{display:'flex',gap:6,flexShrink:0}}>
+       <button onClick={()=>{
+        setSel(null);setSelTab('suivi');
+        setEditB(b);
+        setForm({...b,og:String(b.og||''),fg:String(b.fg||''),abv:String(b.abv||''),volume:String(b.volume||'')});
+        setShowF(true);
+       }} style={{background:C.amberPale,border:`1px solid ${C.amber}`,
         borderRadius:20,padding:'5px 12px',fontSize:12,
-        fontWeight:700,color:C.textMid,flexShrink:0}}>
-       ‹ Retour
-      </button>
+        fontWeight:700,color:C.amber,flexShrink:0}}>
+        ✏ Modifier
+       </button>
+       <button onClick={()=>{setSel(null);setSelTab('suivi');}}
+        style={{background:'none',border:`1px solid ${C.border}`,
+         borderRadius:20,padding:'5px 12px',fontSize:12,
+         fontWeight:700,color:C.textMid,flexShrink:0}}>
+        ‹ Retour
+       </button>
+      </div>
      </div>
      <div style={{display:'flex',gap:0,overflowX:'auto',scrollbarWidth:'none',marginTop:4}}>
       {TABS_FICHE.map(t=>(
@@ -2876,7 +2889,7 @@ function ModuleProduction({brassins,setBrassins,recettes}){
       </button>
      ))}
     </div>
-    <button onClick={()=>setShowF(true)}
+    <button onClick={()=>{setEditB(null);setForm(EF);setShowF(true);}}
      style={{background:C.amber,color:C.bgDark,border:'none',borderRadius:10,
       padding:'10px 14px',fontWeight:700,fontSize:13,minHeight:44}}>
      + Brassin
@@ -2971,9 +2984,9 @@ function ModuleProduction({brassins,setBrassins,recettes}){
    {sel&&<FicheBrassin b={brassins.find(x=>x.id===sel.id)||sel}/>}
 
    {showF&&(
-    <Modal onClose={()=>{setShowF(false);setForm(EF);}}>
+    <Modal onClose={()=>{setShowF(false);setForm(EF);setEditB(null);}}>
      <h3 style={{fontFamily:FA,fontSize:20,
-      color:C.text,marginBottom:14}}>Nouveau brassin</h3>
+      color:C.text,marginBottom:14}}>{editB?'Modifier le brassin':'Nouveau brassin'}</h3>
      {form.recette&&(()=>{
       const rec=recettes.find(r=>r.nom===form.recette);
       if(!rec) return null;
@@ -3021,7 +3034,7 @@ function ModuleProduction({brassins,setBrassins,recettes}){
        <div><Label t="Fermenteur"/>
         <input value={form.fermenteur}
          onChange={e=>setForm({...form,fermenteur:e.target.value})}
-         placeholder="FV-01" style={iSt}/>
+         placeholder="C1" style={iSt}/>
        </div>
        <div><Label t="Volume final (L)"/>
         <input type="number" value={form.volume}
@@ -3090,35 +3103,36 @@ function ModuleProduction({brassins,setBrassins,recettes}){
       </div>
      </div>
      <div style={{display:'flex',gap:10,marginTop:16,justifyContent:'flex-end'}}>
-      <Btn onClick={()=>{setShowF(false);setForm(EF);}}>Annuler</Btn>
+      <Btn onClick={()=>{setShowF(false);setForm(EF);setEditB(null);}}>Annuler</Btn>
       <Btn p onClick={()=>{
        if(!form.recette)return;
        const ogVal   = parseFloat(form.og)||null;
-       const today   = new Date().toISOString().split('T')[0];
+       const today_s = new Date().toISOString().split('T')[0];
        const newB = {
         ...form,
-        id:            Date.now(),
+        id:            editB?.id||Date.now(),
         volume:        parseInt(form.volume)||0,
         og:            ogVal,
         fg:            parseFloat(form.fg)||null,
         abv:           parseFloat(form.abv)||null,
-        paliersMash:   form.paliersMash||[],
-        houblonsDetail:form.houblonsDetail||[],
-        resucrage:     form.resucrage||{},
+        paliersMash:   form.paliersMash||editB?.paliersMash||[],
+        houblonsDetail:form.houblonsDetail||editB?.houblonsDetail||[],
+        resucrage:     form.resucrage||editB?.resucrage||{},
         correctionEau: form.correctionEau||'',
         levureType:    form.levureType||form._recRef?.levure||'',
         _recRef:       undefined,
-        mesures:  ogVal && form.dateDebut ? [{
-         date:   form.dateDebut||today,
+        mesures: editB ? (editB.mesures||[]) : (ogVal && form.dateDebut ? [{
+         date:   form.dateDebut||today_s,
          valeur: ogVal,
          temp:   parseFloat(form.tempFerm)||20,
          note:   'DI — initial',
          type:   'densité',
-        }] : [],
+        }] : []),
        };
-       setBrassins([...brassins, newB]);
-       setShowF(false);setForm(EF);
-      }}>Créer</Btn>
+       if(editB) setBrassins(brassins.map(x=>x.id===editB.id?newB:x));
+       else      setBrassins([...brassins, newB]);
+       setShowF(false);setForm(EF);setEditB(null);
+      }}>{editB?'Enregistrer':'Créer'}</Btn>
      </div>
     </Modal>
    )}
@@ -3130,6 +3144,7 @@ function ModuleConditionnement({brassins,setBrassins,stockCond,setStockCond,cond
  const [view,setView]=useState('sessions');
  const [q,setQ]=useState('');
  const [selId,setSelId]=useState(null);
+ const [editSession,setEditSession]=useState(null); // session en cours d'édition
  const [showStock,setShowStock]=useState(false);
  const [editStock,setEditStock]=useState(null);
  const today=new Date().toISOString().split('T')[0];
@@ -3150,18 +3165,22 @@ function ModuleConditionnement({brassins,setBrassins,stockCond,setStockCond,cond
 
  const selBrassin = condForm.brassinId ? brassins.find(x=>x.id===parseInt(condForm.brassinId)) : null;
 
- const genLotNum = (brassinId, date, lotIndex) => {
-  const d   = date || today;
-  const yy  = d.slice(2,4);
-  const mm  = d.slice(5,7);
-  const dd  = d.slice(8,10);
-  const num = String(brassinId).padStart(3,'0');
-  const lettre = String.fromCharCode(65 + lotIndex); // A, B, C...
-  return `${yy}${mm}${dd}-${num}-${lettre}`;
+ const genLotNum = (brassinId, date) => {
+  const d  = date || today;
+  const mm = d.slice(5,7);
+  const yy = d.slice(2,4);
+  const sorted = [...brassins].sort((a,b_)=>a.id-b_.id);
+  const seq  = sorted.findIndex(x=>x.id===parseInt(brassinId))+1;
+  const b_   = brassins.find(x=>x.id===parseInt(brassinId));
+  const cuve = b_?.fermenteur || 'C?';
+  return `B${seq}-${cuve}-${mm}/${yy}`;
  };
 
- const rebuildLotNums = (lots, brassinId, date) =>
-  lots.map((l,i) => ({...l, lot: genLotNum(brassinId, date, i)}));
+ // Tous les lots d'une même session ont le même numéro de traçabilité
+ const rebuildLotNums = (lots, brassinId, date) => {
+  const num = genLotNum(brassinId, date);
+  return lots.map(l => ({...l, lot: num}));
+ };
 
  const addLot = () => {
   const next = [...condForm.lots, {type:'Bouteille 33cl',volume:'',contenants:'',lot:'',capacite:0.33}];
@@ -3304,7 +3323,31 @@ function ModuleConditionnement({brassins,setBrassins,stockCond,setStockCond,cond
            </div>
           ))}
           {cs.notes&&<div style={{background:C.amberPale,borderRadius:8,padding:'8px 12px',fontSize:12,color:C.textMid,marginTop:4}}>{cs.notes}</div>}
-          <button onClick={()=>setCondSessions(condSessions.filter(x=>x.id!==cs.id))} style={{marginTop:10,background:C.brickPale,border:`1px solid ${C.border}`,borderRadius:8,padding:'8px 14px',fontSize:12,color:C.alert,minHeight:36}}>Supprimer</button>
+          {editSession?.id===cs.id?(
+           <div style={{marginTop:10,background:C.bgDark,borderRadius:10,padding:'12px 14px',border:`1px solid ${C.border}`}}>
+            <div style={{fontFamily:FM,fontSize:10,fontWeight:700,color:C.amber,letterSpacing:1,textTransform:'uppercase',marginBottom:8}}>Modifier la session</div>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:8}}>
+             <div><Label t="Date"/>
+              <input type="date" value={editSession.date} onChange={e=>setEditSession({...editSession,date:e.target.value})} style={{width:'100%',background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,padding:'8px 10px',fontSize:13}}/>
+             </div>
+             <div><Label t="Opérateur"/>
+              <input value={editSession.operateur} onChange={e=>setEditSession({...editSession,operateur:e.target.value})} style={{width:'100%',background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,padding:'8px 10px',fontSize:13}}/>
+             </div>
+            </div>
+            <div style={{marginBottom:10}}><Label t="Notes"/>
+             <input value={editSession.notes||''} onChange={e=>setEditSession({...editSession,notes:e.target.value})} style={{width:'100%',background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,padding:'8px 10px',fontSize:13}}/>
+            </div>
+            <div style={{display:'flex',gap:8}}>
+             <button onClick={()=>{setCondSessions(condSessions.map(x=>x.id===editSession.id?{...x,date:editSession.date,operateur:editSession.operateur,notes:editSession.notes}:x));setEditSession(null);}} style={{flex:1,background:C.amber,border:'none',borderRadius:8,padding:'9px',fontSize:13,fontWeight:700,color:C.bgDark,cursor:'pointer'}}>✓ Enregistrer</button>
+             <button onClick={()=>setEditSession(null)} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:8,padding:'9px 14px',fontSize:13,color:C.textMid,cursor:'pointer'}}>Annuler</button>
+            </div>
+           </div>
+          ):(
+           <div style={{display:'flex',gap:8,marginTop:10}}>
+            <button onClick={()=>setEditSession({...cs})} style={{background:C.amberPale,border:`1px solid ${C.amber}40`,borderRadius:8,padding:'7px 14px',fontSize:12,color:C.amber,fontWeight:700,cursor:'pointer'}}>✏ Modifier</button>
+            <button onClick={()=>setCondSessions(condSessions.filter(x=>x.id!==cs.id))} style={{background:C.brickPale,border:`1px solid ${C.border}`,borderRadius:8,padding:'7px 14px',fontSize:12,color:C.alert,cursor:'pointer'}}>Supprimer</button>
+           </div>
+          )}
          </div>
         )}
        </div>
@@ -3754,12 +3797,12 @@ const calcTarif = (dateDebut,dateFin,nbTireuses) => {
 };
 
 const IST = {
- width:"100%",background:T.bgMid,border:`1px solid ${T.border}`,
- borderRadius:8,color:T.cream,padding:"10px 13px",fontSize:16,outline:"none",
+ width:"100%",background:C.bg,border:`1px solid ${C.border}`,
+ borderRadius:8,color:C.text,padding:"10px 13px",fontSize:16,outline:"none",
 };
 
 const LblT = ({t}) => (
- <div style={{fontSize:10,fontWeight:700,color:T.creamDim,letterSpacing:1.5,
+ <div style={{fontSize:10,fontWeight:700,color:C.textLight,letterSpacing:1.5,
   textTransform:"uppercase",marginBottom:5,
   fontFamily:FB}}>{t}</div>
 );
@@ -3778,8 +3821,8 @@ const PillT = ({statut}) => {
 
 const SecT = ({n,t}) => (
  <div style={{fontFamily:FB,fontWeight:800,fontSize:12,
-  letterSpacing:2,color:T.amber,textTransform:"uppercase",marginBottom:12}}>
-  <span style={{background:T.amber,color:"#000",borderRadius:2,padding:"0 5px",
+  letterSpacing:2,color:C.amber,textTransform:"uppercase",marginBottom:12}}>
+  <span style={{background:C.amber,color:"#000",borderRadius:2,padding:"0 5px",
    marginRight:7,fontWeight:900}}>{n}</span>{t}
  </div>
 );
@@ -3790,19 +3833,19 @@ function ModalT({onClose,children,title}) {
    style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.87)",zIndex:1000,
     display:"flex",alignItems:"flex-end",justifyContent:"center",
     backdropFilter:"blur(4px)"}}>
-   <div style={{background:T.bgCard,borderTop:`2px solid ${T.amber}`,
+   <div style={{background:C.bgCard,borderTop:`2px solid ${C.amber}`,
     width:"100%",maxWidth:620,maxHeight:"93vh",overflowY:"auto",
     animation:"fadeUp 0.18s ease"}}>
-    <div style={{position:"sticky",top:0,background:T.bgCard,
-     borderBottom:`1px solid ${T.border}`,padding:"14px 20px",
+    <div style={{position:"sticky",top:0,background:C.bgCard,
+     borderBottom:`1px solid ${C.border}`,padding:"14px 20px",
      display:"flex",justifyContent:"space-between",alignItems:"center",zIndex:10}}>
      <div style={{fontFamily:FB,fontWeight:800,
-      fontSize:17,letterSpacing:1,color:T.amberL,textTransform:"uppercase"}}>
+      fontSize:17,letterSpacing:1,color:C.amberL,textTransform:"uppercase"}}>
       {title}
      </div>
      <button onClick={onClose}
-      style={{background:"none",border:`1px solid ${T.border}`,borderRadius:4,
-       padding:"4px 10px",color:T.creamDim,fontSize:13,minHeight:32,
+      style={{background:"none",border:`1px solid ${C.border}`,borderRadius:4,
+       padding:"4px 10px",color:C.textLight,fontSize:13,minHeight:32,
        fontFamily:FB,letterSpacing:1}}>ESC</button>
     </div>
     <div style={{padding:"18px 20px 40px"}}>{children}</div>
@@ -3897,23 +3940,23 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
 
  const j        = form.dateDebut&&form.dateFin ? nbJours(form.dateDebut,form.dateFin) : 0;
  const volTotal = form.futs.reduce((s,ft)=>s+(parseInt(ft.volTotal)||0),0);
- const sec      = {background:T.bgMid,borderRadius:8,padding:"14px 16px",
-          marginBottom:10,border:`1px solid ${T.border}`};
+ const sec      = {background:C.bg,borderRadius:8,padding:"14px 16px",
+          marginBottom:10,border:`1px solid ${C.border}`};
 
  return (
   <div>
    {err&&(
-    <div style={{background:T.redPale,border:`1px solid ${T.red}`,borderRadius:6,
-     padding:"10px 14px",marginBottom:12,color:T.red,fontWeight:600,fontSize:13,
+    <div style={{background:C.brickPale,border:`1px solid ${C.alert}`,borderRadius:6,
+     padding:"10px 14px",marginBottom:12,color:C.alert,fontWeight:600,fontSize:13,
      display:"flex",alignItems:"center",gap:8}}>
      <span>⚠</span>{err}
     </div>
    )}
 
-   <div style={{...sec,background:T.amberPale,border:`1.5px dashed ${T.amber}`,marginBottom:12}}>
+   <div style={{...sec,background:C.amberPale,border:`1.5px dashed ${C.amber}`,marginBottom:12}}>
     <SecT n="→" t="Import depuis Google Agenda (optionnel)"/>
-    <div style={{fontSize:11,color:T.creamDim,marginBottom:8}}>
-     Coller le titre d'un événement : <span style={{fontFamily:FM,color:T.amber}}>1BEC Client / 2×20L APA 100 Gobelets</span>
+    <div style={{fontSize:11,color:C.textLight,marginBottom:8}}>
+     Coller le titre d'un événement : <span style={{fontFamily:FM,color:C.amber}}>1BEC Client / 2×20L APA 100 Gobelets</span>
     </div>
     <div style={{display:"flex",gap:8}}>
      <input
@@ -3980,9 +4023,9 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
      </div>
     </div>
     {j>0&&(
-     <div style={{background:T.amberPale,border:`1px solid ${T.amber}40`,borderRadius:6,
+     <div style={{background:C.amberPale,border:`1px solid ${C.amber}40`,borderRadius:6,
       padding:"6px 12px",marginBottom:10,fontFamily:FM,
-      fontSize:12,color:T.amberL}}>
+      fontSize:12,color:C.amberL}}>
       Durée : <strong>{j} jour{j>1?"s":""}</strong>
      </div>
     )}
@@ -3991,9 +4034,9 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
      {Object.entries(STATUTS_LOC).map(([k,s])=>(
       <button key={k} onClick={()=>set("statut",k)}
        style={{padding:"6px 12px",borderRadius:3,
-        border:`1.5px solid ${form.statut===k?s.color:T.border}`,
-        background:form.statut===k?s.bg:T.bgCard,
-        color:form.statut===k?s.color:T.creamDim,
+        border:`1.5px solid ${form.statut===k?s.color:C.border}`,
+        background:form.statut===k?s.bg:C.bgCard,
+        color:form.statut===k?s.color:C.textLight,
         fontFamily:FB,fontWeight:700,
         fontSize:12,letterSpacing:0.5,minHeight:34,textTransform:"uppercase"}}>
        {s.dot} {s.label}
@@ -4010,19 +4053,19 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
       return (
        <button key={t.id} onClick={()=>toggleTireuse(t.id)}
         style={{padding:"10px 6px",borderRadius:6,textAlign:"center",minHeight:60,
-         border:`2px solid ${sel?T.amber:T.border}`,
-         background:sel?T.amberPale:T.bgCard}}>
+         border:`2px solid ${sel?C.amber:C.border}`,
+         background:sel?C.amberPale:C.bgCard}}>
         <div style={{fontFamily:FB,fontWeight:900,
-         fontSize:13,color:sel?T.gold:T.creamMid,lineHeight:1,letterSpacing:-0.5}}>{t.nom}</div>
-        <div style={{fontSize:9,color:sel?T.amberL:T.creamDim,marginTop:3,
+         fontSize:13,color:sel?C.amberL:C.textMid,lineHeight:1,letterSpacing:-0.5}}>{t.nom}</div>
+        <div style={{fontSize:9,color:sel?C.amberL:C.textLight,marginTop:3,
          fontFamily:FM}}>{t.capacite}</div>
-        {sel&&<div style={{fontSize:9,color:T.amber,marginTop:2,fontWeight:700}}>✓</div>}
+        {sel&&<div style={{fontSize:9,color:C.amber,marginTop:2,fontWeight:700}}>✓</div>}
        </button>
       );
      })}
     </div>
-    <div style={{padding:"6px 10px",background:T.bgCard,borderRadius:5,
-     border:`1px solid ${T.border}`,fontSize:10,color:T.creamDim,
+    <div style={{padding:"6px 10px",background:C.bgCard,borderRadius:5,
+     border:`1px solid ${C.border}`,fontSize:10,color:C.textLight,
      fontFamily:FM,display:"flex",gap:12,flexWrap:"wrap"}}>
      <span>1BEC — 1 robinet · froid sec</span>
      <span>2BEC — 2 robinets · froid sec</span>
@@ -4034,27 +4077,27 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
    <div style={sec}>
     <SecT n="04" t="Bières & Fûts"/>
     {form.futs.length===0&&(
-     <p style={{fontSize:13,color:T.creamDim,marginBottom:10,fontStyle:"italic"}}>
+     <p style={{fontSize:13,color:C.textLight,marginBottom:10,fontStyle:"italic"}}>
       Aucun fût — optionnel
      </p>
     )}
     {form.futs.map((ft,i)=>(
-     <div key={`k${i}`} style={{background:T.bgCard,borderRadius:8,padding:"12px",
-      marginBottom:8,border:`1px solid ${T.borderL}`}}>
+     <div key={`k${i}`} style={{background:C.bgCard,borderRadius:8,padding:"12px",
+      marginBottom:8,border:`1px solid ${C.border}`}}>
       <div style={{display:"flex",justifyContent:"space-between",
        alignItems:"center",marginBottom:10}}>
        <span style={{fontFamily:FB,fontWeight:700,
-        fontSize:13,color:T.hop,letterSpacing:1}}>🛢 FÛT {i+1}</span>
+        fontSize:13,color:C.hop,letterSpacing:1}}>🛢 FÛT {i+1}</span>
        <button onClick={()=>remFut(i)}
-        style={{background:"none",border:`1px solid ${T.border}`,borderRadius:3,
-         padding:"2px 8px",color:T.red,fontSize:11,
+        style={{background:"none",border:`1px solid ${C.border}`,borderRadius:3,
+         padding:"2px 8px",color:C.alert,fontSize:11,
          fontFamily:FB,letterSpacing:1}}>RETIRER</button>
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:8}}>
        <div>
         <LblT t="Bière"/>
         <select value={ft.biere} onChange={e=>updFut(i,"biere",e.target.value)}
-         style={{...IST,background:T.bgMid}}>
+         style={{...IST,background:C.bg}}>
          <option value="">— Choisir une bière —</option>
          {BIERES.map(b=><option key={b} value={b}>{b}</option>)}
         </select>
@@ -4063,7 +4106,7 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
         <div>
          <LblT t="Format fût"/>
          <select value={ft.typeFut} onChange={e=>updFut(i,"typeFut",e.target.value)}
-          style={{...IST,background:T.bgMid}}>
+          style={{...IST,background:C.bg}}>
           <option value="20L">Fût 20L — {STOCK_FUTS["20L"]} dispo</option>
           <option value="30L">Fût 30L — {STOCK_FUTS["30L"]} dispo</option>
          </select>
@@ -4072,8 +4115,8 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
          <LblT t="Quantité"/>
          <input type="number" min="1" max="20" value={ft.nbFuts}
           onChange={e=>updFut(i,"nbFuts",e.target.value)}
-          style={{...IST,background:T.bgMid}}/>
-         <div style={{fontSize:10,marginTop:3,color:T.greenL,
+          style={{...IST,background:C.bg}}/>
+         <div style={{fontSize:10,marginTop:3,color:C.greenL,
           fontFamily:FM}}>≈ {ft.volTotal}L</div>
         </div>
        </div>
@@ -4082,10 +4125,10 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
         <input type="number" min="0" step="5" value={ft.prixFut||""}
          placeholder="ex: 80"
          onChange={e=>updFut(i,"prixFut",e.target.value)}
-         style={{...IST,background:T.bgMid}}/>
+         style={{...IST,background:C.bg}}/>
         {(ft.prixFut>0&&ft.nbFuts>0)&&(
          <div style={{fontSize:10,marginTop:3,fontFamily:FM,
-          fontWeight:700,color:T.gold}}>
+          fontWeight:700,color:C.amberL}}>
           Estimé : {Math.round(parseFloat(ft.prixFut)*parseInt(ft.nbFuts))}€
           {" "}· {ft.volTotal}L
          </div>
@@ -4096,26 +4139,26 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
     ))}
     <button onClick={addFut}
      style={{width:"100%",padding:"10px",borderRadius:6,
-      border:`1.5px dashed ${T.hop}`,background:"transparent",color:T.hop,
+      border:`1.5px dashed ${C.hop}`,background:"transparent",color:C.hop,
       fontFamily:FB,fontWeight:700,
       fontSize:13,letterSpacing:1,textTransform:"uppercase",minHeight:42}}>
      + Ajouter un fût
     </button>
     {volTotal>0&&(
      <div style={{marginTop:8,padding:"8px 12px",borderRadius:5,
-      background:T.amberPale,border:`1px solid ${T.amber}40`,
-      fontFamily:FM,fontSize:12,color:T.amberL}}>
+      background:C.amberPale,border:`1px solid ${C.amber}40`,
+      fontFamily:FM,fontSize:12,color:C.amberL}}>
       <div style={{display:"flex",justifyContent:"space-between",fontWeight:700,marginBottom:
        form.futs.some(ft=>ft.prixFut>0)?4:0}}>
        <span>Volume total</span><span>{volTotal} L</span>
       </div>
       {form.futs.some(ft=>parseFloat(ft.prixFut)>0)&&(
        <div style={{display:"flex",justifyContent:"space-between",
-        paddingTop:4,borderTop:`1px solid ${T.amber}30`}}>
-        <span style={{color:T.creamDim}}>Prix estimé fûts</span>
-        <span style={{color:T.gold,fontWeight:700}}>
+        paddingTop:4,borderTop:`1px solid ${C.amber}30`}}>
+        <span style={{color:C.textLight}}>Prix estimé fûts</span>
+        <span style={{color:C.amberL,fontWeight:700}}>
          {form.futs.reduce((s,ft)=>s+(parseFloat(ft.prixFut)||0)*(parseInt(ft.nbFuts)||1),0)}€
-         <span style={{fontSize:9,color:T.creamDim,fontWeight:400,marginLeft:4}}>(au retour)</span>
+         <span style={{fontSize:9,color:C.textLight,fontWeight:400,marginLeft:4}}>(au retour)</span>
         </span>
        </div>
       )}
@@ -4125,9 +4168,9 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
 
    <div style={sec}>
     <SecT n="05" t="Gobelets consignés"/>
-    <div style={{background:T.bgCard,borderRadius:6,padding:"12px",border:`1px solid ${T.border}`}}>
+    <div style={{background:C.bgCard,borderRadius:6,padding:"12px",border:`1px solid ${C.border}`}}>
      <div style={{fontFamily:FB,fontWeight:800,fontSize:11,
-      letterSpacing:2,color:T.hop,textTransform:"uppercase",marginBottom:10}}>
+      letterSpacing:2,color:C.hop,textTransform:"uppercase",marginBottom:10}}>
       Gobelets consignés — 1€/gobelet
      </div>
      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
@@ -4135,9 +4178,9 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
        <LblT t="Gobelets 25cl"/>
        <input type="number" min="0" step="10" value={form.gobelets25||""} placeholder="0"
         onChange={e=>set("gobelets25",parseInt(e.target.value)||0)}
-        style={{...IST,background:T.bgMid}}/>
+        style={{...IST,background:C.bg}}/>
        {(form.gobelets25>0)&&(
-        <div style={{fontSize:10,marginTop:3,color:T.greenL,fontFamily:FM,fontWeight:700}}>
+        <div style={{fontSize:10,marginTop:3,color:C.greenL,fontFamily:FM,fontWeight:700}}>
          Consigne : {form.gobelets25}€
         </div>
        )}
@@ -4146,9 +4189,9 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
        <LblT t="Gobelets 50cl"/>
        <input type="number" min="0" step="10" value={form.gobelets50||""} placeholder="0"
         onChange={e=>set("gobelets50",parseInt(e.target.value)||0)}
-        style={{...IST,background:T.bgMid}}/>
+        style={{...IST,background:C.bg}}/>
        {(form.gobelets50>0)&&(
-        <div style={{fontSize:10,marginTop:3,color:T.greenL,fontFamily:FM,fontWeight:700}}>
+        <div style={{fontSize:10,marginTop:3,color:C.greenL,fontFamily:FM,fontWeight:700}}>
          Consigne : {form.gobelets50}€
         </div>
        )}
@@ -4156,22 +4199,22 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
      </div>
      {((form.gobelets25||0)+(form.gobelets50||0)>0)&&(
       <div style={{marginTop:10,padding:"8px 12px",borderRadius:5,
-       background:T.greenPale,border:`1px solid ${T.green}40`,
+       background:C.greenPale,border:`1px solid ${C.green}40`,
        display:"flex",justifyContent:"space-between",alignItems:"center"}}>
        <span style={{fontFamily:FB,fontWeight:700,
-        fontSize:11,letterSpacing:1,color:T.greenL,textTransform:"uppercase"}}>
+        fontSize:11,letterSpacing:1,color:C.greenL,textTransform:"uppercase"}}>
         Total consigne gobelets
        </span>
        <span style={{fontFamily:FM,fontWeight:700,
-        color:T.greenL,fontSize:14}}>
+        color:C.greenL,fontSize:14}}>
         {(form.gobelets25||0)+(form.gobelets50||0)} €
        </span>
       </div>
      )}
      {((form.gobelets25||0)+(form.gobelets50||0)>0)&&(
       <div style={{marginTop:6,padding:"6px 10px",borderRadius:4,
-       background:T.amberPale,border:`1px solid ${T.amber}30`,
-       fontFamily:FM,fontSize:10,color:T.amberL}}>
+       background:C.amberPale,border:`1px solid ${C.amber}30`,
+       fontFamily:FM,fontSize:10,color:C.amberL}}>
        Total gobelets consignés : <strong>{(form.gobelets25||0) + (form.gobelets50||0)} €</strong>
        {" "}({(form.gobelets25||0)+(form.gobelets50||0)} gobelets × 1€)
       </div>
@@ -4188,15 +4231,15 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel}) {
 
    <div style={{display:"flex",gap:10,justifyContent:"flex-end"}}>
     <button onClick={onCancel}
-     style={{padding:"11px 20px",borderRadius:5,border:`1px solid ${T.border}`,
-      background:"transparent",color:T.creamDim,
+     style={{padding:"11px 20px",borderRadius:5,border:`1px solid ${C.border}`,
+      background:"transparent",color:C.textLight,
       fontFamily:FB,fontWeight:700,
       fontSize:14,letterSpacing:1,textTransform:"uppercase",minHeight:46}}>
      Annuler
     </button>
     <button onClick={handleSave}
      style={{padding:"11px 28px",borderRadius:5,border:"none",
-      background:T.amber,color:"#000",
+      background:C.amber,color:"#000",
       fontFamily:FB,fontWeight:900,
       fontSize:14,letterSpacing:1.5,textTransform:"uppercase",minHeight:46}}>
      {editLoc?"Modifier →":"Créer →"}
@@ -4251,7 +4294,7 @@ function VuePlanning({tireuses,locations,onClickLoc}){
 
  const locsVisible = [...new Set(days.flatMap(d=>locDay(d).map(l=>l.id)))].length;
 
- const SCOL = {confirmée:T.green,demande:T.amber,retournée:T.creamDim,annulée:T.red};
+ const SCOL = {confirmée:C.green,demande:C.amber,retournée:C.textLight,annulée:C.alert};
 
  const PlanSemaine = () => {
   const fmtISO = d => {
@@ -4269,20 +4312,20 @@ function VuePlanning({tireuses,locations,onClickLoc}){
       const nb = locDay(d).length;
       return(
        <div key={`k${i}`} style={{
-        background:isTod(d)?T.amber:T.bgMid,
+        background:isTod(d)?C.amber:C.bg,
         borderRadius:7,padding:'6px 2px',textAlign:'center',
-        border:`1px solid ${isTod(d)?T.amber:T.border}`}}>
+        border:`1px solid ${isTod(d)?C.amber:C.border}`}}>
         <div style={{fontSize:10,fontWeight:700,
-         color:isTod(d)?T.bgCard:T.creamDim,
+         color:isTod(d)?C.bgCard:C.textLight,
          fontFamily:FM,textTransform:'uppercase',letterSpacing:0.3}}>
          {fmtWD(d)}
         </div>
         <div style={{fontSize:16,fontWeight:900,
-         color:isTod(d)?T.bgCard:T.cream,lineHeight:1.1}}>
+         color:isTod(d)?C.bgCard:C.text,lineHeight:1.1}}>
          {fmtDay(d)}
         </div>
         {nb>0&&<div style={{fontSize:8,marginTop:1,
-         color:isTod(d)?T.bgCard:T.amber,fontFamily:FM}}>
+         color:isTod(d)?C.bgCard:C.amber,fontFamily:FM}}>
          {nb} loc.
         </div>}
        </div>
@@ -4302,14 +4345,14 @@ function VuePlanning({tireuses,locations,onClickLoc}){
        gridTemplateColumns:'52px repeat(7,1fr)',gap:2,marginBottom:2}}>
        {/* Label */}
        <div style={{gridColumn:1,gridRow:1,
-        background:T.bgMid,borderRadius:7,padding:'4px 5px',
+        background:C.bg,borderRadius:7,padding:'4px 5px',
         display:'flex',flexDirection:'column',justifyContent:'center',
         borderLeft:`3px solid ${t.couleur}`,minHeight:44}}>
         <div style={{fontSize:11,fontWeight:900,color:t.couleur,
          fontFamily:FB,lineHeight:1}}>
          {t.nom}
         </div>
-        <div style={{fontSize:8,color:T.creamDim,
+        <div style={{fontSize:8,color:C.textLight,
          fontFamily:FM,marginTop:1,lineHeight:1}}>
          {t.label}
         </div>
@@ -4319,12 +4362,12 @@ function VuePlanning({tireuses,locations,onClickLoc}){
         const is=isTod(d);
         const ds=fmtISO(d);
         const dl=tLocs.find(l=>ds>=l.dateDebut&&ds<=l.dateFin);
-        const col=SCOL[dl?.statut]||T.green;
+        const col=SCOL[dl?.statut]||C.green;
         return(
          <div key={`bg${di}`} style={{
           gridColumn:di+2,gridRow:1,
-          background:dl?col+'15':is?T.amberPale+'30':T.bgCard,
-          border:`1px solid ${is?T.amber+'50':dl?col+'35':T.border}`,
+          background:dl?col+'15':is?C.amberPale+'30':C.bgCard,
+          border:`1px solid ${is?C.amber+'50':dl?col+'35':C.border}`,
           borderRadius:6,minHeight:44}}/>
         );
        })}
@@ -4333,7 +4376,7 @@ function VuePlanning({tireuses,locations,onClickLoc}){
         let s=-1,e=-1;
         days.forEach((d,i)=>{const ds=fmtISO(d);if(ds>=l.dateDebut&&ds<=l.dateFin){if(s<0)s=i;e=i;}});
         if(s<0) return null;
-        const col=SCOL[l.statut]||T.green;
+        const col=SCOL[l.statut]||C.green;
         return(
          <div key={`bar${li}`} onClick={()=>onClickLoc(l)}
           style={{
@@ -4369,7 +4412,7 @@ function VuePlanning({tireuses,locations,onClickLoc}){
     <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:2,marginBottom:3}}>
      {WDS.map(j=>(
       <div key={j} style={{textAlign:'center',padding:'5px 2px',
-       fontSize:10,fontWeight:700,color:T.creamDim,
+       fontSize:10,fontWeight:700,color:C.textLight,
        fontFamily:FM,textTransform:'uppercase'}}>
        {j}
       </div>
@@ -4382,17 +4425,17 @@ function VuePlanning({tireuses,locations,onClickLoc}){
       const inMois = inM(d);
       return(
        <div key={`k${i}`} style={{
-        background: isT?T.amberPale:inMois?T.bgMid:T.bgCard,
-        border:`1px solid ${isT?T.amber:T.border}`,
+        background: isT?C.amberPale:inMois?C.bg:C.bgCard,
+        border:`1px solid ${isT?C.amber:C.border}`,
         borderRadius:8,minHeight:60,padding:'3px',
         opacity:inMois?1:0.45}}>
         <div style={{display:'flex',justifyContent:'center',marginBottom:2}}>
          <div style={{
           width:22,height:22,borderRadius:'50%',
-          background:isT?T.amber:'transparent',
+          background:isT?C.amber:'transparent',
           display:'flex',alignItems:'center',justifyContent:'center'}}>
           <span style={{fontSize:11,fontWeight:900,
-           color:isT?T.bgCard:inMois?T.cream:T.creamDim,
+           color:isT?C.bgCard:inMois?C.text:C.textLight,
            fontFamily:FM}}>
            {d.getDate()}
           </span>
@@ -4402,17 +4445,17 @@ function VuePlanning({tireuses,locations,onClickLoc}){
          {locs.slice(0,2).map((l,li)=>(
           <div key={li} onClick={()=>onClickLoc(l)}
            style={{borderRadius:4,padding:'2px 4px',cursor:'pointer',
-            background:(SCOL[l.statut]||T.green)+'28',
-            borderLeft:`2px solid ${SCOL[l.statut]||T.green}`,
+            background:(SCOL[l.statut]||C.green)+'28',
+            borderLeft:`2px solid ${SCOL[l.statut]||C.green}`,
             overflow:'hidden'}}>
            <div style={{fontSize:9,fontWeight:700,lineHeight:1.2,
-            color:SCOL[l.statut]||T.green,
+            color:SCOL[l.statut]||C.green,
             overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',
             fontFamily:FB}}>
             {l.client}
            </div>
            {(l.tireuses||[]).length>0&&(
-            <div style={{fontSize:7,color:T.creamDim,
+            <div style={{fontSize:7,color:C.textLight,
              fontFamily:FM}}>
              {l.tireuses.length}🍺
             </div>
@@ -4420,7 +4463,7 @@ function VuePlanning({tireuses,locations,onClickLoc}){
           </div>
          ))}
          {locs.length>2&&(
-          <div style={{fontSize:8,color:T.amber,textAlign:'center',
+          <div style={{fontSize:8,color:C.amber,textAlign:'center',
            fontFamily:FM,fontWeight:700}}>
            +{locs.length-2}
           </div>
@@ -4439,12 +4482,12 @@ function VuePlanning({tireuses,locations,onClickLoc}){
    <div style={{display:'flex',gap:6,alignItems:'center',
     marginBottom:10,flexWrap:'wrap'}}>
 
-    <div style={{display:'flex',background:T.bgMid,borderRadius:8,padding:2}}>
+    <div style={{display:'flex',background:C.bg,borderRadius:8,padding:2}}>
      {[['semaine','7 jours'],['mois','Mois']].map(([k,l])=>(
       <button key={k} onClick={()=>{setMode(k);setOffset(0);}}
        style={{padding:'6px 12px',borderRadius:6,border:'none',
-        background:mode===k?T.amber:'transparent',
-        color:mode===k?T.bgCard:T.creamMid,
+        background:mode===k?C.amber:'transparent',
+        color:mode===k?C.bgCard:C.textMid,
         fontFamily:FM,fontSize:11,fontWeight:700,
         cursor:'pointer',letterSpacing:0.3,minHeight:34}}>
        {l}
@@ -4454,53 +4497,53 @@ function VuePlanning({tireuses,locations,onClickLoc}){
 
     <div style={{display:'flex',alignItems:'center',gap:4,flex:1,justifyContent:'center'}}>
      <button onClick={()=>setOffset(o=>o-1)}
-      style={{background:T.bgMid,border:`1px solid ${T.border}`,
-       borderRadius:7,width:36,height:36,fontSize:18,color:T.cream,
+      style={{background:C.bg,border:`1px solid ${C.border}`,
+       borderRadius:7,width:36,height:36,fontSize:18,color:C.text,
        cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
       ‹
      </button>
      <div style={{textAlign:'center',flex:1}}>
       <div style={{fontFamily:FB,fontWeight:700,
-       fontSize:13,color:T.cream,textTransform:'uppercase',letterSpacing:0.5}}>
+       fontSize:13,color:C.text,textTransform:'uppercase',letterSpacing:0.5}}>
        {periodLabel}
       </div>
       {offset!==0&&(
        <button onClick={()=>setOffset(0)}
-        style={{background:'none',border:'none',fontSize:10,color:T.amber,
+        style={{background:'none',border:'none',fontSize:10,color:C.amber,
          fontWeight:700,cursor:'pointer',fontFamily:FM}}>
         → Aujourd'hui
        </button>
       )}
      </div>
      <button onClick={()=>setOffset(o=>o+1)}
-      style={{background:T.bgMid,border:`1px solid ${T.border}`,
-       borderRadius:7,width:36,height:36,fontSize:18,color:T.cream,
+      style={{background:C.bg,border:`1px solid ${C.border}`,
+       borderRadius:7,width:36,height:36,fontSize:18,color:C.text,
        cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
       ›
      </button>
     </div>
 
     <button onClick={()=>setShowFilter(f=>!f)}
-     style={{background:showFilter||dateMin||dateMax?T.amberPale:T.bgMid,
-      border:`1px solid ${showFilter||dateMin||dateMax?T.amber:T.border}`,
+     style={{background:showFilter||dateMin||dateMax?C.amberPale:C.bg,
+      border:`1px solid ${showFilter||dateMin||dateMax?C.amber:C.border}`,
       borderRadius:8,padding:'6px 10px',fontSize:11,fontWeight:700,
-      color:dateMin||dateMax?T.amber:T.creamMid,cursor:'pointer',
+      color:dateMin||dateMax?C.amber:C.textMid,cursor:'pointer',
       fontFamily:FM,minHeight:34}}>
      🗓 {dateMin||dateMax?'Filtré':'Dates'}
     </button>
    </div>
 
    {showFilter&&(
-    <div style={{background:T.bgMid,borderRadius:10,padding:'12px 14px',
-     marginBottom:12,border:`1px solid ${T.border}`}}>
-     <div style={{fontSize:9,color:T.amber,fontFamily:FM,
+    <div style={{background:C.bg,borderRadius:10,padding:'12px 14px',
+     marginBottom:12,border:`1px solid ${C.border}`}}>
+     <div style={{fontSize:9,color:C.amber,fontFamily:FM,
       fontWeight:700,letterSpacing:1.5,textTransform:'uppercase',marginBottom:8}}>
       Filtrer par période
      </div>
      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
       {[['Du','dateMin',dateMin,setDateMin],['Au','dateMax',dateMax,setDateMax]].map(([l,k,v,set])=>(
        <div key={k}>
-        <div style={{fontSize:9,color:T.creamDim,fontFamily:FM,
+        <div style={{fontSize:9,color:C.textLight,fontFamily:FM,
          textTransform:'uppercase',letterSpacing:0.5,marginBottom:4}}>{l}</div>
         <input type="date" value={v}
          onChange={e=>set(e.target.value)}
@@ -4510,7 +4553,7 @@ function VuePlanning({tireuses,locations,onClickLoc}){
      </div>
      {(dateMin||dateMax)&&(
       <button onClick={()=>{setDateMin('');setDateMax('');}}
-       style={{marginTop:8,fontSize:10,color:T.creamDim,background:'none',
+       style={{marginTop:8,fontSize:10,color:C.textLight,background:'none',
         border:'none',cursor:'pointer',textDecoration:'underline',
         fontFamily:FM}}>
        Effacer le filtre
@@ -4520,14 +4563,14 @@ function VuePlanning({tireuses,locations,onClickLoc}){
    )}
 
    <div style={{display:'flex',gap:10,marginBottom:10,flexWrap:'wrap',alignItems:'center'}}>
-    {[['confirmée',T.green],['demande',T.amber],['retournée',T.creamDim]].map(([k,col])=>(
+    {[['confirmée',C.green],['demande',C.amber],['retournée',C.textLight]].map(([k,col])=>(
      <div key={k} style={{display:'flex',alignItems:'center',gap:4}}>
       <div style={{width:10,height:10,borderRadius:3,background:col}}/>
-      <span style={{fontSize:10,color:T.creamDim,
+      <span style={{fontSize:10,color:C.textLight,
        fontFamily:FM}}>{k}</span>
      </div>
     ))}
-    <div style={{marginLeft:'auto',fontSize:10,color:T.amber,
+    <div style={{marginLeft:'auto',fontSize:10,color:C.amber,
      fontFamily:FM,fontWeight:700}}>
      {locsVisible} location{locsVisible!==1?'s':''} visible{locsVisible!==1?'s':''}
     </div>
@@ -4569,8 +4612,8 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
   }
  });
 
- const SCOL = {confirmée:T.green, demande:T.amber,
-        retournée:T.creamDim, annulée:T.red};
+ const SCOL = {confirmée:C.green, demande:C.amber,
+        retournée:C.textLight, annulée:C.alert};
 
  const retourner = l => {
   setLocations(prev=>prev.map(x=>x.id===l.id?{...x,statut:'retournée'}:x));
@@ -4625,10 +4668,10 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
      style={{...iSt,paddingLeft:32,paddingRight:q?32:12,
       fontFamily:FM,fontSize:12}}/>
     <span style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',
-     fontSize:14,color:T.creamDim,pointerEvents:'none'}}>🔍</span>
+     fontSize:14,color:C.textLight,pointerEvents:'none'}}>🔍</span>
     {q&&<button onClick={()=>setQ('')}
      style={{position:'absolute',right:8,top:'50%',transform:'translateY(-50%)',
-      background:'none',border:'none',fontSize:14,color:T.creamDim,cursor:'pointer'}}>
+      background:'none',border:'none',fontSize:14,color:C.textLight,cursor:'pointer'}}>
      ✕
     </button>}
    </div>
@@ -4640,14 +4683,14 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
      const n   = f==='toutes'?locations.length
       :f==='a_venir'?locations.filter(l=>new Date(l.dateFin+'T00:00')>=today2&&l.statut!=='annulée').length
       :locations.filter(l=>l.statut===f).length;
-     const col = f==='toutes'?T.amber:SCOL[f]||T.amber;
+     const col = f==='toutes'?C.amber:SCOL[f]||C.amber;
      const act = filtre===f;
      return(
       <button key={f} onClick={()=>setFiltre(f)}
        style={{flexShrink:0,padding:'6px 11px',borderRadius:16,
-        border:`1.5px solid ${act?col:T.border}`,
+        border:`1.5px solid ${act?col:C.border}`,
         background:act?col+'22':'transparent',
-        color:act?col:T.creamDim,fontSize:11,fontWeight:600,
+        color:act?col:C.textLight,fontSize:11,fontWeight:600,
         fontFamily:FM,cursor:'pointer',
         minHeight:32,whiteSpace:'nowrap'}}>
        {{a_venir:'À venir',toutes:'Toutes',
@@ -4660,33 +4703,33 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
    </div>
 
    <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:12}}>
-    <span style={{fontSize:9,color:T.creamDim,fontFamily:FM,
+    <span style={{fontSize:9,color:C.textLight,fontFamily:FM,
      flexShrink:0}}>TRIER :</span>
     {[['date_desc','📅 Plus récent'],['date_asc','📅 Plus ancien'],
      ['client','A→Z'],['statut','Statut']].map(([k,l])=>(
      <button key={k} onClick={()=>setTri(k)}
-      style={{padding:'4px 8px',borderRadius:12,border:`1px solid ${tri===k?T.amber:T.border}`,
-       background:tri===k?T.amberPale:'transparent',
-       color:tri===k?T.amber:T.creamDim,fontSize:10,fontWeight:600,
+      style={{padding:'4px 8px',borderRadius:12,border:`1px solid ${tri===k?C.amber:C.border}`,
+       background:tri===k?C.amberPale:'transparent',
+       color:tri===k?C.amber:C.textLight,fontSize:10,fontWeight:600,
        fontFamily:FM,cursor:'pointer',whiteSpace:'nowrap'}}>
       {l}
      </button>
     ))}
    </div>
 
-   <div style={{fontSize:10,color:T.creamDim,fontFamily:FM,
+   <div style={{fontSize:10,color:C.textLight,fontFamily:FM,
     marginBottom:8}}>
     {sorted.length} location{sorted.length!==1?'s':''}{q?` · "…${q}"`:''}
    </div>
 
    <div style={{display:'flex',flexDirection:'column',gap:8}}>
     {sorted.map(l=>{
-     const col  = SCOL[l.statut]||T.amber;
+     const col  = SCOL[l.statut]||C.amber;
      const dur  = duree(l);
      const caut = consigneGobelets(l);
      return(
       <div key={l.id} onClick={()=>setSelLoc(l)}
-       style={{background:T.bgMid,border:`1px solid ${T.border}`,
+       style={{background:C.bg,border:`1px solid ${C.border}`,
         borderRadius:12,padding:'12px 14px',cursor:'pointer',
         borderLeft:`4px solid ${col}`,
         transition:'background 0.12s'}}>
@@ -4695,11 +4738,11 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
         alignItems:'flex-start',marginBottom:6}}>
         <div style={{flex:1,minWidth:0}}>
          <div style={{fontFamily:FB,fontWeight:700,
-          fontSize:16,color:T.cream,overflow:'hidden',
+          fontSize:16,color:C.text,overflow:'hidden',
           textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
           {l.client}
          </div>
-         <div style={{fontSize:10,color:T.creamDim,
+         <div style={{fontSize:10,color:C.textLight,
           fontFamily:FM,marginTop:2}}>
           📅 {fmtDate(l.dateDebut)}
           {l.dateFin&&l.dateFin!==l.dateDebut?` → ${fmtDate(l.dateFin)}`:''}
@@ -4724,10 +4767,10 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
            const t=tireuses.find(x=>x.id===id);
            return(
             <div key={id} style={{
-             background:(t?.couleur||T.amber)+'30',
-             border:`1px solid ${t?.couleur||T.amber}60`,
+             background:(t?.couleur||C.amber)+'30',
+             border:`1px solid ${t?.couleur||C.amber}60`,
              borderRadius:5,padding:'2px 6px',fontSize:9,
-             fontWeight:700,color:t?.couleur||T.amber,
+             fontWeight:700,color:t?.couleur||C.amber,
              fontFamily:FM,whiteSpace:'nowrap'}}>
              {t?.nom||'T'+id}
             </div>
@@ -4736,13 +4779,13 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
          </div>
         )}
         {(l.futs||[]).length>0&&(
-         <div style={{fontSize:10,color:T.creamDim,
+         <div style={{fontSize:10,color:C.textLight,
           fontFamily:FM}}>
           🛢 {(l.futs||[]).map(f=>`${f.nbFuts}×${f.typeFut}`).join(' · ')}
          </div>
         )}
         {caut>0&&(
-         <div style={{fontSize:10,color:T.greenL,
+         <div style={{fontSize:10,color:C.greenL,
           fontFamily:FM,marginLeft:'auto'}}>
           🥤 {caut}€
          </div>
@@ -4750,7 +4793,7 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
        </div>
 
        {(l.contact||l.tel)&&(
-        <div style={{fontSize:10,color:T.creamDim,
+        <div style={{fontSize:10,color:C.textLight,
          fontFamily:FM,marginTop:5}}>
          📞 {[l.contact,l.tel].filter(Boolean).join(' — ')}
         </div>
@@ -4760,7 +4803,7 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
     })}
 
     {sorted.length===0&&(
-     <div style={{textAlign:'center',padding:'40px 0',color:T.creamDim}}>
+     <div style={{textAlign:'center',padding:'40px 0',color:C.textLight}}>
       <div style={{fontSize:32,marginBottom:8}}>🍻</div>
       <div style={{fontSize:13,fontWeight:600}}>
        {q?`Aucun résultat pour "${q}"`:'Aucune location'}
@@ -4771,7 +4814,7 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
 
    {selLoc&&(()=>{
     const l   = locations.find(x=>x.id===selLoc.id)||selLoc;
-    const col = SCOL[l.statut]||T.amber;
+    const col = SCOL[l.statut]||C.amber;
     const dur = duree(l);
     const caut= consigneGobelets(l);
     return(
@@ -4781,29 +4824,29 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
         alignItems:'flex-start',marginBottom:8}}>
         <div style={{flex:1,minWidth:0}}>
          <h2 style={{fontFamily:FB,fontWeight:900,
-          fontSize:22,color:T.cream,marginBottom:4}}>{l.client}</h2>
+          fontSize:22,color:C.text,marginBottom:4}}>{l.client}</h2>
          <div style={{display:'flex',gap:6,flexWrap:'wrap',alignItems:'center'}}>
           <div style={{background:col+'25',border:`1px solid ${col}40`,
            borderRadius:10,padding:'2px 10px',fontSize:10,fontWeight:700,
            color:col,fontFamily:FM,textTransform:'uppercase'}}>
            {l.statut}
           </div>
-          <div style={{fontSize:11,color:T.creamDim,
+          <div style={{fontSize:11,color:C.textLight,
            fontFamily:FM}}>
            {fmtDate(l.dateDebut)}{l.dateFin!==l.dateDebut?` → ${fmtDate(l.dateFin)}`:''} · {dur}j
           </div>
          </div>
         </div>
         <button onClick={()=>setSelLoc(null)}
-         style={{background:'none',border:`1px solid ${T.border}`,
+         style={{background:'none',border:`1px solid ${C.border}`,
           borderRadius:20,padding:'5px 12px',fontSize:12,
-          fontWeight:700,color:T.creamMid,cursor:'pointer'}}>✕</button>
+          fontWeight:700,color:C.textMid,cursor:'pointer'}}>✕</button>
        </div>
       </div>
 
       {(l.tireuses||[]).length>0&&(
        <div style={{marginBottom:12}}>
-        <div style={{fontSize:9,color:T.amber,fontFamily:FM,
+        <div style={{fontSize:9,color:C.amber,fontFamily:FM,
          fontWeight:700,letterSpacing:1.5,textTransform:'uppercase',marginBottom:6}}>
          Tireuses ({l.tireuses.length})
         </div>
@@ -4812,10 +4855,10 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
           const t=tireuses.find(x=>x.id===id);
           return(
            <div key={id} style={{
-            background:(t?.couleur||T.amber)+'20',
-            border:`1px solid ${t?.couleur||T.amber}50`,
+            background:(t?.couleur||C.amber)+'20',
+            border:`1px solid ${t?.couleur||C.amber}50`,
             borderRadius:8,padding:'6px 10px',
-            fontSize:12,fontWeight:700,color:t?.couleur||T.amber,
+            fontSize:12,fontWeight:700,color:t?.couleur||C.amber,
             fontFamily:FM}}>
             {t?.nom||'T'+id}<br/>
             <span style={{fontSize:9,opacity:0.7}}>{t?.modele||''}</span>
@@ -4828,16 +4871,16 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
 
       {(l.futs||[]).length>0&&(
        <div style={{marginBottom:12}}>
-        <div style={{fontSize:9,color:T.amber,fontFamily:FM,
+        <div style={{fontSize:9,color:C.amber,fontFamily:FM,
          fontWeight:700,letterSpacing:1.5,textTransform:'uppercase',marginBottom:6}}>
          Fûts commandés
         </div>
         {(l.futs||[]).map((f,i)=>(
          <div key={`k${i}`} style={{display:'flex',justifyContent:'space-between',
-          padding:'7px 10px',borderRadius:8,background:T.bgCard,
+          padding:'7px 10px',borderRadius:8,background:C.bgCard,
           marginBottom:4,fontSize:12}}>
-          <span style={{fontWeight:700,color:T.cream}}>{f.biere}</span>
-          <span style={{fontFamily:FM,color:T.amber,fontWeight:700}}>
+          <span style={{fontWeight:700,color:C.text}}>{f.biere}</span>
+          <span style={{fontFamily:FM,color:C.amber,fontWeight:700}}>
            {f.nbFuts}×{f.typeFut} = {f.volTotal}L
           </span>
          </div>
@@ -4846,25 +4889,25 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
       )}
 
       {(l.contact||l.tel)&&(
-       <div style={{background:T.bgCard,borderRadius:8,padding:'10px 12px',
-        marginBottom:12,border:`1px solid ${T.border}`}}>
-        <div style={{fontSize:9,color:T.amber,fontFamily:FM,
+       <div style={{background:C.bgCard,borderRadius:8,padding:'10px 12px',
+        marginBottom:12,border:`1px solid ${C.border}`}}>
+        <div style={{fontSize:9,color:C.amber,fontFamily:FM,
          fontWeight:700,letterSpacing:1.5,textTransform:'uppercase',marginBottom:6}}>
          Contact
         </div>
-        <div style={{fontSize:13,color:T.cream,fontWeight:600}}>
+        <div style={{fontSize:13,color:C.text,fontWeight:600}}>
          {l.contact||'—'}
         </div>
-        {l.tel&&<div style={{fontSize:12,color:T.amber,
+        {l.tel&&<div style={{fontSize:12,color:C.amber,
          fontFamily:FM,marginTop:3}}>
          📞 {l.tel}
         </div>}
        </div>
       )}
 
-      <div style={{background:T.bgCard,borderRadius:8,padding:'10px 12px',
-       marginBottom:12,border:`1px solid ${T.border}`}}>
-       <div style={{fontSize:9,color:T.amber,fontFamily:FM,
+      <div style={{background:C.bgCard,borderRadius:8,padding:'10px 12px',
+       marginBottom:12,border:`1px solid ${C.border}`}}>
+       <div style={{fontSize:9,color:C.amber,fontFamily:FM,
         fontWeight:700,letterSpacing:1.5,textTransform:'uppercase',marginBottom:6}}>
         Gobelets consignés (1€/unité)
        </div>
@@ -4873,16 +4916,16 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
         ['Gobelets 50cl',   l.gobelets50>0?`${l.gobelets50} × 1€ = ${l.gobelets50}€`:'—'],
        ].map(([lbl,val])=>(
         <div key={lbl} style={{display:'flex',justifyContent:'space-between',
-         fontSize:12,padding:'4px 0',borderBottom:`1px solid ${T.border}`,
-         color:T.creamMid}}>
+         fontSize:12,padding:'4px 0',borderBottom:`1px solid ${C.border}`,
+         color:C.textMid}}>
          <span>{lbl}</span>
          <span style={{fontFamily:FM,
-          fontWeight:700,color:T.cream}}>{val}</span>
+          fontWeight:700,color:C.text}}>{val}</span>
         </div>
        ))}
        {caut>0&&(
         <div style={{display:'flex',justifyContent:'space-between',
-         fontSize:13,padding:'6px 0 0',color:T.greenL,fontWeight:700}}>
+         fontSize:13,padding:'6px 0 0',color:C.greenL,fontWeight:700}}>
          <span>TOTAL CONSIGNE</span>
          <span style={{fontFamily:FM}}>{caut}€</span>
         </div>
@@ -4890,9 +4933,9 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
       </div>
 
       {l.notes&&(
-       <div style={{background:T.bgCard,borderRadius:8,padding:'8px 12px',
-        marginBottom:12,border:`1px solid ${T.border}`,
-        fontSize:11,color:T.creamDim,lineHeight:1.6}}>
+       <div style={{background:C.bgCard,borderRadius:8,padding:'8px 12px',
+        marginBottom:12,border:`1px solid ${C.border}`,
+        fontSize:11,color:C.textLight,lineHeight:1.6}}>
         📝 {l.notes}
        </div>
       )}
@@ -4901,21 +4944,21 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
        {l.statut!=='retournée'&&l.statut!=='annulée'&&(
         <button onClick={()=>retourner(l)}
          style={{flex:1,padding:'10px',borderRadius:8,border:'none',
-          background:T.green,color:'#fff',fontWeight:700,fontSize:12,cursor:'pointer'}}>
+          background:C.green,color:'#fff',fontWeight:700,fontSize:12,cursor:'pointer'}}>
          ✓ Retournée
         </button>
        )}
        <button onClick={()=>gCal(l)}
         style={{flex:1,padding:'10px',borderRadius:8,
-         border:`1px solid ${T.border}`,background:T.bgLight,
-         color:T.creamMid,fontWeight:700,fontSize:12,cursor:'pointer'}}>
+         border:`1px solid ${C.border}`,background:C.bgCard,
+         color:C.textMid,fontWeight:700,fontSize:12,cursor:'pointer'}}>
         📅 Google Agenda
        </button>
        {onEdit&&(
         <button onClick={()=>{setSelLoc(null);onEdit(l);}}
          style={{flex:1,padding:'10px',borderRadius:8,
-          border:`1px solid ${T.amber}60`,background:T.amberPale,
-          color:T.amber,fontWeight:700,fontSize:12,cursor:'pointer'}}>
+          border:`1px solid ${C.amber}60`,background:C.amberPale,
+          color:C.amber,fontWeight:700,fontSize:12,cursor:'pointer'}}>
          ✏ Modifier
         </button>
        )}
@@ -4923,8 +4966,8 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
       {l.statut!=='annulée'&&(
        <button onClick={()=>annuler(l)}
         style={{width:'100%',padding:'8px',borderRadius:8,
-         border:`1px solid ${T.red}40`,background:'transparent',
-         color:T.red,fontSize:11,fontWeight:600,cursor:'pointer'}}>
+         border:`1px solid ${C.alert}40`,background:'transparent',
+         color:C.alert,fontSize:11,fontWeight:600,cursor:'pointer'}}>
         🗑 Annuler la location
        </button>
       )}
@@ -4936,102 +4979,201 @@ function VueLocations({locations,setLocations,tireuses,setTireuses,onEdit,initSe
 }
 
 function VueParc({tireuses,locations}) {
+ const [vueParc,setVueParc] = useState('grille'); // 'grille' | 'semaine'
  const actives = locations.filter(l=>l.statut!=="retournée"&&l.statut!=="annulée");
  const dispos  = tireuses.filter(t=>!actives.some(l=>l.tireuses.includes(t.id))).length;
 
+ // Semaine courante
+ const today = new Date(); today.setHours(0,0,0,0);
+ const monday = d => { const x=new Date(d); x.setDate(x.getDate()-((x.getDay()+6)%7)); x.setHours(0,0,0,0); return x; };
+ const addD   = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+ const fmtISO = d => { const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; };
+ const fmtWD  = d => d.toLocaleDateString('fr-FR',{weekday:'short'});
+ const fmtDay = d => d.toLocaleDateString('fr-FR',{day:'numeric'});
+ const ws = monday(today);
+ const weekDays = Array.from({length:7},(_,i)=>addD(ws,i));
+ const isTod = d => d.toDateString()===today.toDateString();
+
+ const locOnDay = (t,day) => {
+  const ds = fmtISO(day);
+  return actives.find(l=>l.tireuses?.includes(t.id)&&ds>=l.dateDebut&&ds<=l.dateFin);
+ };
+
  return (
   <div>
-   <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:20}}>
-    {tireuses.map(t=>{
-     const lc   = actives.find(l=>l.tireuses.includes(t.id));
-     const libre= !lc;
-     const s    = lc?STATUTS_LOC[lc.statut]:null;
-     return (
-      <div key={t.id} style={{background:libre?T.bgCard:T.bgMid,borderRadius:8,
-       padding:"12px 8px",border:`2px solid ${libre?T.green:s?.color||T.amber}`,
-       textAlign:"center",position:"relative",overflow:"hidden"}}>
-       {!libre&&<div style={{position:"absolute",top:0,left:0,right:0,
-        height:2,background:s?.color||T.amber}}/>}
-       <div style={{fontFamily:FB,fontWeight:900,
-        fontSize:14,color:libre?T.greenL:s?.color||T.amber,lineHeight:1,
-        letterSpacing:-0.5}}>
-        {t.nom}
-       </div>
-       <div style={{fontSize:9,color:T.creamDim,
-        fontFamily:FM,marginTop:3}}>{t.capacite}</div>
-       <div style={{marginTop:8,fontSize:10,
-        fontFamily:FB,fontWeight:700,
-        letterSpacing:0.5,textTransform:"uppercase",
-        color:libre?T.green:s?.color||T.amber}}>
-        {libre?"LIBRE":s?.label||"Louée"}
-       </div>
-       {lc&&<div style={{fontSize:8,color:T.creamDim,marginTop:3,overflow:"hidden",
-        textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
-        {lc.client.split(" ")[0]}
-       </div>}
-      </div>
-     );
-    })}
-   </div>
-
-   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:20}}>
+   {/* KPI row */}
+   <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginBottom:20}}>
     {[
-     {label:"Libres",val:`${dispos}/8`,color:T.greenL},
-     {label:"En location",val:String(tireuses.length-dispos),color:T.amber},
-     {label:"Locations actives",val:String(actives.length),color:T.gold},
-    ].map(({label,val,color})=>(
-     <div key={label} style={{background:T.bgCard,borderRadius:6,padding:"12px 10px",
-      textAlign:"center",border:`1px solid ${T.border}`}}>
-      <div style={{fontFamily:FB,fontWeight:900,
-       fontSize:24,color,lineHeight:1}}>{val}</div>
-      <div style={{fontSize:10,color:T.creamDim,textTransform:"uppercase",
-       letterSpacing:1,fontFamily:FB,marginTop:4}}>
+     {label:"Libres",val:`${dispos}/${tireuses.length}`,color:C.green,icon:'✓'},
+     {label:"En location",val:String(tireuses.length-dispos),color:C.amber,icon:'⏳'},
+     {label:"Locations actives",val:String(actives.length),color:C.hop,icon:'🍻'},
+    ].map(({label,val,color,icon})=>(
+     <div key={label} style={{background:C.bgCard,borderRadius:14,padding:"14px 16px",
+      border:`1px solid ${C.border}`,position:'relative',overflow:'hidden'}}>
+      <div style={{position:'absolute',top:0,left:0,right:0,height:3,background:color}}/>
+      <div style={{fontFamily:FA,fontStyle:'italic',fontWeight:700,
+       fontSize:28,color,lineHeight:1,marginBottom:2}}>{val}</div>
+      <div style={{fontSize:10,color:C.textLight,textTransform:"uppercase",
+       letterSpacing:1,fontFamily:FM,marginTop:4}}>
        {label}
       </div>
      </div>
     ))}
    </div>
 
-   <div style={{fontFamily:FB,fontWeight:800,fontSize:13,
-    letterSpacing:2,color:T.amber,textTransform:"uppercase",marginBottom:10}}>
-    Détail du parc
+   {/* Toggle vue */}
+   <div style={{display:'flex',gap:6,marginBottom:16}}>
+    {[['grille','🍺 Parc'],['semaine','📅 Semaine']].map(([v,l])=>(
+     <button key={v} onClick={()=>setVueParc(v)}
+      style={{padding:'7px 16px',borderRadius:20,fontSize:12,fontWeight:600,
+       border:`1.5px solid ${vueParc===v?C.amber:C.border}`,
+       background:vueParc===v?C.amberPale:'transparent',
+       color:vueParc===v?C.amber:C.textMid,cursor:'pointer'}}>
+      {l}
+     </button>
+    ))}
    </div>
-   {tireuses.map(t=>{
-    const lc   = actives.find(l=>l.tireuses.includes(t.id));
-    const libre= !lc;
-    return (
-     <div key={t.id} style={{background:T.bgCard,border:`1px solid ${T.border}`,
-      borderRadius:6,padding:"12px 14px",marginBottom:6,
-      display:"flex",gap:12,alignItems:"center",
-      borderLeft:`3px solid ${libre?T.green:STATUTS_LOC[lc?.statut]?.color||T.amber}`}}>
-      <div style={{width:40,height:40,borderRadius:6,background:T.bgMid,
-       display:"flex",alignItems:"center",justifyContent:"center",
-       fontFamily:FB,fontWeight:900,
-       fontSize:12,color:T.gold,flexShrink:0,letterSpacing:-0.5}}>{t.nom}</div>
-      <div style={{flex:1,minWidth:0}}>
-       <div style={{fontFamily:FB,fontWeight:700,
-        fontSize:14,color:T.cream}}>
-        {t.nom}{" "}
-        <span style={{fontSize:11,color:T.creamDim,
-         fontFamily:FM,fontWeight:400}}>{t.modele}</span>
-       </div>
-       <div style={{fontSize:11,color:T.creamDim,
-        fontFamily:FM,marginTop:1}}>
-        {t.capacite}{t.notes?` · ${t.notes}`:""}
-       </div>
-       {lc&&<div style={{fontSize:11,color:STATUTS_LOC[lc.statut]?.color,
-        marginTop:3,fontFamily:FB,fontWeight:600}}>
-        {lc.client} · {fmtDate(lc.dateDebut)}→{fmtDate(lc.dateFin)}
-       </div>}
-      </div>
-      <span style={{flexShrink:0,fontFamily:FB,
-       fontWeight:700,fontSize:11,letterSpacing:0.5,textTransform:"uppercase",
-       color:libre?T.greenL:STATUTS_LOC[lc?.statut]?.color||T.amber}}>
-       {libre?"✓ LIBRE":"⏳ LOUÉE"}
-      </span>
+
+   {vueParc==='grille'&&(
+    <div>
+     <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(130px,1fr))",gap:10,marginBottom:20}}>
+      {tireuses.map(t=>{
+       const lc  = actives.find(l=>l.tireuses.includes(t.id));
+       const libre=!lc;
+       const col = libre?C.green:STATUTS_LOC[lc.statut]?.color||C.amber;
+       return (
+        <div key={t.id} style={{background:C.bgCard,borderRadius:14,
+         padding:"14px 12px",border:`1.5px solid ${col}40`,
+         textAlign:"center",position:"relative",overflow:"hidden"}}>
+         <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:col}}/>
+         <div style={{fontFamily:FA,fontStyle:'italic',fontWeight:700,
+          fontSize:22,color:col,lineHeight:1,marginBottom:6}}>
+          {t.nom}
+         </div>
+         <div style={{fontSize:10,fontFamily:FM,fontWeight:700,
+          letterSpacing:0.8,textTransform:"uppercase",
+          color:col,marginBottom:libre?0:8}}>
+          {libre?"LIBRE":STATUTS_LOC[lc.statut]?.label||"Louée"}
+         </div>
+         {lc&&(
+          <div style={{fontSize:12,color:C.text,fontFamily:FB,fontWeight:600,
+           marginTop:4,wordBreak:'break-word',lineHeight:1.3}}>
+           {lc.client}
+          </div>
+         )}
+         {lc&&(
+          <div style={{fontSize:9,color:C.textLight,fontFamily:FM,marginTop:4}}>
+           {fmtDate(lc.dateDebut)} → {fmtDate(lc.dateFin)}
+          </div>
+         )}
+        </div>
+       );
+      })}
      </div>
-    );
-   })}
+
+     {/* Détail liste */}
+     <div style={{fontSize:9,fontFamily:FM,color:C.amber,letterSpacing:1.6,textTransform:'uppercase',marginBottom:10}}>Détail du parc</div>
+     {tireuses.map(t=>{
+      const lc  = actives.find(l=>l.tireuses.includes(t.id));
+      const libre=!lc;
+      const col = libre?C.green:STATUTS_LOC[lc?.statut]?.color||C.amber;
+      return (
+       <div key={t.id} style={{background:C.bgCard,border:`1px solid ${C.border}`,
+        borderRadius:12,padding:"12px 16px",marginBottom:8,
+        display:"flex",gap:14,alignItems:"center",
+        borderLeft:`3px solid ${col}`}}>
+        <div style={{width:44,height:44,borderRadius:10,background:C.bgDark,
+         display:"flex",alignItems:"center",justifyContent:"center",
+         fontFamily:FA,fontStyle:'italic',fontWeight:700,
+         fontSize:15,color:C.amber,flexShrink:0}}>{t.nom}</div>
+        <div style={{flex:1,minWidth:0}}>
+         <div style={{fontFamily:FB,fontWeight:700,fontSize:14,color:C.text,marginBottom:2}}>
+          {t.nom}
+          <span style={{fontSize:11,color:C.textLight,fontFamily:FM,fontWeight:400,marginLeft:6}}>{t.modele}</span>
+         </div>
+         {lc?(
+          <div style={{fontSize:12,color:col,fontFamily:FB,fontWeight:600}}>
+           {lc.client}
+           <span style={{fontSize:10,color:C.textLight,fontFamily:FM,fontWeight:400,marginLeft:6}}>
+            {fmtDate(lc.dateDebut)} → {fmtDate(lc.dateFin)}
+           </span>
+          </div>
+         ):<div style={{fontSize:11,color:C.textLight,fontFamily:FM}}>Disponible</div>}
+        </div>
+        <span style={{flexShrink:0,fontFamily:FM,fontWeight:700,fontSize:10,
+         letterSpacing:0.8,textTransform:"uppercase",color:col}}>
+         {libre?"✓ LIBRE":"LOUÉE"}
+        </span>
+       </div>
+      );
+     })}
+    </div>
+   )}
+
+   {vueParc==='semaine'&&(
+    <div>
+     <div style={{fontSize:11,color:C.textLight,fontFamily:FM,marginBottom:12}}>
+      Semaine du {weekDays[0].toLocaleDateString('fr-FR',{day:'numeric',month:'long'})} au {weekDays[6].toLocaleDateString('fr-FR',{day:'numeric',month:'long'})}
+     </div>
+     {/* Header jours */}
+     <div style={{display:'grid',gridTemplateColumns:'70px repeat(7,1fr)',gap:3,marginBottom:4}}>
+      <div/>
+      {weekDays.map((d,i)=>(
+       <div key={`k${i}`} style={{background:isTod(d)?C.amber:C.bgDark,borderRadius:8,
+        padding:'5px 2px',textAlign:'center',
+        border:`1px solid ${isTod(d)?C.amber:C.border}`}}>
+        <div style={{fontSize:9,fontWeight:700,color:isTod(d)?'#fff':C.textLight,
+         fontFamily:FM,textTransform:'uppercase'}}>{fmtWD(d)}</div>
+        <div style={{fontSize:14,fontWeight:900,color:isTod(d)?'#fff':C.text,lineHeight:1.1}}>{fmtDay(d)}</div>
+       </div>
+      ))}
+     </div>
+     {/* Lignes tireuses */}
+     {tireuses.map(t=>(
+      <div key={t.id} style={{display:'grid',gridTemplateColumns:'70px repeat(7,1fr)',gap:3,marginBottom:4}}>
+       <div style={{background:C.bgCard,borderRadius:8,padding:'4px 6px',
+        display:'flex',alignItems:'center',justifyContent:'center',
+        border:`1px solid ${C.border}`,fontFamily:FA,fontStyle:'italic',
+        fontSize:13,fontWeight:700,color:C.amber}}>{t.nom}</div>
+       {weekDays.map((d,di)=>{
+        const lc = locOnDay(t,d);
+        const col = lc?STATUTS_LOC[lc.statut]?.color||C.amber:C.green;
+        const isTD=isTod(d);
+        return(
+         <div key={`d${di}`} style={{borderRadius:8,padding:'4px 6px',
+          minHeight:52,border:`1px solid ${lc?col+'50':isTD?C.amber+'40':C.border}`,
+          background:lc?col+'12':isTD?C.amberPale+'20':C.bgCard,
+          display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',
+          gap:2}}>
+          {lc?(
+           <>
+            <div style={{fontSize:8,fontWeight:700,color:col,textTransform:'uppercase',fontFamily:FM,letterSpacing:0.5}}>
+             {STATUTS_LOC[lc.statut]?.dot||'●'}
+            </div>
+            <div style={{fontSize:9,fontFamily:FB,fontWeight:700,color:C.text,
+             textAlign:'center',lineHeight:1.2,wordBreak:'break-all'}}>
+             {lc.client.split(' ')[0]}
+            </div>
+           </>
+          ):(
+           <div style={{fontSize:16,color:C.green,opacity:0.7}}>✓</div>
+          )}
+         </div>
+        );
+       })}
+      </div>
+     ))}
+     {/* Légende */}
+     <div style={{display:'flex',gap:12,marginTop:10,flexWrap:'wrap'}}>
+      {[['✓ Libre',C.green],['● Confirmée',C.green],['◉ En cours',C.amber],['○ Demande','#7A9A5A']].map(([l,col])=>(
+       <div key={l} style={{display:'flex',alignItems:'center',gap:5,fontSize:10,color:C.textMid}}>
+        <div style={{width:8,height:8,borderRadius:2,background:col}}/>
+        {l}
+       </div>
+      ))}
+     </div>
+    </div>
+   )}
   </div>
  );
 }
@@ -5041,7 +5183,7 @@ function VueStats({locations}) {
  const retour   = locations.filter(l=>l.statut==="retournée");
  const actives  = locations.filter(l=>l.statut!=="annulée"&&l.statut!=="retournée");
  const totalCA  = nonAnn.reduce((s,l)=>s+(l.tarif||0),0);
- const totalGob = actives.reduce((s,l)=>s+((l.gobelets25||0)+(l.gobelets50||0)),0);
+ const totalGob = nonAnn.reduce((s,l)=>s+((l.gobelets25||0)+(l.gobelets50||0)),0);
  const totalVol = nonAnn.reduce((s,l)=>s+l.futs.reduce((a,f)=>a+(f.volTotal||0),0),0);
  const totalJ   = retour.reduce((s,l)=>s+nbJours(l.dateDebut,l.dateFin),0);
 
@@ -5058,74 +5200,104 @@ function VueStats({locations}) {
   if(!md[m])md[m]={ca:0,n:0};
   md[m].ca+=l.tarif||0; md[m].n++;
  });
- const ma  = Object.entries(md).slice(-6);
- const maxC= Math.max(...ma.map(x=>x[1].ca))||1;
+ const ma   = Object.entries(md).slice(-8);
+ const maxC = Math.max(...ma.map(x=>x[1].ca))||1;
 
  return (
   <div>
-   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
+   {/* Hero CA */}
+   <div style={{background:`linear-gradient(135deg,${C.amber} 0%,#A85E10 100%)`,borderRadius:20,
+    padding:'20px 24px',marginBottom:16,position:'relative',overflow:'hidden',
+    boxShadow:`0 8px 24px -8px ${C.amber}50`}}>
+    <div style={{position:'absolute',right:-20,bottom:-20,width:120,height:120,
+     borderRadius:'50%',background:'rgba(255,255,255,0.07)'}}/>
+    <div style={{fontSize:9,color:'rgba(255,255,255,0.7)',fontFamily:FM,
+     letterSpacing:1.6,textTransform:'uppercase',marginBottom:4}}>Chiffre d'affaires total</div>
+    <div style={{fontFamily:FA,fontStyle:'italic',fontSize:42,color:'#fff',
+     lineHeight:1,letterSpacing:-1,marginBottom:8}}>
+     {totalCA.toLocaleString('fr')}€
+    </div>
+    <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+     <span style={{background:'rgba(255,255,255,0.18)',color:'#fff',fontSize:10,
+      padding:'3px 10px',borderRadius:99,fontFamily:FM,fontWeight:600}}>
+      {nonAnn.length} locations
+     </span>
+     <span style={{background:'rgba(255,255,255,0.18)',color:'#fff',fontSize:10,
+      padding:'3px 10px',borderRadius:99,fontFamily:FM,fontWeight:600}}>
+      {retour.length} terminées
+     </span>
+    </div>
+   </div>
+
+   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
     {[
-     {label:"Chiffre d'affaires",val:`${totalCA}€`,color:T.gold,  sub:`${nonAnn.length} locations`},
-     {label:"Gobelets en consigne",val:`${totalGob}`,color:T.amber, sub:`${totalGob}€ à récupérer`},
-     {label:"Volume servi",      val:`${totalVol}L`,color:T.hop,  sub:"en fût"},
-     {label:"Jours de location", val:totalJ,       color:T.greenL,sub:`${retour.length} terminées`},
-    ].map(({label,val,color,sub})=>(
-     <div key={label} style={{background:T.bgCard,borderRadius:8,padding:"14px 16px",
-      border:`1px solid ${T.border}`,position:"relative",overflow:"hidden"}}>
-      <div style={{position:"absolute",top:0,left:0,right:0,height:2,
-       background:color}}/>
-      <div style={{fontFamily:FB,fontWeight:900,
-       fontSize:"clamp(22px,6vw,30px)",color,lineHeight:1,marginBottom:3}}>
-       {val}
-      </div>
-      <div style={{fontSize:10,color:T.creamDim,textTransform:"uppercase",
-       letterSpacing:1,fontFamily:FB,fontWeight:700}}>
-       {label}
-      </div>
-      <div style={{fontSize:11,color:T.creamMid,marginTop:3}}>{sub}</div>
+     {label:"Volume servi",val:`${totalVol}L`,color:C.hop,sub:"en fût",icon:'🛢'},
+     {label:"Jours loc.",  val:totalJ,        color:C.green,sub:`${retour.length} terminées`,icon:'📅'},
+     {label:"Gobelets",   val:totalGob,       color:C.amber,sub:'en consigne',icon:'🥤'},
+     {label:"Actives",    val:actives.length, color:C.text,sub:'en cours',icon:'⏳'},
+    ].map(({label,val,color,sub,icon})=>(
+     <div key={label} style={{background:C.bgCard,borderRadius:14,padding:"14px 16px",
+      border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
+      <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:color}}/>
+      <div style={{fontSize:20,marginBottom:4}}>{icon}</div>
+      <div style={{fontFamily:FA,fontStyle:'italic',fontWeight:700,
+       fontSize:24,color,lineHeight:1,marginBottom:2}}>{val}</div>
+      <div style={{fontSize:10,color:C.textLight,textTransform:"uppercase",
+       letterSpacing:1,fontFamily:FM}}>{label}</div>
+      <div style={{fontSize:11,color:C.textMid,marginTop:2}}>{sub}</div>
      </div>
     ))}
    </div>
 
    {ma.length>0&&(
-    <div style={{background:T.bgCard,borderRadius:8,padding:"14px 16px",
-     border:`1px solid ${T.border}`,marginBottom:16}}>
-     <div style={{fontFamily:FB,fontWeight:800,
-      fontSize:13,letterSpacing:2,color:T.amber,textTransform:"uppercase",
-      marginBottom:12}}>CA mensuel</div>
-     {ma.map(([m,d])=>(
-      <div key={m} style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
-       <div style={{width:42,fontFamily:FM,fontSize:10,
-        color:T.creamDim,flexShrink:0,textAlign:"right"}}>{m}</div>
-       <div style={{flex:1,height:20,background:T.bgMid,borderRadius:2,overflow:"hidden"}}>
-        <div style={{height:"100%",borderRadius:2,
-         background:`${T.amber}`,
-         width:`${(d.ca/maxC)*100}%`}}/>
+    <div style={{background:C.bgCard,borderRadius:16,padding:"18px 20px",
+     border:`1px solid ${C.border}`,marginBottom:16}}>
+     <div style={{fontSize:9,fontFamily:FM,color:C.amber,
+      letterSpacing:1.6,textTransform:'uppercase',marginBottom:14}}>CA mensuel</div>
+     {ma.map(([m,d])=>{
+      const pct=(d.ca/maxC)*100;
+      return(
+      <div key={m} style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
+       <div style={{width:46,fontFamily:FM,fontSize:10,
+        color:C.textLight,flexShrink:0,textAlign:"right"}}>{m}</div>
+       <div style={{flex:1,height:22,background:C.bgDark,borderRadius:6,overflow:"hidden",position:'relative'}}>
+        <div style={{height:"100%",borderRadius:6,
+         background:`linear-gradient(90deg,${C.amber},${C.amberL})`,
+         width:`${pct}%`,transition:'width 0.5s'}}/>
+        <div style={{position:'absolute',left:8,top:0,bottom:0,display:'flex',alignItems:'center',
+         fontSize:9,fontFamily:FM,color:pct>15?'rgba(255,255,255,0.8)':C.amber,fontWeight:700}}>
+         {d.n} loc.
+        </div>
        </div>
-       <div style={{fontFamily:FB,fontWeight:700,
-        fontSize:13,color:T.gold,minWidth:40,textAlign:"right"}}>{d.ca}€</div>
+       <div style={{fontFamily:FA,fontStyle:'italic',fontWeight:700,
+        fontSize:15,color:C.amber,minWidth:52,textAlign:"right"}}>{d.ca}€</div>
       </div>
-     ))}
+      );
+     })}
     </div>
    )}
 
    {topB.length>0&&(
-    <div style={{background:T.bgCard,borderRadius:8,padding:"14px 16px",
-     border:`1px solid ${T.border}`}}>
-     <div style={{fontFamily:FB,fontWeight:800,
-      fontSize:13,letterSpacing:2,color:T.hop,textTransform:"uppercase",
-      marginBottom:12}}>Bières les + louées</div>
-     {topB.map(([nom,n])=>(
-      <div key={nom} style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
-       <div style={{flex:1,fontSize:13,color:T.cream,overflow:"hidden",
+    <div style={{background:C.bgCard,borderRadius:16,padding:"18px 20px",
+     border:`1px solid ${C.border}`}}>
+     <div style={{fontSize:9,fontFamily:FM,color:C.hop,
+      letterSpacing:1.6,textTransform:'uppercase',marginBottom:14}}>Bières les + louées</div>
+     {topB.map(([nom,n],i)=>(
+      <div key={nom} style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
+       <div style={{width:20,height:20,borderRadius:6,flexShrink:0,
+        background:i<3?C.amberPale:C.bgDark,
+        display:'flex',alignItems:'center',justifyContent:'center',
+        fontSize:10,fontWeight:700,color:i<3?C.amber:C.textLight,
+        fontFamily:FM}}>{i+1}</div>
+       <div style={{flex:1,fontSize:13,color:C.text,overflow:"hidden",
         textOverflow:"ellipsis",whiteSpace:"nowrap",
         fontFamily:FB,fontWeight:600}}>{nom}</div>
-       <div style={{width:80,height:6,background:T.bgMid,borderRadius:2,
+       <div style={{width:90,height:8,background:C.bgDark,borderRadius:4,
         overflow:"hidden",flexShrink:0}}>
-        <div style={{height:"100%",background:T.hop,
-         width:`${(n/maxB)*100}%`,borderRadius:2}}/>
+        <div style={{height:"100%",background:C.hop,
+         width:`${(n/maxB)*100}%`,borderRadius:4,transition:'width 0.5s'}}/>
        </div>
-       <div style={{fontFamily:FM,fontSize:11,color:T.hop,
+       <div style={{fontFamily:FM,fontSize:12,fontWeight:700,color:C.hop,
         minWidth:28,textAlign:"right"}}>{n}×</div>
       </div>
      ))}
@@ -5565,19 +5737,19 @@ function VueImport({locations,setLocations,onDone}){
  const nbNew  = parsed.filter(e=>!locations.some(l=>l.icsUid===e.icsUid)&&selected.includes(e.id)).length;
  const nbUpd  = parsed.filter(e=> locations.some(l=>l.icsUid===e.icsUid)&&selected.includes(e.id)).length;
 
- const card   = {background:T.bgCard,borderRadius:10,padding:'14px 16px',
-  marginBottom:10,border:`1px solid ${T.border}`};
+ const card   = {background:C.bgCard,borderRadius:10,padding:'14px 16px',
+  marginBottom:10,border:`1px solid ${C.border}`};
  const btnPrim= {padding:'11px 20px',borderRadius:6,border:'none',
-  background:T.amber,color:'#000',fontFamily:FB,
+  background:C.amber,color:'#000',fontFamily:FB,
   fontWeight:900,fontSize:14,letterSpacing:0.8,textTransform:'uppercase',
   cursor:'pointer',width:'100%',minHeight:44};
  const btnSec = {padding:'10px 16px',borderRadius:6,
-  border:`1px solid ${T.border}`,background:'transparent',
-  color:T.creamDim,fontFamily:FB,
+  border:`1px solid ${C.border}`,background:'transparent',
+  color:C.textLight,fontFamily:FB,
   fontWeight:700,fontSize:13,letterSpacing:0.5,cursor:'pointer'};
  const Label  = ({children,style={}})=>(
   <div style={{fontSize:9,fontFamily:FM,fontWeight:700,
-   letterSpacing:2,color:T.amberL,textTransform:'uppercase',
+   letterSpacing:2,color:C.amberL,textTransform:'uppercase',
    marginBottom:6,...style}}>{children}</div>
  );
 
@@ -5585,15 +5757,15 @@ function VueImport({locations,setLocations,onDone}){
   <div style={{textAlign:'center',padding:'40px 16px'}}>
    <div style={{fontSize:52,marginBottom:14}}>✅</div>
    <div style={{fontFamily:FB,fontWeight:900,
-    fontSize:22,color:T.greenL,letterSpacing:1,textTransform:'uppercase',marginBottom:6}}>
+    fontSize:22,color:C.greenL,letterSpacing:1,textTransform:'uppercase',marginBottom:6}}>
     Synchronisation réussie
    </div>
-   <div style={{fontSize:13,color:T.creamDim,marginBottom:6}}>
+   <div style={{fontSize:13,color:C.textLight,marginBottom:6}}>
     {nbNew} nouvelle(s) location · {nbUpd} mise(s) à jour
    </div>
-   {savedUrl&&<div style={{fontSize:10,color:T.amberL,fontFamily:FM,
+   {savedUrl&&<div style={{fontSize:10,color:C.amberL,fontFamily:FM,
     marginBottom:24,wordBreak:'break-all',padding:'6px 10px',
-    background:T.bgMid,borderRadius:6,border:`1px solid ${T.amber}30`}}>
+    background:C.bg,borderRadius:6,border:`1px solid ${C.amber}30`}}>
     🔗 URL mémorisée ✓
    </div>}
    <button onClick={onDone} style={btnPrim}>Voir les locations →</button>
@@ -5602,14 +5774,14 @@ function VueImport({locations,setLocations,onDone}){
 
  if(step==='preview') return(
   <div>
-   <div style={{...card,background:T.amberPale,border:`1px solid ${T.amber}50`,marginBottom:14}}>
+   <div style={{...card,background:C.amberPale,border:`1px solid ${C.amber}50`,marginBottom:14}}>
     <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
      <div>
       <div style={{fontFamily:FB,fontWeight:900,
-       fontSize:16,color:T.amber,letterSpacing:0.5}}>
+       fontSize:16,color:C.amber,letterSpacing:0.5}}>
        {parsed.length} événement{parsed.length>1?'s':''} trouvés
       </div>
-      <div style={{fontSize:11,color:T.creamDim,marginTop:3,
+      <div style={{fontSize:11,color:C.textLight,marginTop:3,
        fontFamily:FM}}>
        {parsed.filter(e=>!locations.some(l=>l.icsUid===e.icsUid)).length} nouveaux ·{' '}
        {parsed.filter(e=>locations.some(l=>l.icsUid===e.icsUid)).length} mises à jour
@@ -5622,8 +5794,8 @@ function VueImport({locations,setLocations,onDone}){
     </div>
    </div>
 
-   {err&&<div style={{background:T.redPale,border:`1px solid ${T.red}40`,
-    borderRadius:6,padding:'8px 12px',marginBottom:10,color:T.red,fontSize:12}}>{err}</div>}
+   {err&&<div style={{background:C.brickPale,border:`1px solid ${C.alert}40`,
+    borderRadius:6,padding:'8px 12px',marginBottom:10,color:C.alert,fontSize:12}}>{err}</div>}
 
    <div style={{maxHeight:340,overflowY:'auto',marginBottom:14,
     display:'flex',flexDirection:'column',gap:6,scrollbarWidth:'thin'}}>
@@ -5636,15 +5808,15 @@ function VueImport({locations,setLocations,onDone}){
      return(
       <div key={e.id}
        onClick={()=>setSelected(s=>sel?s.filter(x=>x!==e.id):[...s,e.id])}
-       style={{background:sel?T.amberPale:T.bgCard,
-        border:`1.5px solid ${sel?T.amber:T.border}`,
+       style={{background:sel?C.amberPale:C.bgCard,
+        border:`1.5px solid ${sel?C.amber:C.border}`,
         borderRadius:8,padding:'10px 12px',cursor:'pointer',
-        borderLeft:`3px solid ${exist?T.amber:T.greenL}`,
+        borderLeft:`3px solid ${exist?C.amber:C.greenL}`,
         opacity:sel?1:0.65,transition:'all 0.15s'}}>
        <div style={{display:'flex',alignItems:'flex-start',gap:8}}>
         <div style={{width:18,height:18,borderRadius:3,flexShrink:0,marginTop:2,
-         border:`2px solid ${sel?T.amber:T.border}`,
-         background:sel?T.amber:'transparent',
+         border:`2px solid ${sel?C.amber:C.border}`,
+         background:sel?C.amber:'transparent',
          display:'flex',alignItems:'center',justifyContent:'center',
          fontSize:10,color:'#000',fontWeight:900}}>
          {sel?'✓':''}
@@ -5652,37 +5824,37 @@ function VueImport({locations,setLocations,onDone}){
         <div style={{flex:1,minWidth:0}}>
          <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:2}}>
           <div style={{fontFamily:FB,fontWeight:700,
-           fontSize:15,color:T.cream,overflow:'hidden',
+           fontSize:15,color:C.text,overflow:'hidden',
            textOverflow:'ellipsis',whiteSpace:'nowrap',flex:1}}>
            {e.client||'Sans titre'}
           </div>
           {exist&&<span style={{flexShrink:0,fontSize:8,fontWeight:700,
-           color:T.amber,background:T.bgDark,border:`1px solid ${T.amber}40`,
+           color:C.amber,background:C.bgDark,border:`1px solid ${C.amber}40`,
            padding:'1px 5px',borderRadius:3,fontFamily:FM,
            letterSpacing:0.5}}>MAJ</span>}
          </div>
          <div style={{fontFamily:FM,fontSize:10,
-          color:T.creamDim,marginBottom:4}}>
+          color:C.textLight,marginBottom:4}}>
           📅 {e.dateDebut}{e.dateFin!==e.dateDebut?` → ${e.dateFin}`:''} · {duree}j
          </div>
          <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
-          {e.tireuses?.length>0&&<span style={{fontSize:9,color:T.amberL,
-           background:T.bgDark,padding:'1px 6px',borderRadius:3,
-           fontFamily:FM,border:`1px solid ${T.amber}20`}}>
+          {e.tireuses?.length>0&&<span style={{fontSize:9,color:C.amberL,
+           background:C.bgDark,padding:'1px 6px',borderRadius:3,
+           fontFamily:FM,border:`1px solid ${C.amber}20`}}>
            🍻 {e.tireuses.length} tireuse{e.tireuses.length>1?'s':''}
           </span>}
-          {e.futs?.length>0&&<span style={{fontSize:9,color:T.creamDim,
-           background:T.bgDark,padding:'1px 6px',borderRadius:3,
+          {e.futs?.length>0&&<span style={{fontSize:9,color:C.textLight,
+           background:C.bgDark,padding:'1px 6px',borderRadius:3,
            fontFamily:FM}}>
            🛢 {e.futs.map(f=>f.nbFuts+'×'+f.typeFut).join(' ')}
           </span>}
-          {(e.gobelets25>0||e.gobelets50>0)&&<span style={{fontSize:9,color:T.greenL,
-           background:T.bgDark,padding:'1px 6px',borderRadius:3,
+          {(e.gobelets25>0||e.gobelets50>0)&&<span style={{fontSize:9,color:C.greenL,
+           background:C.bgDark,padding:'1px 6px',borderRadius:3,
            fontFamily:FM}}>
            🥤 {(e.gobelets25||0)+(e.gobelets50||0)} gob.
           </span>}
-          {e.tel&&<span style={{fontSize:9,color:T.creamDim,
-           background:T.bgDark,padding:'1px 6px',borderRadius:3,
+          {e.tel&&<span style={{fontSize:9,color:C.textLight,
+           background:C.bgDark,padding:'1px 6px',borderRadius:3,
            fontFamily:FM}}>
            📞 {e.tel}
           </span>}
@@ -5709,21 +5881,21 @@ function VueImport({locations,setLocations,onDone}){
  return(
   <div>
    {savedUrl&&(
-    <div style={{...card,border:`1.5px solid ${T.amber}60`,marginBottom:12,
-     background:T.amberPale}}>
+    <div style={{...card,border:`1.5px solid ${C.amber}60`,marginBottom:12,
+     background:C.amberPale}}>
      <div style={{display:'flex',justifyContent:'space-between',
       alignItems:'flex-start',marginBottom:8}}>
       <div>
        <div style={{fontFamily:FB,fontWeight:900,
-        fontSize:15,color:T.amber,letterSpacing:0.5,marginBottom:3}}>
+        fontSize:15,color:C.amber,letterSpacing:0.5,marginBottom:3}}>
         🔗 Agenda mémorisé
        </div>
-       <div style={{fontSize:9,color:T.creamDim,
+       <div style={{fontSize:9,color:C.textLight,
         fontFamily:FM,wordBreak:'break-all',
         maxWidth:220,lineHeight:1.4}}>
         {savedUrl.replace('https://calendar.google.com','gcal').slice(0,60)}…
        </div>
-       {lastSync&&<div style={{fontSize:9,color:T.amberL,
+       {lastSync&&<div style={{fontSize:9,color:C.amberL,
         fontFamily:FM,marginTop:3}}>
         Dernière synchro : {lastSync.toLocaleDateString('fr-FR',
          {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}
@@ -5738,7 +5910,7 @@ function VueImport({locations,setLocations,onDone}){
      </div>
      <button onClick={()=>{setSavedUrl('');setUrlInput('');
       try{localStorage.removeItem('ical_url_tireuses');}catch(e){}}}
-      style={{fontSize:9,color:T.creamDim,background:'none',border:'none',
+      style={{fontSize:9,color:C.textLight,background:'none',border:'none',
        cursor:'pointer',textDecoration:'underline',fontFamily:FM}}>
       Supprimer l'URL mémorisée
      </button>
@@ -5751,14 +5923,14 @@ function VueImport({locations,setLocations,onDone}){
      placeholder="https://calendar.google.com/calendar/ical/…"
      style={{...iSt,marginBottom:8,fontSize:13,
       fontFamily:FM}}/>
-    {err&&<div style={{fontSize:11,color:T.red,marginBottom:8,lineHeight:1.4}}>{err}</div>}
+    {err&&<div style={{fontSize:11,color:C.alert,marginBottom:8,lineHeight:1.4}}>{err}</div>}
     <button onClick={()=>syncUrl()} disabled={loading}
      style={{...btnPrim,opacity:loading?0.6:1}}>
      {loading?'Chargement…':'🔄 Synchroniser maintenant'}
     </button>
    </div>
 
-   <div style={{...card,background:T.bgDark}}>
+   <div style={{...card,background:C.bgDark}}>
     <Label>Comment obtenir l'URL iCal ?</Label>
     {[
      ['1','Ouvrez Google Agenda sur ordinateur'],
@@ -5768,31 +5940,31 @@ function VueImport({locations,setLocations,onDone}){
      ['5','Collez l\'URL ci-dessus et cliquez Synchroniser'],
     ].map(([n,t])=>(
      <div key={n} style={{display:'flex',gap:10,alignItems:'flex-start',
-      marginBottom:8,fontSize:12,color:T.creamDim,lineHeight:1.4}}>
+      marginBottom:8,fontSize:12,color:C.textLight,lineHeight:1.4}}>
       <div style={{width:20,height:20,borderRadius:'50%',flexShrink:0,
-       background:T.amber,color:'#000',display:'flex',alignItems:'center',
+       background:C.amber,color:'#000',display:'flex',alignItems:'center',
        justifyContent:'center',fontSize:9,fontWeight:900,marginTop:1}}>
        {n}
       </div>
       {t}
      </div>
     ))}
-    <div style={{marginTop:8,padding:'8px 10px',background:T.bgCard,
-     borderRadius:6,border:`1px solid ${T.border}`,
-     fontSize:10,color:T.amberL,fontFamily:FM,lineHeight:1.6}}>
+    <div style={{marginTop:8,padding:'8px 10px',background:C.bgCard,
+     borderRadius:6,border:`1px solid ${C.border}`,
+     fontSize:10,color:C.amberL,fontFamily:FM,lineHeight:1.6}}>
      ⚠ L'agenda doit être réglé sur "Accessible au public" pour que l'URL fonctionne
     </div>
    </div>
 
    <div style={card}>
     <Label>Option B — Fichier .ics</Label>
-    <div style={{fontSize:12,color:T.creamDim,marginBottom:10,lineHeight:1.5}}>
+    <div style={{fontSize:12,color:C.textLight,marginBottom:10,lineHeight:1.5}}>
      Dans Google Agenda → ⚙ Paramètres → Importer/Exporter → Exporter
     </div>
     <label style={{display:'flex',alignItems:'center',justifyContent:'center',
       width:'100%',minHeight:48,padding:'11px',boxSizing:'border-box',
-      border:`1px solid ${T.border}`,borderRadius:6,cursor:'pointer',
-      background:T.bgMid,color:T.cream,fontWeight:700,fontSize:14,gap:8}}>
+      border:`1px solid ${C.border}`,borderRadius:6,cursor:'pointer',
+      background:C.bg,color:C.text,fontWeight:700,fontSize:14,gap:8}}>
      <input type="file" accept=".ics,text/calendar"
       style={{position:'absolute',opacity:0,pointerEvents:'none',width:0,height:0}}
       onChange={handleFile}/>
@@ -5801,8 +5973,8 @@ function VueImport({locations,setLocations,onDone}){
    </div>
 
    {locations.filter(l=>l.icsUid).length>0&&(
-    <div style={{...card,background:T.bgDark}}>
-     <div style={{fontSize:11,color:T.creamDim,fontFamily:FM}}>
+    <div style={{...card,background:C.bgDark}}>
+     <div style={{fontSize:11,color:C.textLight,fontFamily:FM}}>
       📊 {locations.filter(l=>l.icsUid).length} location{locations.filter(l=>l.icsUid).length>1?'s':''} importées depuis Google Agenda
      </div>
     </div>
@@ -5890,7 +6062,7 @@ function ModuleTireuses({tireuses,setTireuses,locations,setLocations,stockCond,s
    </div>
 
    <div style={{padding:'14px 16px'}}>
-    {ongletT==='planning'  && <VuePlanning  tireuses={tireuses} locations={locations} onClickLoc={l=>{setSelLoc(l);setOngletT('locations');}}/>}
+    {ongletT==='planning'  && <VuePlanning  tireuses={tireuses} locations={locations} onClickLoc={l=>{setEditLoc(l);setShowForm(true);}}/>}
     {ongletT==='locations' && <VueLocations locations={locations} setLocations={setLocations} tireuses={tireuses} setTireuses={setTireuses} onEdit={openForm}/>}
     {ongletT==='parc'      && <VueParc      tireuses={tireuses} locations={locations}/>}
     {ongletT==='stats'     && <VueStats     locations={locations}/>}
@@ -9738,6 +9910,237 @@ function ModuleAnticipation({brassins,setBrassins,recettes,locations,stock,stock
  );
 }
 
+// ─── SAUVEGARDE / SYNC ──────────────────────────────────────────────────────
+
+function ModuleSauvegarde({data, onRestore}) {
+ const [token,  setToken]  = useState(()=>localStorage.getItem('ppb_gist_token')||'');
+ const [gistId, setGistId] = useState(()=>localStorage.getItem('ppb_gist_id')||'');
+ const [status, setStatus] = useState('idle'); // idle|syncing|ok|error
+ const [msg,    setMsg]    = useState('');
+ const [lastSync, setLastSync] = useState(()=>localStorage.getItem('ppb_last_sync')||'');
+ const [autoSync, setAutoSync] = useState(()=>localStorage.getItem('ppb_auto_sync')==='1');
+ const [showToken, setShowToken] = useState(false);
+ const fileRef = useRef();
+ const autoTimer = useRef();
+ const prevData  = useRef(null);
+
+ const saveToken = t => { setToken(t); localStorage.setItem('ppb_gist_token', t); };
+ const saveGistId= id=> { setGistId(id);localStorage.setItem('ppb_gist_id', id); };
+
+ // Auto-sync : push 10s après le dernier changement de données
+ useEffect(()=>{
+  if(!autoSync||!token) return;
+  const cur = JSON.stringify(data);
+  if(prevData.current===null){prevData.current=cur;return;}
+  if(prevData.current===cur) return;
+  prevData.current=cur;
+  clearTimeout(autoTimer.current);
+  autoTimer.current=setTimeout(()=>pushGist(true),10000);
+  return ()=>clearTimeout(autoTimer.current);
+ },[data,autoSync,token]);
+
+ const stamp = () => {
+  const ts=new Date().toLocaleString('fr-FR');
+  setLastSync(ts); localStorage.setItem('ppb_last_sync',ts);
+ };
+
+ const exportJSON = () => {
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href=url; a.download=`ppb-${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(url);
+ };
+
+ const importJSON = e => {
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+   try{
+    onRestore(JSON.parse(ev.target.result));
+    setStatus('ok'); setMsg('✓ Données restaurées depuis le fichier JSON.');
+   }catch{setStatus('error');setMsg('Fichier JSON invalide.');}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+ };
+
+ const pushGist = async (silent=false) => {
+  if(!token){setStatus('error');setMsg('Token GitHub manquant.');return;}
+  if(!silent){setStatus('syncing');setMsg('Envoi en cours…');}
+  try{
+   const content=JSON.stringify(data,null,2);
+   const url    = gistId?`https://api.github.com/gists/${gistId}`:'https://api.github.com/gists';
+   const method = gistId?'PATCH':'POST';
+   const body   = gistId
+    ?{files:{'ppb-data.json':{content}}}
+    :{description:'Les Papas Brasseurs — données app',public:false,files:{'ppb-data.json':{content}}};
+   const res=await fetch(url,{method,headers:{'Authorization':`token ${token}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+   if(!res.ok)throw new Error(`GitHub: HTTP ${res.status}`);
+   const json=await res.json();
+   saveGistId(json.id);
+   stamp();
+   setStatus('ok'); setMsg(`✓ Sauvegardé (Gist ${json.id.slice(0,8)}…)`);
+  }catch(err){setStatus('error');setMsg('Erreur push : '+err.message);}
+ };
+
+ const pullGist = async () => {
+  if(!token||!gistId){setStatus('error');setMsg('Token et Gist ID requis.');return;}
+  setStatus('syncing');setMsg('Récupération…');
+  try{
+   const res=await fetch(`https://api.github.com/gists/${gistId}`,{headers:{'Authorization':`token ${token}`}});
+   if(!res.ok)throw new Error(`GitHub: HTTP ${res.status}`);
+   const json=await res.json();
+   const content=json.files['ppb-data.json']?.content;
+   if(!content)throw new Error('Fichier ppb-data.json introuvable dans le Gist');
+   onRestore(JSON.parse(content));
+   stamp();
+   setStatus('ok');setMsg('✓ Données chargées depuis le Gist.');
+  }catch(err){setStatus('error');setMsg('Erreur pull : '+err.message);}
+ };
+
+ const statusColor = {idle:C.textLight,syncing:C.amber,ok:C.green,error:C.alert}[status];
+
+ return (
+  <div style={{maxWidth:680}}>
+   {/* Status banner */}
+   {msg&&(
+    <div style={{background:status==='ok'?C.greenPale:status==='error'?C.brickPale:C.amberPale,
+     border:`1px solid ${statusColor}40`,borderRadius:12,padding:'10px 16px',
+     marginBottom:16,display:'flex',alignItems:'center',gap:10}}>
+     <span style={{fontSize:16}}>{status==='syncing'?'⏳':status==='ok'?'✅':'❌'}</span>
+     <span style={{fontSize:13,color:C.text,flex:1}}>{msg}</span>
+     {lastSync&&<span style={{fontSize:10,fontFamily:FM,color:C.textLight}}>Dernier sync : {lastSync}</span>}
+    </div>
+   )}
+
+   {/* Export / Import */}
+   <div style={{background:C.bgCard,borderRadius:16,border:`1px solid ${C.border}`,padding:'20px 22px',marginBottom:16,boxShadow:'0 4px 14px -6px rgba(60,40,10,0.10)'}}>
+    <div style={{fontSize:9,fontFamily:FM,color:C.amber,letterSpacing:1.6,textTransform:'uppercase',marginBottom:6}}>SAUVEGARDE LOCALE</div>
+    <div style={{fontFamily:FA,fontSize:18,fontStyle:'italic',color:C.text,marginBottom:14}}>Export / Import JSON</div>
+    <div style={{fontSize:12,color:C.textMid,marginBottom:16,lineHeight:1.6}}>
+     Téléchargez vos données en fichier <code style={{fontFamily:FM,background:C.bgDark,padding:'1px 6px',borderRadius:4}}>.json</code> ou restaurez depuis une sauvegarde précédente.
+    </div>
+    <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+     <button onClick={exportJSON}
+      style={{padding:'10px 20px',borderRadius:10,background:C.amber,color:'#fff',
+       border:'none',fontWeight:700,fontSize:13,fontFamily:FB,cursor:'pointer',
+       boxShadow:'0 4px 14px -4px rgba(216,144,30,0.4)'}}>
+      ⬇ Exporter JSON
+     </button>
+     <button onClick={()=>fileRef.current.click()}
+      style={{padding:'10px 20px',borderRadius:10,background:C.bgDark,color:C.text,
+       border:`1px solid ${C.border}`,fontWeight:600,fontSize:13,fontFamily:FB,cursor:'pointer'}}>
+      ⬆ Importer JSON
+     </button>
+     <input ref={fileRef} type="file" accept=".json" onChange={importJSON} style={{display:'none'}}/>
+    </div>
+   </div>
+
+   {/* GitHub Gist sync */}
+   <div style={{background:C.bgCard,borderRadius:16,border:`1px solid ${C.border}`,padding:'20px 22px',marginBottom:16,boxShadow:'0 4px 14px -6px rgba(60,40,10,0.10)'}}>
+    <div style={{fontSize:9,fontFamily:FM,color:C.green,letterSpacing:1.6,textTransform:'uppercase',marginBottom:6}}>SYNC MULTI-POSTE</div>
+    <div style={{fontFamily:FA,fontSize:18,fontStyle:'italic',color:C.text,marginBottom:8}}>GitHub Gist</div>
+    <div style={{fontSize:12,color:C.textMid,marginBottom:16,lineHeight:1.6}}>
+     Les données sont stockées dans un <b>Gist privé</b> sur votre compte GitHub. Toutes les machines partageant le même token accèdent aux mêmes données.
+    </div>
+
+    {/* Token */}
+    <div style={{marginBottom:12}}>
+     <div style={{fontSize:11,fontWeight:700,color:C.textMid,marginBottom:5,textTransform:'uppercase',letterSpacing:0.8}}>Token GitHub (Personal Access Token)</div>
+     <div style={{display:'flex',gap:8,alignItems:'center'}}>
+      <input
+       type={showToken?'text':'password'}
+       value={token}
+       onChange={e=>saveToken(e.target.value)}
+       placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+       style={{flex:1,background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,padding:'9px 13px',fontSize:13,outline:'none',fontFamily:FM}}
+      />
+      <button onClick={()=>setShowToken(v=>!v)}
+       style={{padding:'9px 12px',borderRadius:8,background:C.bgDark,border:`1px solid ${C.border}`,cursor:'pointer',fontSize:13,color:C.textMid}}>
+       {showToken?'🙈':'👁'}
+      </button>
+     </div>
+     <div style={{fontSize:10,color:C.textLight,marginTop:4,fontFamily:FM}}>
+      github.com → Settings → Developer settings → Personal access tokens → Gist (scope)
+     </div>
+    </div>
+
+    {/* Gist ID (optionnel) */}
+    {gistId&&(
+     <div style={{marginBottom:16}}>
+      <div style={{fontSize:11,fontWeight:700,color:C.textMid,marginBottom:5,textTransform:'uppercase',letterSpacing:0.8}}>Gist ID (auto-rempli)</div>
+      <div style={{display:'flex',gap:8,alignItems:'center'}}>
+       <input
+        type="text" value={gistId} onChange={e=>saveGistId(e.target.value)}
+        style={{flex:1,background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.textLight,padding:'7px 13px',fontSize:12,outline:'none',fontFamily:FM}}
+       />
+       <button onClick={()=>saveGistId('')}
+        style={{padding:'7px 10px',borderRadius:8,background:C.brickPale,border:`1px solid ${C.border}`,cursor:'pointer',fontSize:12,color:C.brick}}>
+        ✕
+       </button>
+      </div>
+     </div>
+    )}
+
+    {/* Actions */}
+    <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}>
+     <button onClick={()=>pushGist(false)}
+      disabled={!token||status==='syncing'}
+      style={{padding:'10px 18px',borderRadius:10,background:C.green,color:'#fff',
+       border:'none',fontWeight:700,fontSize:13,fontFamily:FB,cursor:'pointer',
+       opacity:(!token||status==='syncing')?0.5:1,
+       boxShadow:'0 4px 14px -4px rgba(74,128,64,0.4)'}}>
+      ☁ Push (sauvegarder)
+     </button>
+     <button onClick={pullGist}
+      disabled={!token||!gistId||status==='syncing'}
+      style={{padding:'10px 18px',borderRadius:10,background:C.bgDark,color:C.text,
+       border:`1px solid ${C.border}`,fontWeight:600,fontSize:13,fontFamily:FB,cursor:'pointer',
+       opacity:(!token||!gistId||status==='syncing')?0.5:1}}>
+      ⬇ Pull (charger)
+     </button>
+
+     {/* Auto-sync toggle */}
+     <label style={{display:'flex',alignItems:'center',gap:8,cursor:'pointer',marginLeft:'auto'}}>
+      <div onClick={()=>{const v=!autoSync;setAutoSync(v);localStorage.setItem('ppb_auto_sync',v?'1':'0');}}
+       style={{width:42,height:24,borderRadius:99,background:autoSync?C.green:C.bgDark,
+        border:`1px solid ${C.border}`,position:'relative',transition:'background 0.2s',cursor:'pointer'}}>
+       <div style={{position:'absolute',top:3,left:autoSync?20:3,width:18,height:18,
+        borderRadius:99,background:autoSync?'#fff':C.textLight,transition:'left 0.2s'}}/>
+      </div>
+      <span style={{fontSize:12,fontFamily:FB,color:C.textMid,fontWeight:600}}>Auto-sync</span>
+      <span style={{fontSize:10,fontFamily:FM,color:C.textLight}}>(10 s après modif.)</span>
+     </label>
+    </div>
+   </div>
+
+   {/* Résumé données */}
+   <div style={{background:C.bgCard,borderRadius:16,border:`1px solid ${C.border}`,padding:'16px 22px',boxShadow:'0 4px 14px -6px rgba(60,40,10,0.10)'}}>
+    <div style={{fontSize:9,fontFamily:FM,color:C.textLight,letterSpacing:1.6,textTransform:'uppercase',marginBottom:10}}>CONTENU SAUVEGARDÉ</div>
+    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(130px,1fr))',gap:8}}>
+     {[
+      {k:'Brassins',       v:data.brassins?.length||0,       icon:'⚗️'},
+      {k:'Locations',      v:data.locations?.length||0,      icon:'🍻'},
+      {k:'Stock matières', v:data.stock?.length||0,          icon:'🌾'},
+      {k:'Recettes',       v:data.recettes?.length||0,       icon:'📋'},
+      {k:'Fournisseurs',   v:data.fournisseurs?.length||0,   icon:'🏭'},
+      {k:'Sessions cond.', v:data.condSessions?.length||0,   icon:'🍾'},
+      {k:'Stock condit.',  v:data.stockCond?.length||0,      icon:'📦'},
+      {k:'Inventaires',    v:data.inventaires?.length||0,    icon:'📊'},
+     ].map(({k,v,icon})=>(
+      <div key={k} style={{background:C.bg,borderRadius:10,padding:'10px 12px',border:`1px solid ${C.border}`}}>
+       <div style={{fontSize:16,marginBottom:2}}>{icon}</div>
+       <div style={{fontFamily:FA,fontStyle:'italic',fontSize:20,color:C.amber,lineHeight:1}}>{v}</div>
+       <div style={{fontSize:9,fontFamily:FM,color:C.textLight,textTransform:'uppercase',letterSpacing:1,marginTop:2}}>{k}</div>
+      </div>
+     ))}
+    </div>
+   </div>
+  </div>
+ );
+}
+
 export default function App(){
  const [stock,setStock]=useState(STOCK_INIT);
  const [recettes,setRecettes]=useState(RECETTES_INIT);
@@ -9823,11 +10226,10 @@ export default function App(){
   },
   {
    id:'locations', label:'Locations', icon:'🍻',
-   badge: (locActives||0)+(aEncaisser||0)||null,
-   bc: aEncaisser>0?C.alert:C.green,
+   badge: locActives||null,
+   bc: C.green,
    modules:[
-    {id:'tireuses',      label:'Planning',      icon:'📅'},
-    {id:'encaissement',  label:'Encaissements', icon:'💳', badge:aEncaisser||null, bc:C.alert},
+    {id:'tireuses', label:'Planning', icon:'📅'},
    ],
   },
   {
@@ -9848,6 +10250,10 @@ export default function App(){
     {id:'planification',label:'Agenda',         icon:'📅'},
    ],
   },
+  {
+   id:'reglages', label:'Réglages', icon:'⚙️',
+   modules:[{id:'sauvegarde',label:'Sync & Sauvegarde',icon:'☁️'}],
+  },
  ];
 
  const familleActive = FAMILLES.find(f=>f.modules.some(m=>m.id===module))?.id || 'accueil';
@@ -9857,8 +10263,23 @@ export default function App(){
  };
  const sousMods = FAMILLES.find(f=>f.id===familleActive)?.modules || [];
 
+ const allData = {stock,recettes,brassins,fournisseurs,stockCond,condSessions,tireuses,locations,stockPF,inventaires};
+
+ const restoreData = d => {
+  if(d.locations?.length)    setLocations(d.locations);
+  if(d.brassins?.length)     setBrassins(d.brassins);
+  if(d.stock?.length)        setStock(d.stock);
+  if(d.tireuses?.length)     setTireuses(d.tireuses);
+  if(d.inventaires?.length)  setInventaires(d.inventaires);
+  if(d.recettes?.length)     setRecettes(d.recettes);
+  if(d.fournisseurs?.length) setFournisseurs(d.fournisseurs);
+  if(d.stockCond?.length)    setStockCond(d.stockCond);
+  if(d.condSessions?.length) setCondSessions(d.condSessions);
+ };
+
  const MODULES_JSX = (
   <>
+   {module==='sauvegarde'      &&<ModuleSauvegarde data={allData} onRestore={restoreData}/>}
    {module==='dashboard'       &&<ModuleDashboard stock={stock} brassins={brassins} fournisseurs={fournisseurs} condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} locations={locations} setModule={setModule}/>}
    {module==='stocks'          &&<ModuleStocks stock={stock} setStock={setStock} fournisseurs={fournisseurs}/>}
    {module==='recettes'        &&<ModuleRecettes recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond}/>}
@@ -9871,7 +10292,6 @@ export default function App(){
    {module==='stockpf'         &&<ModuleStockPF condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} setStockPF={setStockPF} stock={stock} inventaires={inventaires} setInventaires={setInventaires}/>}
    {module==='catalogue'       &&<ModuleCatalogue recettes={recettes} setRecettes={setRecettes} brassins={brassins} stockPF={stockPF} setStockPF={setStockPF} condSessions={condSessions} stock={stock} stockCond={stockCond}/>}
    {module==='pl'              &&<ModulePL brassins={brassins} recettes={recettes} condSessions={condSessions} stockPF={stockPF} locations={locations} stock={stock} stockCond={stockCond}/>}
-   {module==='encaissement'    &&<ModuleEncaissement locations={locations} setLocations={setLocations}/>}
    {module==='simulation'      &&<ModuleSimulation recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond} condSessions={condSessions} stockPF={stockPF}/>}
    {module==='prediction'      &&<ModulePrediction brassins={brassins} recettes={recettes}/>}
    {module==='agenda'          &&<ModuleAgendaImport locations={locations} setLocations={setLocations} brassins={brassins} setBrassins={setBrassins} recettes={recettes}/>}
