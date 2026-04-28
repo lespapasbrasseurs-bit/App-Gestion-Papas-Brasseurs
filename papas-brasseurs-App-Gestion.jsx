@@ -10617,7 +10617,7 @@ export default function App(){
        const j=Math.floor((Date.now()-new Date(b.dateDebut))/86400000);
        const s=STATUTS[b.statut]||STATUTS.planifié;
        const lastDens=b.mesures?.filter(m=>m.type==='densité'||!m.type).slice(-1)[0];
-       const att=calcAtt(b);
+       const att=(b.og&&lastDens?.valeur)?Math.round((b.og-lastDens.valeur)/(b.og-1)*100):null;
        return <div key={b.id} style={{background:C.bgCard,borderRadius:16,padding:'16px',marginBottom:10,border:`2px solid ${s.color}30`,boxShadow:`0 2px 12px -4px ${s.color}20`}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}}>
          <div>
