@@ -11,6 +11,7 @@ const FONTS = `
 @font-face{font-family:'DKLemonYellowSun';src:url('/fonts/DKLemonYellowSun.otf') format('opentype');font-weight:normal;font-style:normal}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ppb-mod{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{font-family:'DM Sans',sans-serif;-webkit-text-size-adjust:100%}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#C8820A;border-radius:3px}
@@ -10203,9 +10204,12 @@ export default function App(){
   if(!id){id=Math.random().toString(36).slice(2,10);localStorage.setItem('ppb_machine_id',id);}
   return id;
  },[]);
- const machineName = useMemo(()=>
-  localStorage.getItem('ppb_machine_name')||`Poste-${machineId.slice(0,4).toUpperCase()}`
- ,[machineId]);
+ const [machineName, setMachineName] = useState(()=>{
+  const id=localStorage.getItem('ppb_machine_id')||'????';
+  return localStorage.getItem('ppb_machine_name')||`Poste-${id.slice(0,4).toUpperCase()}`;
+ });
+ const [editingMachineName, setEditingMachineName] = useState(false);
+ const saveMachineName = name=>{setMachineName(name);localStorage.setItem('ppb_machine_name',name);};
  const [syncStatus,  setSyncStatus]   = useState('idle');
  const [syncTime,    setSyncTime]     = useState(null);
  const [lockConflict,setLockConflict] = useState(null);
@@ -10535,9 +10539,23 @@ export default function App(){
          border:'none',cursor:'pointer',textAlign:'left',
          transition:'background 0.15s,color 0.15s',
          WebkitTapHighlightColor:'transparent'}}>
-        <span style={{fontSize:16,opacity:a?1:0.7}}>{f.icon}</span>
-        <span style={{flex:1}}>{f.label}</span>
-        {f.badge&&<span style={{background:f.bc||C.amber,color:'#fff',borderRadius:99,padding:'1px 6px',fontSize:9,fontWeight:900}}>{f.badge}</span>}
+        <span style={{fontSize:16,opacity:a?1:0.7,flexShrink:0}}>{f.icon}</span>
+        <span style={{flex:1,display:'flex',flexDirection:'column',gap:4,alignItems:'flex-start',minWidth:0}}>
+         {f.label}
+         {f.id==='brasserie'&&actifs>0&&(()=>{
+          const nBrassage=brassins.filter(x=>x.statut==='brassage').length;
+          const nFerm=brassins.filter(x=>x.statut==='fermentation'||x.statut==='garde').length;
+          const nCond=brassins.filter(x=>x.statut==='conditionnement').length;
+          const tot=nBrassage+nFerm+nCond;
+          if(!tot) return null;
+          return <div style={{width:'100%',height:2,display:'flex',gap:1,borderRadius:1,overflow:'hidden'}}>
+           {nBrassage>0&&<div style={{flex:nBrassage,background:C.amber,borderRadius:1}}/>}
+           {nFerm>0&&<div style={{flex:nFerm,background:C.hop,borderRadius:1}}/>}
+           {nCond>0&&<div style={{flex:nCond,background:C.green,borderRadius:1}}/>}
+          </div>;
+         })()}
+        </span>
+        {f.badge&&<span style={{background:f.bc||C.amber,color:'#fff',borderRadius:99,padding:'1px 6px',fontSize:9,fontWeight:900,flexShrink:0}}>{f.badge}</span>}
        </button>
       );
      })}
@@ -10547,7 +10565,19 @@ export default function App(){
      <div style={{width:32,height:32,borderRadius:999,background:C.amber,color:'#FFF',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:FA,fontWeight:700,fontSize:13,flexShrink:0}}>👋</div>
      <div style={{minWidth:0}}>
       <div style={{fontSize:13,fontFamily:FP,color:C.text,letterSpacing:0.2}}>Salut !</div>
-      <div style={{fontSize:10,color:C.textLight,fontFamily:FM}}>Brasseur · admin</div>
+      <div style={{fontSize:10,color:C.textLight,fontFamily:FM,display:'flex',alignItems:'center',gap:4}}>
+       {editingMachineName
+        ?<input value={machineName} autoFocus
+           onChange={e=>setMachineName(e.target.value)}
+           onBlur={()=>{setEditingMachineName(false);saveMachineName(machineName);}}
+           onKeyDown={e=>{if(e.key==='Enter'||e.key==='Escape'){setEditingMachineName(false);saveMachineName(machineName);}}}
+           style={{fontSize:10,fontFamily:FM,border:`1px solid ${C.border}`,borderRadius:4,padding:'1px 5px',background:C.bg,color:C.text,width:90,outline:'none'}}/>
+        :<span style={{cursor:'pointer',display:'flex',alignItems:'center',gap:3}} title="Renommer ce poste"
+           onClick={()=>setEditingMachineName(true)}>
+           {machineName}<span style={{opacity:0.4,fontSize:8}}>✏</span>
+          </span>
+       }
+      </div>
      </div>
     </div>
    </aside>
@@ -10587,7 +10617,7 @@ export default function App(){
     </header>
     <SubNav/>
     {/* Content */}
-    <div style={{flex:1,overflow:'auto',padding:'24px 32px',background:C.bg}}>
+    <div key={module} style={{flex:1,overflow:'auto',padding:'24px 32px',background:C.bg,animation:'ppb-mod 0.15s ease'}}>
      {MODULES_JSX}
     </div>
    </main>

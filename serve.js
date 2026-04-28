@@ -43,6 +43,14 @@ http.createServer(async(req,res)=>{
   if((req.url==='/api/data'||req.url==='/api/data-beacon') && req.method==='POST'){
     const b2=await body(req);
     const ts=new Date().toISOString();
+    // Rotation : garde les 5 dernières sauvegardes
+    if(fs.existsSync(DATA_FILE)){
+      for(let i=4;i>=1;i--){
+        const src=i===1?DATA_FILE:path.join(dir,`ppb_data_bak_${i-1}.json`);
+        const dst=path.join(dir,`ppb_data_bak_${i}.json`);
+        try{if(fs.existsSync(src))fs.copyFileSync(src,dst);}catch{}
+      }
+    }
     writeJson(DATA_FILE,{...b2, savedAt:ts});
     return json(res,{ok:true,savedAt:ts});
   }
