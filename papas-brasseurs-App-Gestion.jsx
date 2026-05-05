@@ -10300,7 +10300,7 @@ function ModuleAnticipation({brassins,setBrassins,recettes,locations,stock,stock
 
 // ─── SAUVEGARDE / SYNC ──────────────────────────────────────────────────────
 
-function ModuleSauvegarde({data, onRestore, machineName, saveMachineName, darkMode, setDarkMode, fermJours, saveFermJours, recettes, jsonbinKey, saveJsonbinKey, jsonbinId, saveJsonbinId, cloudStatus, cloudTime}) {
+function ModuleSauvegarde({data, onRestore, machineName, saveMachineName, darkMode, setDarkMode, fermJours, saveFermJours, recettes, jsonbinKey, saveJsonbinKey, jsonbinId, saveJsonbinId, cloudStatus, cloudTime, onForceSave, onForceLoad}) {
  const [msg,         setMsg]         = useState('');
  const [msgType,     setMsgType]     = useState('ok'); // ok|error
  const [showKey,     setShowKey]     = useState(false);
@@ -10510,19 +10510,38 @@ function ModuleSauvegarde({data, onRestore, machineName, saveMachineName, darkMo
       </div>
      </div>
     )}
-    {/* Statut + test */}
-    <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}>
-     {cloudStatus!=='idle'&&<div style={{display:'flex',alignItems:'center',gap:6,fontSize:12,
+    {/* Statut */}
+    {cloudStatus!=='idle'&&(
+     <div style={{display:'flex',alignItems:'center',gap:6,fontSize:12,marginBottom:10,
       color:cloudStatus==='error'?C.alert:cloudStatus==='saving'?C.amber:C.green,fontFamily:FM}}>
-      <span>{cloudStatus==='saving'?'⟳':cloudStatus==='error'?'⚠':'☁'}</span>
-      <span>{cloudStatus==='saving'?'Sauvegarde…':cloudStatus==='saved'&&cloudTime?`Sync ${cloudTime.toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})}`:'Erreur'}</span>
-     </div>}
-     {jsonbinKey&&!jsonbinId&&<div style={{fontSize:11,color:C.amber,fontFamily:FM}}>
-      ✦ Un Bin sera créé automatiquement à la prochaine modification.
-     </div>}
-     {testStatus==='ok'&&<span style={{fontSize:11,color:C.green,fontFamily:FM}}>✅ Connexion OK</span>}
-     {testStatus==='error'&&<span style={{fontSize:11,color:C.alert,fontFamily:FM}}>❌ Clé invalide ou bin introuvable</span>}
-    </div>
+      <span style={{fontSize:16}}>{cloudStatus==='saving'?'⟳':cloudStatus==='error'?'⚠':'☁'}</span>
+      <span>{cloudStatus==='saving'?'Sauvegarde en cours…'
+       :cloudStatus==='saved'&&cloudTime?`Dernière sync : ${cloudTime.toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})}`
+       :'Erreur de synchronisation — vérifiez la clé API ou réessayez'}</span>
+     </div>
+    )}
+    {jsonbinKey&&!jsonbinId&&<div style={{fontSize:11,color:C.amber,fontFamily:FM,marginBottom:10}}>
+     ✦ Un Bin sera créé automatiquement à la prochaine modification.
+    </div>}
+    {/* Boutons d'action */}
+    {jsonbinKey&&(
+     <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+      <button onClick={onForceSave} disabled={cloudStatus==='saving'||!jsonbinKey}
+       style={{padding:'8px 16px',borderRadius:8,border:'none',cursor:'pointer',
+        background:C.amber,color:'#000',fontWeight:700,fontSize:12,fontFamily:FB,
+        opacity:cloudStatus==='saving'?0.5:1}}>
+       🔄 Forcer sauvegarde
+      </button>
+      {jsonbinId&&(
+       <button onClick={onForceLoad} disabled={cloudStatus==='saving'}
+        style={{padding:'8px 16px',borderRadius:8,border:`1px solid ${C.border}`,cursor:'pointer',
+         background:C.bgDark,color:C.textMid,fontWeight:600,fontSize:12,fontFamily:FB,
+         opacity:cloudStatus==='saving'?0.5:1}}>
+        ☁ Charger depuis cloud
+       </button>
+      )}
+     </div>
+    )}
    </Card>
 
    {/* ── Sauvegardes ── */}
@@ -10822,6 +10841,56 @@ export default function App(){
   }
  },[locations,brassins,stock,tireuses,inventaires,recettes,fournisseurs,stockCond,condSessions,stockPF,serverAvail]);
 
+ // ── Force-save / Force-load cloud ────────────────────────────
+ const forceSaveCloud = () => {
+  if(!jsonbinKeyRef.current) return;
+  if(cloudTimer.current) clearTimeout(cloudTimer.current);
+  setCloudStatus('saving');
+  const ts=new Date().toISOString();
+  const body=JSON.stringify({savedBy:machineId,savedAt:ts,data:dataRef.current});
+  const headers={'Content-Type':'application/json','X-Master-Key':jsonbinKeyRef.current};
+  const binId=jsonbinIdRef.current;
+  if(binId){
+   fetch(`https://api.jsonbin.io/v3/b/${binId}`,{method:'PUT',headers,body})
+   .then(r=>r.ok?r.json():Promise.reject(r.status))
+   .then(()=>{setCloudStatus('saved');setCloudTime(new Date());localStorage.setItem('ppb_saved_at',ts);})
+   .catch(()=>setCloudStatus('error'));
+  } else {
+   fetch('https://api.jsonbin.io/v3/b',{method:'POST',
+    headers:{...headers,'X-Bin-Name':'PPB-Data','X-Bin-Private':'true'},body})
+   .then(r=>r.ok?r.json():Promise.reject(r.status))
+   .then(res=>{const id=res.metadata?.id;if(id)saveJsonbinId(id);setCloudStatus('saved');setCloudTime(new Date());localStorage.setItem('ppb_saved_at',ts);})
+   .catch(()=>setCloudStatus('error'));
+  }
+ };
+
+ const forceLoadCloud = () => {
+  if(!jsonbinKeyRef.current||!jsonbinIdRef.current) return;
+  setCloudStatus('saving');
+  fetch(`https://api.jsonbin.io/v3/b/${jsonbinIdRef.current}/latest`,{
+   headers:{'X-Master-Key':jsonbinKeyRef.current}
+  })
+  .then(r=>r.ok?r.json():Promise.reject(r.status))
+  .then(res=>{
+   const d=res.record?.data||res.data;
+   if(!d) throw new Error('no data');
+   if(d.locations?.length)    setLocations(d.locations);
+   if(d.brassins?.length)     setBrassins(d.brassins);
+   if(d.stock?.length)        setStock(d.stock);
+   if(d.tireuses?.length)     setTireuses(d.tireuses);
+   if(d.inventaires?.length)  setInventaires(d.inventaires);
+   if(d.recettes?.length)     setRecettes(d.recettes);
+   if(d.fournisseurs?.length) setFournisseurs(d.fournisseurs);
+   if(d.stockCond?.length)    setStockCond(d.stockCond);
+   if(d.condSessions?.length) setCondSessions(d.condSessions);
+   if(d.stockPF?.length)      setStockPF(d.stockPF);
+   const ts=res.record?.savedAt||new Date().toISOString();
+   localStorage.setItem('ppb_saved_at',ts);
+   setCloudStatus('saved');setCloudTime(new Date());
+  })
+  .catch(()=>setCloudStatus('error'));
+ };
+
  // Ping verrou toutes les 30 s
  useEffect(()=>{
   if(!serverAvail) return;
@@ -10948,7 +11017,7 @@ export default function App(){
 
  const MODULES_JSX = (
   <>
-   {module==='sauvegarde'      &&<ModuleSauvegarde data={allData} onRestore={restoreData} machineName={machineName} saveMachineName={saveMachineName} darkMode={darkMode} setDarkMode={setDarkMode} fermJours={fermJours} saveFermJours={saveFermJours} recettes={recettes} jsonbinKey={jsonbinKey} saveJsonbinKey={saveJsonbinKey} jsonbinId={jsonbinId} saveJsonbinId={saveJsonbinId} cloudStatus={cloudStatus} cloudTime={cloudTime}/>}
+   {module==='sauvegarde'      &&<ModuleSauvegarde data={allData} onRestore={restoreData} machineName={machineName} saveMachineName={saveMachineName} darkMode={darkMode} setDarkMode={setDarkMode} fermJours={fermJours} saveFermJours={saveFermJours} recettes={recettes} jsonbinKey={jsonbinKey} saveJsonbinKey={saveJsonbinKey} jsonbinId={jsonbinId} saveJsonbinId={saveJsonbinId} cloudStatus={cloudStatus} cloudTime={cloudTime} onForceSave={forceSaveCloud} onForceLoad={forceLoadCloud}/>}
    {module==='dashboard'       &&<ModuleDashboard stock={stock} brassins={brassins} fournisseurs={fournisseurs} condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} locations={locations} setModule={setModule} journal={journal}/>}
    {module==='stocks'          &&<ModuleStocks stock={stock} setStock={setStock} fournisseurs={fournisseurs}/>}
    {module==='recettes'        &&<ModuleRecettes recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond} onRenameRecette={renameRecette}/>}
