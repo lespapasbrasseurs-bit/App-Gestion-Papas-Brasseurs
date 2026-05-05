@@ -1,0 +1,9 @@
+node_modules/
+ppb_data.json
+ppb_data_bak_*.json
+ppb_lock.json
+*.ics
+*.xlsx
+desktop.ini
+.claude/
+design-refonte.pdf
