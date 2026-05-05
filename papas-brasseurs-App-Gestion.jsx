@@ -1096,7 +1096,7 @@ function ModuleStocks({stock,setStock,fournisseurs}){
  );
 }
 
-function ModuleRecettes({recettes,setRecettes,stock,stockCond}){
+function ModuleRecettes({recettes,setRecettes,stock,stockCond,onRenameRecette}){
  const [sel,setSel]           = useState(null);
  const [editMode,setEditMode] = useState(false);  // 'prix' | 'recette' | false
  const [pxForm,setPxForm]     = useState({});
@@ -1141,6 +1141,7 @@ function ModuleRecettes({recettes,setRecettes,stock,stockCond}){
 
  const saveRecette = () => {
   const ef = editForm;
+  const oldNom = recettes.find(r=>r.id===ef.id)?.nom;
   const updated = {
    ...ef,
    abv:            parseFloat(ef.abv)||0,
@@ -1163,6 +1164,8 @@ function ModuleRecettes({recettes,setRecettes,stock,stockCond}){
    resucrage:      ef.resucrage||{},
   };
   if(ef.id) {
+   // Propagation du renommage si le nom a changé
+   if(oldNom && oldNom !== ef.nom && onRenameRecette) onRenameRecette(oldNom, ef.nom);
    setRecettes(recettes.map(r=>r.id===ef.id ? updated : r));
    setSel(updated);
   } else {
@@ -1268,6 +1271,14 @@ function ModuleRecettes({recettes,setRecettes,stock,stockCond}){
       <Label t="Nom de la recette"/>
       <input value={editForm.nom||''} onChange={e=>setEditForm({...editForm,nom:e.target.value})}
        placeholder="La Nouvelle…" style={iSt}/>
+      {editForm.id && recettes.find(r=>r.id===editForm.id)?.nom !== editForm.nom && editForm.nom?.trim() && (
+       <div style={{marginTop:5,fontSize:11,color:C.amber,fontFamily:FM,
+        background:C.amberPale,padding:'4px 10px',borderRadius:6,
+        border:`1px solid ${C.amber}30`,display:'flex',gap:6,alignItems:'center'}}>
+        <span>⚠</span>
+        <span>Renommage : les brassins, sessions de conditionnement et stock produits finis liés seront mis à jour automatiquement.</span>
+       </div>
+      )}
      </div>
      <div>
       <Label t="Style bière"/>
@@ -10842,12 +10853,25 @@ export default function App(){
   if(d.condSessions?.length) setCondSessions(d.condSessions);
  };
 
+ // Renommage recette → propagation dans brassins, condSessions, stockPF, fermJours
+ const renameRecette = (oldNom, newNom) => {
+  if(!oldNom||!newNom||oldNom===newNom) return;
+  setBrassins(prev=>prev.map(b=>b.recette===oldNom?{...b,recette:newNom}:b));
+  setCondSessions(prev=>prev.map(cs=>cs.brassinNom===oldNom?{...cs,brassinNom:newNom}:cs));
+  setStockPF(prev=>prev.map(x=>x.brassinNom===oldNom?{...x,brassinNom:newNom}:x));
+  if(fermJours[oldNom]!==undefined){
+   const fj={...fermJours,[newNom]:fermJours[oldNom]};
+   delete fj[oldNom];
+   saveFermJours(fj);
+  }
+ };
+
  const MODULES_JSX = (
   <>
    {module==='sauvegarde'      &&<ModuleSauvegarde data={allData} onRestore={restoreData} machineName={machineName} saveMachineName={saveMachineName} darkMode={darkMode} setDarkMode={setDarkMode} fermJours={fermJours} saveFermJours={saveFermJours} recettes={recettes} jsonbinKey={jsonbinKey} saveJsonbinKey={saveJsonbinKey} jsonbinId={jsonbinId} saveJsonbinId={saveJsonbinId} cloudStatus={cloudStatus} cloudTime={cloudTime}/>}
    {module==='dashboard'       &&<ModuleDashboard stock={stock} brassins={brassins} fournisseurs={fournisseurs} condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} locations={locations} setModule={setModule} journal={journal}/>}
    {module==='stocks'          &&<ModuleStocks stock={stock} setStock={setStock} fournisseurs={fournisseurs}/>}
-   {module==='recettes'        &&<ModuleRecettes recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond}/>}
+   {module==='recettes'        &&<ModuleRecettes recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond} onRenameRecette={renameRecette}/>}
    {module==='production'      &&<ModuleProduction brassins={brassins} setBrassins={setBrassins} recettes={recettes} logAction={logAction}/>}
    {module==='conditionnement' &&<ModuleConditionnement brassins={brassins} setBrassins={setBrassins} stockCond={stockCond} setStockCond={setStockCond} condSessions={condSessions} setCondSessions={setCondSessions} logAction={logAction}/>}
    {module==='fournisseurs'    &&<ModuleFournisseurs fournisseurs={fournisseurs} setFournisseurs={setFournisseurs} stock={stock}/>}
