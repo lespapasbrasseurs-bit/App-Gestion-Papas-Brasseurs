@@ -5442,6 +5442,9 @@ const BIERE_ALIASES = [
  ['apa',              "L'Impèrtinente"],
  ['imper',            "L'Impèrtinente"],
  ['ipa',              "La Pèrlimpinpin"],
+ ['perlim',           "La Pèrlimpinpin"],
+ ['perlin',           "La Pèrlimpinpin"],
+ ['merlin',           "La Mèrlimpinpin"],
 ];
 
 function normStr(s){
@@ -5463,6 +5466,21 @@ function resolveBiere(raw){
   }
  }
  return raw.trim();
+}
+
+// Retourne le nom officiel de la bière trouvée dans le texte, ou null si aucun alias ne matche
+function findBiereInText(text){
+ if(!text) return null;
+ const key = normStr(text);
+ for(const [alias, nom] of BIERE_ALIASES){
+  const a = normStr(alias);
+  if(a.length <= 3){
+   if(new RegExp('(?<![a-z])'+a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![a-z])').test(key)) return nom;
+  } else {
+   if(key.includes(a)) return nom;
+  }
+ }
+ return null;
 }
 
 function repartirFuts(volTotal, biere){
@@ -9365,26 +9383,51 @@ function ModulePrediction({brassins,recettes,fermJours=FERM_JOURS_DEF}){
  );
 }
 
-function detectEventType(evt){
+function detectEventType(evt, calType='tireuses'){
  const txt = ((evt.summary||'')+(evt.description||'')).toLowerCase();
  if(/tireuse|location |réservation|reservation|évén|fête|fete|fest|mariage|soirée|anniversaire|repas/i.test(txt))
   return 'location';
- if(/brassin|brassage|brew|ferment|cuvée|cuve|mash|empatage|conditionnement|mise en bouteille|enfutage/i.test(txt))
+ if(/brassin|brassage|brew|ferment|cuvée|cuve|mash|empatage/i.test(txt))
+  return 'brassin';
+ if(calType==='brasserie'){
+  // Pour le calendrier brasserie, enfutage/embouteillage/CIP/etc. → autre (pas des brassins)
+  return 'autre';
+ }
+ if(/conditionnement|mise en bouteille|enfutage/i.test(txt))
   return 'brassin';
  if(/livraison|commande|order|achat|fournisseur|delivery|malts?|houblons?/i.test(txt))
   return 'achat';
- return 'location';  // calendar group → probablement des locations
+ return 'location';  // calendrier tireuses → probablement des locations
 }
 
 function mapICSBrassin(evt, recettes, i){
  const sum = evt.summary||'';
- const rec = recettes.find(r=>
-  sum.toLowerCase().includes(r.nom.toLowerCase().replace(/^la |^l'/,''))
- );
+
+ // Extraire le volume depuis le titre : "12hl" → 1200, "600l" → 600, etc.
+ const hlM = sum.match(/(\d+(?:[.,]\d+)?)\s*hl\b/i);
+ const lM  = !hlM && sum.match(/(\d{3,})\s*l\b/i); // min 3 chiffres pour éviter "C1"
+ const volExtracted = hlM ? Math.round(parseFloat(hlM[1].replace(',','.'))*100)
+                    : lM  ? parseInt(lM[1]) : 0;
+
+ // Résoudre la bière via les aliases (ex: "Imper" → "L'Impèrtinente")
+ const biereAlias = findBiereInText(sum);
+
+ // Chercher la recette correspondante
+ const rec = biereAlias
+  ? recettes.find(r=>r.nom===biereAlias)
+  : recettes.find(r=>normStr(sum).includes(normStr(r.nom.replace(/^la |^l'/i,''))));
+
+ // Nom de recette : alias résolu, ou nom de recette existante, ou nettoyage du titre
+ const recetteNom = biereAlias || rec?.nom
+  || sum.replace(/brassage|brassin|brew|enfutage|embouteillage|conditionnement/gi,'')
+        .replace(/\bC\s*\d+\b/g,'').replace(/\b\d+\s*hl\b/gi,'').replace(/\b\d+\s*l\b/gi,'')
+        .replace(/\bbt\b|\bfuts?\b|\bfût\b/gi,'').replace(/\s+/g,' ').trim()
+  || `Import ${i+1}`;
+
  return {
   id:         Date.now()+i,
-  recette:    rec?.nom || sum.replace(/brassin|brassage/gi,'').trim() || `Import ${i+1}`,
-  volume:     rec?.volume||0,
+  recette:    recetteNom,
+  volume:     volExtracted || rec?.volume || 0,
   statut:     'planifié',
   dateDebut:  evt.dateDebut,
   dateCond:   null,
@@ -9446,7 +9489,7 @@ function ModuleAgendaImport({locations,setLocations,brassins,setBrassins,recette
 
   const cats = {location:[],brassin:[],autre:[]};
   evts.forEach((evt,i)=>{
-   const type = detectEventType(evt);
+   const type = detectEventType(evt, sourceKey);
    if(type==='location'){
     const mapped = mapICS(evt,i);
     const exists = locations.some(l=>l.icsUid===evt.uid);
