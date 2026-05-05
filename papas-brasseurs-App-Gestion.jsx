@@ -5440,6 +5440,7 @@ const BIERE_ALIASES = [
  ['stout',            "La Mary'Stout"],
  ['brune',            "La Mary'Stout"],
  ['apa',              "L'Impèrtinente"],
+ ['imper',            "L'Impèrtinente"],
  ['ipa',              "La Pèrlimpinpin"],
 ];
 
@@ -5661,6 +5662,9 @@ function parseDescFuts(desc){
   const gob25m=desc.match(/\+?(\d+)\s*(?:gobelets?|gob\.?)\s*(?:de\s+)?25/i)
               ||(!gob50m&&desc.match(/\+?(\d+)\s*(?:gobelets?|gob\.?)(?!\s*\d)/i));
   if(gob25m)gobelets25=parseInt(gob25m[1]);
+  // Pinte → gobelet 50cl, Demi → gobelet 25cl
+  if(!gobelets50){const m=desc.match(/\+?(\d+)\s*pintes?/i);if(m)gobelets50=parseInt(m[1]);}
+  if(!gobelets25){const m=desc.match(/\+?(\d+)\s*demis?/i);if(m)gobelets25=parseInt(m[1]);}
   const tarifm=desc.match(/(?:tarif|prix|total)\s*:?\s*(\d+)\s*€/i);
   if(tarifm)tarif=parseInt(tarifm[1]);
   const telm=desc.match(/(?:t[eé]l(?:[eé]phone)?|mobile)\s*[:\-.]?\s*([+\d][\d\s.\-]{7,})/i)
@@ -5674,7 +5678,7 @@ function parseDescFuts(desc){
     .replace(/\s*,\s*/g,'\n')    // virgule → saut de ligne
     .replace(/\s*\+\s*(?=\d)/g,'\n'); // + avant nombre → saut de ligne
 
-  const SKIP=/(?:gobelets?|gob\.|tarif|prix|dépôt|contact|t[eé]l|mobile|adresse|\d\s*€)/i;
+  const SKIP=/(?:gobelets?|gob\.|pintes?|demis?|tarif|prix|dépôt|contact|t[eé]l|mobile|adresse|\d\s*€)/i;
 
   normalized.split('\n').forEach(rawLine=>{
     let line=rawLine.replace(/^[•\-\*\+]\s*/,'').trim();
@@ -9435,8 +9439,10 @@ function ModuleAgendaImport({locations,setLocations,brassins,setBrassins,recette
 
  const processICS = (text, sourceKey) => {
   setErr('');
-  const evts = parseICS(text);
-  if(!evts.length){ setErr('Aucun événement trouvé dans ce calendrier.'); return; }
+  const today = new Date().toISOString().split('T')[0];
+  const allEvts = parseICS(text);
+  const evts = allEvts.filter(e => e.dateDebut >= today);
+  if(!evts.length){ setErr('Aucun événement à venir dans ce calendrier.'); return; }
 
   const cats = {location:[],brassin:[],autre:[]};
   evts.forEach((evt,i)=>{
@@ -9455,9 +9461,10 @@ function ModuleAgendaImport({locations,setLocations,brassins,setBrassins,recette
   });
 
   setParsed(cats);
+  // Tout sélectionner par défaut (nouveaux + MAJ) → synchronisation complète
   setSelected({
-   location: cats.location.filter(e=>!e._exists).map(e=>e.id),
-   brassin:  cats.brassin.filter(e=>!e._exists).map(e=>e.id),
+   location: cats.location.map(e=>e.id),
+   brassin:  cats.brassin.map(e=>e.id),
   });
 
   try{
@@ -9587,7 +9594,7 @@ function ModuleAgendaImport({locations,setLocations,brassins,setBrassins,recette
      ← Retour
     </button>
     <h2 style={{fontFamily:FA,fontSize:18,color:C.text,flex:1}}>
-     Aperçu — {totalNew} nouveaux · {totalUpd} MAJ
+     Sync — {totalNew} nouveaux · {totalUpd} MAJ
     </h2>
    </div>
 
