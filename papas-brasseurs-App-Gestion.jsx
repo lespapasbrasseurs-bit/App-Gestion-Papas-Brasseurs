@@ -6499,6 +6499,8 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
  const [invCounts,setInvCounts]   = useState({});     // {key: string} valeur saisie
  const [invStep,setInvStep]       = useState(0);      // index mode terrain
  const [invConfirm,setInvConfirm] = useState(false);  // afficher récap avant validation
+ const [initDate,   setInitDate]   = useState(new Date().toISOString().split('T')[0]);
+ const [initCounts, setInitCounts] = useState({});    // { "Recette||Type": "qte" }
  const csvRef = useRef();
 
  const pCond = calcPrixCond(stockCond);
@@ -6689,6 +6691,40 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
   a.click(); URL.revokeObjectURL(url);
  };
 
+ // ── Inventaire de départ ───────────────────────────────────────────────────
+ const BLONDE_PAPAS = 'La Blonde des Papas';
+ const TOUS_FORMATS = ['Bouteille 33cl','Bouteille 75cl','Fût 20L','Fût 30L'];
+ const formatsFor = nom => nom===BLONDE_PAPAS ? ['Fût 20L','Fût 30L'] : TOUS_FORMATS;
+
+ const initKey = (nom, type) => `${nom}||${type}`;
+ const initVal = (nom, type) => parseInt(initCounts[initKey(nom,type)])||0;
+ const initTotal = recettes.reduce((s,r)=>s+formatsFor(r.nom).reduce((ss,t)=>ss+initVal(r.nom,t),0),0);
+
+ const applyInit = () => {
+  const ts = Date.now();
+  const newEntries = [];
+  recettes.forEach(rec=>{
+   formatsFor(rec.nom).forEach(type=>{
+    const qte = initVal(rec.nom, type);
+    if(qte > 0){
+     const lotId = `init-${rec.nom.replace(/\W/g,'-')}-${type.replace(/\W/g,'-')}-${ts}`;
+     newEntries.push({
+      id:lotId, lotId,
+      brassinNom: rec.nom, type, lot:'INIT',
+      dateCond: initDate,
+      qteInit: qte, qteDispo: qte, sorties: [], source:'init',
+     });
+    }
+   });
+  });
+  if(newEntries.length){
+   setStockPF(prev=>[...prev,...newEntries]);
+   setInitCounts({});
+   setImportLog(`✅ Stock initial : ${newEntries.length} lot(s) créés`);
+   setView('stock');
+  }
+ };
+
  // ── Helpers inventaire ─────────────────────────────────────────────────────
  const invGroups = (() => {
   const map = {};
@@ -6793,7 +6829,7 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
    </div>
 
    <div style={{display:'flex',gap:6,marginBottom:14,overflowX:'auto',scrollbarWidth:'none',WebkitOverflowScrolling:'touch'}}>
-    {[['stock','📋 Lots'],['valorisation','📊 Valeur'],['inventaire','📝 Inventaire'],['import','📥 Import']].map(([v,l])=>(
+    {[['stock','📋 Lots'],['valorisation','📊 Valeur'],['inventaire','📝 Inventaire'],['init','🚀 Départ'],['import','📥 Import']].map(([v,l])=>(
      <button key={v} onClick={()=>setView(v)}
       style={{flexShrink:0,padding:'7px 14px',borderRadius:20,whiteSpace:'nowrap',
        border:`1.5px solid ${view===v?(v==='inventaire'?C.ok:C.amber):C.border}`,
@@ -7392,6 +7428,129 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
         ))}
        </div>
       )}
+     </div>
+    );
+   })()}
+
+   {view==='init'&&(()=>{
+    const hasPrevInit = stockPF.some(x=>x.source==='init');
+    const FMT_COLORS = {'Bouteille 33cl':'#2A6080','Bouteille 75cl':'#4A6741','Fût 20L':C.amber,'Fût 30L':C.brick};
+    const FMT_SHORT  = {'Bouteille 33cl':'33 cl','Bouteille 75cl':'75 cl','Fût 20L':'Fût 20L','Fût 30L':'Fût 30L'};
+
+    return (
+     <div>
+      {/* Header */}
+      <div style={{background:C.bgCard,borderRadius:14,border:`1px solid ${C.border}`,
+       padding:'16px 18px',marginBottom:14}}>
+       <div style={{fontFamily:FA,fontStyle:'italic',fontSize:18,color:C.text,marginBottom:4}}>
+        Inventaire de départ
+       </div>
+       <div style={{fontSize:12,color:C.textMid,lineHeight:1.6,marginBottom:12}}>
+        Saisissez les quantités en stock pour chaque bière et conditionnement.
+        Cela crée des lots <code style={{fontFamily:FM,background:C.bgDark,padding:'1px 5px',borderRadius:4}}>INIT</code> dans le stock produits finis.
+       </div>
+       {hasPrevInit&&(
+        <div style={{background:C.amberPale,border:`1px solid ${C.amber}40`,borderRadius:8,
+         padding:'8px 12px',fontSize:11,color:C.amber,fontFamily:FM,marginBottom:12}}>
+         ⚠️ Des lots INIT existent déjà. Un nouvel import ajoutera des entrées supplémentaires.
+        </div>
+       )}
+       <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}>
+        <div>
+         <div style={{fontSize:10,fontFamily:FM,color:C.textLight,textTransform:'uppercase',letterSpacing:1,marginBottom:4}}>Date de l'inventaire</div>
+         <input type="date" value={initDate} onChange={e=>setInitDate(e.target.value)}
+          style={{background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,
+           color:C.text,padding:'7px 12px',fontSize:13,outline:'none',fontFamily:FM}}/>
+        </div>
+        {initTotal>0&&(
+         <div style={{marginLeft:'auto',background:C.greenPale,border:`1px solid ${C.green}40`,
+          borderRadius:8,padding:'8px 14px',fontSize:12,color:C.greenL,fontFamily:FM,fontWeight:700}}>
+          {initTotal} contenant{initTotal>1?'s':''} saisi{initTotal>1?'s':''}
+         </div>
+        )}
+       </div>
+      </div>
+
+      {/* Grille recettes */}
+      {recettes.length===0&&(
+       <div style={{textAlign:'center',padding:'40px 20px',color:C.textLight}}>
+        <div style={{fontSize:32,marginBottom:8}}>📋</div>
+        Aucune recette — ajoutez des recettes d'abord.
+       </div>
+      )}
+      {recettes.map(rec=>{
+       const fmts = formatsFor(rec.nom);
+       const rowTotal = fmts.reduce((s,t)=>s+initVal(rec.nom,t),0);
+       return (
+        <div key={rec.nom} style={{background:C.bgCard,borderRadius:12,border:`1px solid ${C.border}`,
+         marginBottom:8,overflow:'hidden',
+         borderLeft:`3px solid ${rowTotal>0?C.green:C.border}`}}>
+         {/* Titre recette */}
+         <div style={{padding:'10px 14px 6px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <div style={{fontFamily:FA,fontStyle:'italic',fontSize:15,color:C.text}}>{rec.nom}</div>
+          {rec.nom===BLONDE_PAPAS&&(
+           <span style={{fontSize:9,fontFamily:FM,color:C.amber,background:C.amberPale,
+            padding:'2px 8px',borderRadius:10,border:`1px solid ${C.amber}30`}}>
+            Fûts uniquement
+           </span>
+          )}
+          {rowTotal>0&&(
+           <span style={{fontSize:10,fontFamily:FM,color:C.green,marginLeft:8,fontWeight:700}}>
+            {rowTotal} cont.
+           </span>
+          )}
+         </div>
+         {/* Inputs formats */}
+         <div style={{display:'flex',flexWrap:'wrap',gap:6,padding:'6px 14px 12px'}}>
+          {TOUS_FORMATS.map(type=>{
+           const disabled = !fmts.includes(type);
+           const key = initKey(rec.nom, type);
+           const v   = initCounts[key]||'';
+           const col = FMT_COLORS[type];
+           return (
+            <div key={type} style={{display:'flex',flexDirection:'column',gap:3,
+             opacity:disabled?0.25:1, minWidth:80}}>
+             <div style={{fontSize:10,fontFamily:FM,color:col,fontWeight:700,
+              textTransform:'uppercase',letterSpacing:0.5}}>{FMT_SHORT[type]}</div>
+             <input
+              type="number" min="0" step="1"
+              value={v}
+              disabled={disabled}
+              onChange={e=>setInitCounts(c=>({...c,[key]:e.target.value}))}
+              placeholder="0"
+              style={{width:72,background:disabled?C.bgDark:C.bg,
+               border:`1.5px solid ${v&&!disabled?col:C.border}`,
+               borderRadius:8,color:C.text,padding:'6px 10px',
+               fontSize:14,fontFamily:FM,outline:'none',
+               textAlign:'center',cursor:disabled?'not-allowed':'text',
+               boxShadow:v&&!disabled?`0 0 0 2px ${col}20`:'none'}}/>
+            </div>
+           );
+          })}
+         </div>
+        </div>
+       );
+      })}
+
+      {/* Boutons action */}
+      <div style={{display:'flex',gap:10,marginTop:14,flexWrap:'wrap'}}>
+       <button onClick={applyInit}
+        disabled={initTotal===0}
+        style={{padding:'10px 24px',borderRadius:10,background:initTotal>0?C.green:C.bgDark,
+         color:initTotal>0?'#fff':C.textLight,border:'none',fontWeight:700,fontSize:14,
+         fontFamily:FB,cursor:initTotal>0?'pointer':'not-allowed',
+         boxShadow:initTotal>0?'0 4px 14px -4px rgba(74,128,64,0.4)':'none',
+         transition:'all 0.15s'}}>
+        ✓ Importer {initTotal>0?`(${initTotal} contenants)`:''}
+       </button>
+       <button onClick={()=>setInitCounts({})}
+        disabled={initTotal===0}
+        style={{padding:'10px 16px',borderRadius:10,background:C.bgDark,color:C.textMid,
+         border:`1px solid ${C.border}`,fontWeight:600,fontSize:13,fontFamily:FB,
+         cursor:initTotal>0?'pointer':'not-allowed'}}>
+        Effacer
+       </button>
+      </div>
      </div>
     );
    })()}
