@@ -6561,9 +6561,12 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
   const map = {};
   stockPF.forEach(x=>{ map[x.lotId]=x; });
   const result = [];
+  // Lots issus des sessions de conditionnement
+  const sessionKeys = new Set();
   condSessions.forEach(cs=>{
    cs.lots.forEach(lot=>{
     const key  = `${cs.id}-${lot.lot}`;
+    sessionKeys.add(key);
     const saved = map[key];
     result.push(saved || {
      id:key,lotId:key,brassinNom:cs.brassinNom,
@@ -6572,6 +6575,8 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
     });
    });
   });
+  // Lots manuels / INIT / DGSYS (pas issus d'une condSession)
+  stockPF.forEach(x=>{ if(!sessionKeys.has(x.lotId)) result.push(x); });
   return result;
  })();
 
