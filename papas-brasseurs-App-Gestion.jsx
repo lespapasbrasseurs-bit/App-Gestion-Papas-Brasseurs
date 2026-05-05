@@ -3996,7 +3996,7 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel,stockPF=[]}) {
   if(!form.dateDebut)            {setErr("La date de début est requise");     return;}
   if(!form.dateFin)              {setErr("La date de fin est requise");       return;}
   if(form.dateFin<form.dateDebut){setErr("La date de fin doit être après le début"); return;}
-  if(!form.tireuses.length)      {setErr("Sélectionnez au moins une tireuse"); return;}
+  // tireuses peut être vide (location sans tireuse)
   setErr("");
   onSave({
    ...form,
@@ -4139,8 +4139,22 @@ function FormLocationT({editLoc,tireuses,recettes,onSave,onCancel,stockPF=[]}) {
    </div>
 
    <div style={sec}>
-    <SecT n="03" t={`Tireuses * — ${form.tireuses.length} sélectionnée${form.tireuses.length>1?"s":""}`}/>
+    <SecT n="03" t={form.tireuses.length===0
+     ? "Tireuses — Sans tireuse"
+     : `Tireuses — ${form.tireuses.length} sélectionnée${form.tireuses.length>1?"s":""}`}/>
     <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,marginBottom:8}}>
+     {/* Bouton "Sans tireuse" */}
+     <button onClick={()=>setForm(f=>({...f,tireuses:[]}))}
+      style={{padding:"10px 6px",borderRadius:6,textAlign:"center",minHeight:60,
+       border:`2px solid ${form.tireuses.length===0?C.textMid:C.border}`,
+       background:form.tireuses.length===0?C.bgCard:'transparent',
+       gridColumn:'1',opacity:1}}>
+      <div style={{fontSize:18,lineHeight:1}}>🚫</div>
+      <div style={{fontFamily:FB,fontWeight:700,fontSize:10,
+       color:form.tireuses.length===0?C.text:C.textLight,
+       marginTop:3,letterSpacing:-0.3}}>Sans</div>
+      {form.tireuses.length===0&&<div style={{fontSize:9,color:C.textMid,marginTop:2,fontWeight:700}}>✓</div>}
+     </button>
      {tireuses.map(t=>{
       const sel = form.tireuses.includes(t.id);
       return (
@@ -8640,7 +8654,7 @@ function ModuleEncaissement({locations,setLocations}){
         whiteSpace:'nowrap'}}>{l.client}</div>
        <div style={{fontSize:11,color:C.textLight,
         fontFamily:FM,marginTop:2}}>
-        {fmtDate(l.dateDebut)} · {l.tireuses.length} tireuse{l.tireuses.length>1?'s':''}
+        {fmtDate(l.dateDebut)} · {(l.tireuses||[]).length>0?`${l.tireuses.length} tireuse${l.tireuses.length>1?'s':''}`:'sans tireuse'}
         {l.tel&&` · ${l.tel}`}
        </div>
       </div>
