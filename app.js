@@ -1,3 +1,4 @@
+// v2.4
 const {useState,useEffect,useRef,useMemo} = React;const FM="'DM Mono',monospace";const FB="'DM Sans',sans-serif";const FA="'Fraunces',serif";const FP="'PoetsenOne',sans-serif";const FD="'DKLemonYellowSun',cursive";const FONTS=`
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Abril+Fatface&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 @font-face{font-family:'PoetsenOne';src:url('/fonts/PoetsenOne.ttf') format('truetype');font-weight:normal;font-style:normal}
