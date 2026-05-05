@@ -10622,8 +10622,10 @@ export default function App(){
  const [jsonbinId,  setJsonbinId]  = useState(()=>localStorage.getItem('ppb_jsonbin_id')||'');
  const [cloudStatus, setCloudStatus] = useState('idle'); // idle|saving|saved|error
  const [cloudTime,   setCloudTime]   = useState(null);
- const saveJsonbinKey = k => { setJsonbinKey(k); localStorage.setItem('ppb_jsonbin_key', k); };
- const saveJsonbinId  = id=> { setJsonbinId(id);  localStorage.setItem('ppb_jsonbin_id',  id); };
+ const jsonbinKeyRef = useRef(jsonbinKey);
+ const jsonbinIdRef  = useRef(jsonbinId);
+ const saveJsonbinKey = k  => { setJsonbinKey(k);  jsonbinKeyRef.current=k;  localStorage.setItem('ppb_jsonbin_key', k); };
+ const saveJsonbinId  = id => { setJsonbinId(id);   jsonbinIdRef.current=id;  localStorage.setItem('ppb_jsonbin_id',  id); };
  const [syncStatus,  setSyncStatus]   = useState('idle');
  const [syncTime,    setSyncTime]     = useState(null);
  const [lockConflict,setLockConflict] = useState(null);
@@ -10674,9 +10676,9 @@ export default function App(){
 
  // Chargement initial depuis JSONBin
  useEffect(()=>{
-  if(!jsonbinKey||!jsonbinId) return;
-  fetch(`https://api.jsonbin.io/v3/b/${jsonbinId}/latest`,{
-   headers:{'X-Master-Key':jsonbinKey}
+  if(!jsonbinKeyRef.current||!jsonbinIdRef.current) return;
+  fetch(`https://api.jsonbin.io/v3/b/${jsonbinIdRef.current}/latest`,{
+   headers:{'X-Master-Key':jsonbinKeyRef.current}
   })
   .then(r=>r.json())
   .then(res=>{
@@ -10719,15 +10721,16 @@ export default function App(){
     .catch(()=>setSyncStatus('error'));
    },5000);
   }
-  // ── JSONBin cloud ──
-  if(jsonbinKey){
+  // ── JSONBin cloud (utilise refs pour éviter boucle de dépendances) ──
+  if(jsonbinKeyRef.current){
    if(cloudTimer.current) clearTimeout(cloudTimer.current);
    cloudTimer.current=setTimeout(()=>{
     setCloudStatus('saving');
     const body=JSON.stringify({savedBy:machineId,savedAt:ts,data:dataRef.current});
-    const headers={'Content-Type':'application/json','X-Master-Key':jsonbinKey};
-    if(jsonbinId){
-     fetch(`https://api.jsonbin.io/v3/b/${jsonbinId}`,{method:'PUT',headers,body})
+    const headers={'Content-Type':'application/json','X-Master-Key':jsonbinKeyRef.current};
+    const binId=jsonbinIdRef.current;
+    if(binId){
+     fetch(`https://api.jsonbin.io/v3/b/${binId}`,{method:'PUT',headers,body})
      .then(r=>r.ok?r.json():Promise.reject(r.status))
      .then(()=>{ setCloudStatus('saved'); setCloudTime(new Date()); localStorage.setItem('ppb_saved_at',ts); })
      .catch(()=>setCloudStatus('error'));
@@ -10735,12 +10738,12 @@ export default function App(){
      fetch('https://api.jsonbin.io/v3/b',{method:'POST',
       headers:{...headers,'X-Bin-Name':'PPB-Data','X-Bin-Private':'true'},body})
      .then(r=>r.ok?r.json():Promise.reject(r.status))
-     .then(res=>{ const id=res.metadata?.id; if(id){saveJsonbinId(id);} setCloudStatus('saved'); setCloudTime(new Date()); localStorage.setItem('ppb_saved_at',ts); })
+     .then(res=>{ const id=res.metadata?.id; if(id) saveJsonbinId(id); setCloudStatus('saved'); setCloudTime(new Date()); localStorage.setItem('ppb_saved_at',ts); })
      .catch(()=>setCloudStatus('error'));
     }
    },5000);
   }
- },[locations,brassins,stock,tireuses,inventaires,recettes,fournisseurs,stockCond,condSessions,stockPF,serverAvail,jsonbinKey,jsonbinId]);
+ },[locations,brassins,stock,tireuses,inventaires,recettes,fournisseurs,stockCond,condSessions,stockPF,serverAvail]);
 
  // Ping verrou toutes les 30 s
  useEffect(()=>{
