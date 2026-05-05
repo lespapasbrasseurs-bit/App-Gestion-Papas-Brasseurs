@@ -10207,9 +10207,11 @@ function ModuleAnticipation({brassins,setBrassins,recettes,locations,stock,stock
 
 // ─── SAUVEGARDE / SYNC ──────────────────────────────────────────────────────
 
-function ModuleSauvegarde({data, onRestore, machineName, saveMachineName, darkMode, setDarkMode, fermJours, saveFermJours, recettes}) {
+function ModuleSauvegarde({data, onRestore, machineName, saveMachineName, darkMode, setDarkMode, fermJours, saveFermJours, recettes, jsonbinKey, saveJsonbinKey, jsonbinId, saveJsonbinId, cloudStatus, cloudTime}) {
  const [msg,         setMsg]         = useState('');
  const [msgType,     setMsgType]     = useState('ok'); // ok|error
+ const [showKey,     setShowKey]     = useState(false);
+ const [testStatus,  setTestStatus]  = useState(null); // null|ok|error
  const [backups,     setBackups]     = useState([]);
  const [confirmReset,setConfirmReset]= useState(false);
  const [editFerm,    setEditFerm]    = useState(false);
@@ -10376,6 +10378,58 @@ function ModuleSauvegarde({data, onRestore, machineName, saveMachineName, darkMo
         </div>
        </>
     }
+   </Card>
+
+   {/* ── Sync Cloud JSONBin ── */}
+   <Card label="SYNC CLOUD" color={C.green}>
+    <div style={{fontSize:12,color:C.textMid,marginBottom:14,lineHeight:1.6}}>
+     Synchronisation automatique via <b>JSONBin.io</b> (gratuit) — fonctionne sur Vercel et entre appareils.{' '}
+     <a href="https://jsonbin.io" target="_blank" rel="noopener" style={{color:C.green}}>Créer un compte →</a>
+    </div>
+    {/* Clé API */}
+    <div style={{marginBottom:12}}>
+     <div style={{fontSize:11,fontWeight:700,color:C.textMid,marginBottom:5,textTransform:'uppercase',letterSpacing:0.8}}>Clé API (X-Master-Key)</div>
+     <div style={{display:'flex',gap:8,alignItems:'center'}}>
+      <input type={showKey?'text':'password'} value={jsonbinKey||''}
+       onChange={e=>saveJsonbinKey(e.target.value)}
+       placeholder="$2a$10$xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+       style={{flex:1,background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,
+        color:C.text,padding:'9px 13px',fontSize:12,outline:'none',fontFamily:FM}}/>
+      <button onClick={()=>setShowKey(v=>!v)}
+       style={{padding:'9px 12px',borderRadius:8,background:C.bgDark,border:`1px solid ${C.border}`,cursor:'pointer',fontSize:13,color:C.textMid}}>
+       {showKey?'🙈':'👁'}
+      </button>
+     </div>
+     <div style={{fontSize:10,color:C.textLight,marginTop:4,fontFamily:FM}}>
+      jsonbin.io → Dashboard → API Keys → Master Key
+     </div>
+    </div>
+    {/* Bin ID */}
+    {jsonbinId&&(
+     <div style={{marginBottom:12}}>
+      <div style={{fontSize:11,fontWeight:700,color:C.textMid,marginBottom:5,textTransform:'uppercase',letterSpacing:0.8}}>Bin ID (auto-rempli)</div>
+      <div style={{display:'flex',gap:8,alignItems:'center'}}>
+       <input type="text" value={jsonbinId} readOnly
+        style={{flex:1,background:C.bgDark,border:`1px solid ${C.border}`,borderRadius:8,
+         color:C.textLight,padding:'7px 13px',fontSize:12,outline:'none',fontFamily:FM}}/>
+       <button onClick={()=>saveJsonbinId('')}
+        style={{padding:'7px 10px',borderRadius:8,background:C.brickPale,border:`1px solid ${C.border}`,cursor:'pointer',fontSize:12,color:C.brick}}>✕</button>
+      </div>
+     </div>
+    )}
+    {/* Statut + test */}
+    <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}>
+     {cloudStatus!=='idle'&&<div style={{display:'flex',alignItems:'center',gap:6,fontSize:12,
+      color:cloudStatus==='error'?C.alert:cloudStatus==='saving'?C.amber:C.green,fontFamily:FM}}>
+      <span>{cloudStatus==='saving'?'⟳':cloudStatus==='error'?'⚠':'☁'}</span>
+      <span>{cloudStatus==='saving'?'Sauvegarde…':cloudStatus==='saved'&&cloudTime?`Sync ${cloudTime.toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})}`:'Erreur'}</span>
+     </div>}
+     {jsonbinKey&&!jsonbinId&&<div style={{fontSize:11,color:C.amber,fontFamily:FM}}>
+      ✦ Un Bin sera créé automatiquement à la prochaine modification.
+     </div>}
+     {testStatus==='ok'&&<span style={{fontSize:11,color:C.green,fontFamily:FM}}>✅ Connexion OK</span>}
+     {testStatus==='error'&&<span style={{fontSize:11,color:C.alert,fontFamily:FM}}>❌ Clé invalide ou bin introuvable</span>}
+    </div>
    </Card>
 
    {/* ── Sauvegardes ── */}
@@ -10546,6 +10600,14 @@ export default function App(){
   catch{ return {...FERM_JOURS_DEF}; }
  });
  const saveFermJours = fj => { setFermJours(fj); try{localStorage.setItem('ppb_ferm_jours',JSON.stringify(fj));}catch{} };
+
+ // ── JSONBin cloud sync ─────────────────────────────────────────────────────
+ const [jsonbinKey, setJsonbinKey] = useState(()=>localStorage.getItem('ppb_jsonbin_key')||'');
+ const [jsonbinId,  setJsonbinId]  = useState(()=>localStorage.getItem('ppb_jsonbin_id')||'');
+ const [cloudStatus, setCloudStatus] = useState('idle'); // idle|saving|saved|error
+ const [cloudTime,   setCloudTime]   = useState(null);
+ const saveJsonbinKey = k => { setJsonbinKey(k); localStorage.setItem('ppb_jsonbin_key', k); };
+ const saveJsonbinId  = id=> { setJsonbinId(id);  localStorage.setItem('ppb_jsonbin_id',  id); };
  const [syncStatus,  setSyncStatus]   = useState('idle');
  const [syncTime,    setSyncTime]     = useState(null);
  const [lockConflict,setLockConflict] = useState(null);
@@ -10594,19 +10656,75 @@ export default function App(){
    .catch(()=>{});
  },[]);
 
- // Auto-save debounced 5 s
+ // Chargement initial depuis JSONBin
  useEffect(()=>{
-  if(!serverAvail) return;
-  if(saveTimer.current) clearTimeout(saveTimer.current);
-  saveTimer.current=setTimeout(()=>{
-   setSyncStatus('saving');
-   const ts=new Date().toISOString();
-   fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({savedBy:machineId,data:dataRef.current})})
-   .then(()=>{ setSyncStatus('saved'); setSyncTime(new Date()); localStorage.setItem('ppb_saved_at',ts); })
-   .catch(()=>setSyncStatus('error'));
-  },5000);
- },[locations,brassins,stock,tireuses,inventaires,recettes,fournisseurs,stockCond,condSessions,stockPF,serverAvail]);
+  if(!jsonbinKey||!jsonbinId) return;
+  fetch(`https://api.jsonbin.io/v3/b/${jsonbinId}/latest`,{
+   headers:{'X-Master-Key':jsonbinKey}
+  })
+  .then(r=>r.json())
+  .then(res=>{
+   const remote=res.record;
+   if(!remote?.savedAt||!remote?.data) return;
+   const remoteMs=new Date(remote.savedAt).getTime();
+   const localTs=localStorage.getItem('ppb_saved_at');
+   const localMs=localTs?new Date(localTs).getTime():0;
+   if(remoteMs>localMs){
+    const d=remote.data;
+    if(d.locations?.length)    setLocations(d.locations);
+    if(d.brassins?.length)     setBrassins(d.brassins);
+    if(d.stock?.length)        setStock(d.stock);
+    if(d.tireuses?.length)     setTireuses(d.tireuses);
+    if(d.inventaires?.length)  setInventaires(d.inventaires);
+    if(d.recettes?.length)     setRecettes(d.recettes);
+    if(d.fournisseurs?.length) setFournisseurs(d.fournisseurs);
+    if(d.stockCond?.length)    setStockCond(d.stockCond);
+    if(d.condSessions?.length) setCondSessions(d.condSessions);
+    if(d.stockPF?.length)      setStockPF(d.stockPF);
+    localStorage.setItem('ppb_saved_at',remote.savedAt);
+    setCloudStatus('saved'); setCloudTime(new Date(remote.savedAt));
+   }
+  })
+  .catch(()=>{});
+ },[]);
+
+ // Auto-save debounced 5 s (serve.js + JSONBin)
+ const cloudTimer = useRef(null);
+ useEffect(()=>{
+  const ts=new Date().toISOString();
+  // ── serve.js local ──
+  if(serverAvail){
+   if(saveTimer.current) clearTimeout(saveTimer.current);
+   saveTimer.current=setTimeout(()=>{
+    setSyncStatus('saving');
+    fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({savedBy:machineId,data:dataRef.current})})
+    .then(()=>{ setSyncStatus('saved'); setSyncTime(new Date()); localStorage.setItem('ppb_saved_at',ts); })
+    .catch(()=>setSyncStatus('error'));
+   },5000);
+  }
+  // ── JSONBin cloud ──
+  if(jsonbinKey){
+   if(cloudTimer.current) clearTimeout(cloudTimer.current);
+   cloudTimer.current=setTimeout(()=>{
+    setCloudStatus('saving');
+    const body=JSON.stringify({savedBy:machineId,savedAt:ts,data:dataRef.current});
+    const headers={'Content-Type':'application/json','X-Master-Key':jsonbinKey};
+    if(jsonbinId){
+     fetch(`https://api.jsonbin.io/v3/b/${jsonbinId}`,{method:'PUT',headers,body})
+     .then(r=>r.ok?r.json():Promise.reject(r.status))
+     .then(()=>{ setCloudStatus('saved'); setCloudTime(new Date()); localStorage.setItem('ppb_saved_at',ts); })
+     .catch(()=>setCloudStatus('error'));
+    } else {
+     fetch('https://api.jsonbin.io/v3/b',{method:'POST',
+      headers:{...headers,'X-Bin-Name':'PPB-Data','X-Bin-Private':'true'},body})
+     .then(r=>r.ok?r.json():Promise.reject(r.status))
+     .then(res=>{ const id=res.metadata?.id; if(id){saveJsonbinId(id);} setCloudStatus('saved'); setCloudTime(new Date()); localStorage.setItem('ppb_saved_at',ts); })
+     .catch(()=>setCloudStatus('error'));
+    }
+   },5000);
+  }
+ },[locations,brassins,stock,tireuses,inventaires,recettes,fournisseurs,stockCond,condSessions,stockPF,serverAvail,jsonbinKey,jsonbinId]);
 
  // Ping verrou toutes les 30 s
  useEffect(()=>{
@@ -10721,7 +10839,7 @@ export default function App(){
 
  const MODULES_JSX = (
   <>
-   {module==='sauvegarde'      &&<ModuleSauvegarde data={allData} onRestore={restoreData} machineName={machineName} saveMachineName={saveMachineName} darkMode={darkMode} setDarkMode={setDarkMode} fermJours={fermJours} saveFermJours={saveFermJours} recettes={recettes}/>}
+   {module==='sauvegarde'      &&<ModuleSauvegarde data={allData} onRestore={restoreData} machineName={machineName} saveMachineName={saveMachineName} darkMode={darkMode} setDarkMode={setDarkMode} fermJours={fermJours} saveFermJours={saveFermJours} recettes={recettes} jsonbinKey={jsonbinKey} saveJsonbinKey={saveJsonbinKey} jsonbinId={jsonbinId} saveJsonbinId={saveJsonbinId} cloudStatus={cloudStatus} cloudTime={cloudTime}/>}
    {module==='dashboard'       &&<ModuleDashboard stock={stock} brassins={brassins} fournisseurs={fournisseurs} condSessions={condSessions} recettes={recettes} stockCond={stockCond} stockPF={stockPF} locations={locations} setModule={setModule} journal={journal}/>}
    {module==='stocks'          &&<ModuleStocks stock={stock} setStock={setStock} fournisseurs={fournisseurs}/>}
    {module==='recettes'        &&<ModuleRecettes recettes={recettes} setRecettes={setRecettes} stock={stock} stockCond={stockCond}/>}
@@ -10998,12 +11116,19 @@ export default function App(){
        🔔
        {alerts>0&&<span style={{position:'absolute',top:6,right:7,width:7,height:7,borderRadius:999,background:C.alert}}/>}
       </div>
-      {serverAvail&&<div title={syncTime?`Dernière synchro : ${syncTime.toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})}`:machineName}
+      {serverAvail&&<div title={syncTime?`Local : ${syncTime.toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})}`:machineName}
        style={{display:'flex',alignItems:'center',gap:5,fontSize:11,fontFamily:FM,
         color:syncStatus==='error'?C.alert:syncStatus==='saving'?C.amber:syncStatus==='saved'?C.green:C.textLight,
         padding:'4px 10px',borderRadius:999,background:C.bgDark,border:`1px solid ${C.border}`,flexShrink:0}}>
-       <span>{syncStatus==='saving'?'⟳':syncStatus==='error'?'⚠':'☁'}</span>
+       <span>{syncStatus==='saving'?'⟳':syncStatus==='error'?'⚠':'🖥'}</span>
        <span>{syncStatus==='saving'?'Synchro…':syncStatus==='saved'&&syncTime?syncTime.toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'}):machineName}</span>
+      </div>}
+      {jsonbinKey&&<div title={cloudTime?`Cloud : ${cloudTime.toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})}`:' JSONBin'}
+       style={{display:'flex',alignItems:'center',gap:5,fontSize:11,fontFamily:FM,
+        color:cloudStatus==='error'?C.alert:cloudStatus==='saving'?C.amber:cloudStatus==='saved'?C.green:C.textLight,
+        padding:'4px 10px',borderRadius:999,background:C.bgDark,border:`1px solid ${C.border}`,flexShrink:0}}>
+       <span>{cloudStatus==='saving'?'⟳':cloudStatus==='error'?'⚠':'☁'}</span>
+       <span>{cloudStatus==='saving'?'Cloud…':cloudStatus==='saved'&&cloudTime?cloudTime.toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'}):'Cloud'}</span>
       </div>}
       <DarkToggle/>
       <Btn p onClick={()=>setModule('production')}>+ Nouveau brassin</Btn>
