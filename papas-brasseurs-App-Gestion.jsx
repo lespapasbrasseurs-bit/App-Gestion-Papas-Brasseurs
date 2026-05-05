@@ -2187,6 +2187,19 @@ function ModuleProduction({brassins,setBrassins,recettes,logAction}){
  };
  const [form,setForm] = useState(EF);
 
+ // Auto-terminer les brassins de plus de 40 jours
+ useEffect(()=>{
+  const now = Date.now();
+  const vieux = brassins.filter(b=>
+   b.statut!=='terminé' &&
+   b.dateDebut &&
+   (now - new Date(b.dateDebut+'T00:00').getTime()) > 40*86400000
+  );
+  if(vieux.length){
+   setBrassins(prev=>prev.map(b=>vieux.some(v=>v.id===b.id)?{...b,statut:'terminé'}:b));
+  }
+ },[]);// eslint-disable-line
+
  const actifs   = brassins.filter(b=>b.statut!=='terminé'&&
   (b.recette+' '+(b.fermenteur||'')+(b.notes||'')).toLowerCase().includes(q.toLowerCase()));
  const termines = brassins.filter(b=>b.statut==='terminé'&&b.volume>0&&
