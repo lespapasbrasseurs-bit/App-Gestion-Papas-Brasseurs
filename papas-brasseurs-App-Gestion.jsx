@@ -6501,6 +6501,8 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
  const [invConfirm,setInvConfirm] = useState(false);  // afficher récap avant validation
  const [initDate,   setInitDate]   = useState(new Date().toISOString().split('T')[0]);
  const [initCounts, setInitCounts] = useState({});    // { "Recette||Type": "qte" }
+ const [initExtra,  setInitExtra]  = useState([]);    // noms de références ajoutées manuellement
+ const [initNewRef, setInitNewRef] = useState('');
  const csvRef = useRef();
 
  const pCond = calcPrixCond(stockCond);
@@ -6698,19 +6700,31 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
 
  const initKey = (nom, type) => `${nom}||${type}`;
  const initVal = (nom, type) => parseInt(initCounts[initKey(nom,type)])||0;
- const initTotal = recettes.reduce((s,r)=>s+formatsFor(r.nom).reduce((ss,t)=>ss+initVal(r.nom,t),0),0);
+ const initAllNames = [...recettes.map(r=>r.nom), ...initExtra];
+ const initTotal = initAllNames.reduce((s,nom)=>s+formatsFor(nom).reduce((ss,t)=>ss+initVal(nom,t),0),0);
+
+ const addInitRef = () => {
+  const n = initNewRef.trim();
+  if(!n||initAllNames.includes(n)) return;
+  setInitExtra(prev=>[...prev,n]);
+  setInitNewRef('');
+ };
+ const removeInitRef = nom => {
+  setInitExtra(prev=>prev.filter(x=>x!==nom));
+  setInitCounts(c=>{const nc={...c};formatsFor(nom).forEach(t=>delete nc[initKey(nom,t)]);return nc;});
+ };
 
  const applyInit = () => {
   const ts = Date.now();
   const newEntries = [];
-  recettes.forEach(rec=>{
-   formatsFor(rec.nom).forEach(type=>{
-    const qte = initVal(rec.nom, type);
+  initAllNames.forEach(nom=>{
+   formatsFor(nom).forEach(type=>{
+    const qte = initVal(nom, type);
     if(qte > 0){
-     const lotId = `init-${rec.nom.replace(/\W/g,'-')}-${type.replace(/\W/g,'-')}-${ts}`;
+     const lotId = `init-${nom.replace(/\W/g,'-')}-${type.replace(/\W/g,'-')}-${ts}`;
      newEntries.push({
       id:lotId, lotId,
-      brassinNom: rec.nom, type, lot:'INIT',
+      brassinNom: nom, type, lot:'INIT',
       dateCond: initDate,
       qteInit: qte, qteDispo: qte, sorties: [], source:'init',
      });
@@ -6720,6 +6734,7 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
   if(newEntries.length){
    setStockPF(prev=>[...prev,...newEntries]);
    setInitCounts({});
+   setInitExtra([]);
    setImportLog(`✅ Stock initial : ${newEntries.length} lot(s) créés`);
    setView('stock');
   }
@@ -7472,39 +7487,41 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
       </div>
 
       {/* Grille recettes */}
-      {recettes.length===0&&(
+      {recettes.length===0&&initExtra.length===0&&(
        <div style={{textAlign:'center',padding:'40px 20px',color:C.textLight}}>
         <div style={{fontSize:32,marginBottom:8}}>📋</div>
-        Aucune recette — ajoutez des recettes d'abord.
+        Aucune recette — ajoutez une référence ci-dessous.
        </div>
       )}
-      {recettes.map(rec=>{
-       const fmts = formatsFor(rec.nom);
-       const rowTotal = fmts.reduce((s,t)=>s+initVal(rec.nom,t),0);
+      {initAllNames.map(nom=>{
+       const isExtra = initExtra.includes(nom);
+       const fmts = formatsFor(nom);
+       const rowTotal = fmts.reduce((s,t)=>s+initVal(nom,t),0);
        return (
-        <div key={rec.nom} style={{background:C.bgCard,borderRadius:12,border:`1px solid ${C.border}`,
+        <div key={nom} style={{background:C.bgCard,borderRadius:12,border:`1px solid ${C.border}`,
          marginBottom:8,overflow:'hidden',
-         borderLeft:`3px solid ${rowTotal>0?C.green:C.border}`}}>
-         {/* Titre recette */}
-         <div style={{padding:'10px 14px 6px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-          <div style={{fontFamily:FA,fontStyle:'italic',fontSize:15,color:C.text}}>{rec.nom}</div>
-          {rec.nom===BLONDE_PAPAS&&(
-           <span style={{fontSize:9,fontFamily:FM,color:C.amber,background:C.amberPale,
-            padding:'2px 8px',borderRadius:10,border:`1px solid ${C.amber}30`}}>
-            Fûts uniquement
-           </span>
-          )}
-          {rowTotal>0&&(
-           <span style={{fontSize:10,fontFamily:FM,color:C.green,marginLeft:8,fontWeight:700}}>
-            {rowTotal} cont.
-           </span>
-          )}
+         borderLeft:`3px solid ${rowTotal>0?C.green:isExtra?C.hop:C.border}`}}>
+         {/* Titre */}
+         <div style={{padding:'10px 14px 6px',display:'flex',justifyContent:'space-between',alignItems:'center',gap:8}}>
+          <div style={{display:'flex',alignItems:'center',gap:6,flex:1,minWidth:0}}>
+           <div style={{fontFamily:FA,fontStyle:'italic',fontSize:15,color:C.text,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{nom}</div>
+           {isExtra&&<span style={{fontSize:9,fontFamily:FM,color:C.hop,background:C.hopPale,
+            padding:'2px 7px',borderRadius:10,border:`1px solid ${C.hop}30`,flexShrink:0}}>Manuelle</span>}
+           {nom===BLONDE_PAPAS&&<span style={{fontSize:9,fontFamily:FM,color:C.amber,background:C.amberPale,
+            padding:'2px 7px',borderRadius:10,border:`1px solid ${C.amber}30`,flexShrink:0}}>Fûts seul.</span>}
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:6,flexShrink:0}}>
+           {rowTotal>0&&<span style={{fontSize:10,fontFamily:FM,color:C.green,fontWeight:700}}>{rowTotal} cont.</span>}
+           {isExtra&&<button onClick={()=>removeInitRef(nom)}
+            style={{width:20,height:20,borderRadius:99,background:C.brickPale,border:'none',
+             cursor:'pointer',fontSize:11,color:C.brick,display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1}}>✕</button>}
+          </div>
          </div>
          {/* Inputs formats */}
          <div style={{display:'flex',flexWrap:'wrap',gap:6,padding:'6px 14px 12px'}}>
           {TOUS_FORMATS.map(type=>{
            const disabled = !fmts.includes(type);
-           const key = initKey(rec.nom, type);
+           const key = initKey(nom, type);
            const v   = initCounts[key]||'';
            const col = FMT_COLORS[type];
            return (
@@ -7531,6 +7548,29 @@ function ModuleStockPF({condSessions,recettes,stockCond,stockPF,setStockPF,stock
         </div>
        );
       })}
+
+      {/* Ajouter une référence manuelle */}
+      <div style={{background:C.bgCard,borderRadius:12,border:`1.5px dashed ${C.border}`,
+       padding:'12px 14px',marginBottom:8,display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}>
+       <span style={{fontSize:14,flexShrink:0}}>➕</span>
+       <input
+        value={initNewRef}
+        onChange={e=>setInitNewRef(e.target.value)}
+        onKeyDown={e=>e.key==='Enter'&&addInitRef()}
+        placeholder="Nom de la bière ou référence…"
+        style={{flex:1,minWidth:180,background:C.bg,border:`1px solid ${C.border}`,
+         borderRadius:8,color:C.text,padding:'8px 12px',fontSize:13,outline:'none',fontFamily:FM}}/>
+       <button onClick={addInitRef}
+        disabled={!initNewRef.trim()||initAllNames.includes(initNewRef.trim())}
+        style={{padding:'8px 16px',borderRadius:8,background:C.hop,color:'#fff',border:'none',
+         fontWeight:700,fontSize:13,fontFamily:FB,cursor:'pointer',flexShrink:0,
+         opacity:(!initNewRef.trim()||initAllNames.includes(initNewRef.trim()))?0.4:1}}>
+        Ajouter
+       </button>
+       {initAllNames.includes(initNewRef.trim())&&initNewRef.trim()&&(
+        <span style={{fontSize:11,color:C.amber,fontFamily:FM,width:'100%'}}>⚠ Cette référence existe déjà dans la liste.</span>
+       )}
+      </div>
 
       {/* Boutons action */}
       <div style={{display:'flex',gap:10,marginTop:14,flexWrap:'wrap'}}>
